@@ -1,0 +1,39 @@
+import java.nio.file.Paths
+
+apply from: 'buildsystem/ci.gradle'
+apply from: 'buildsystem/dependencies.gradle'
+
+buildscript {
+	repositories {
+    jcenter()
+	}
+	final def androidPluginVersion = "2.2.3"
+  final def classpathDependencies = [
+    "com.android.tools.build:gradle:${androidPluginVersion}"
+  ]
+  dependencies {
+    classpath classpathDependencies
+  }
+}
+
+final def inducedVersion = System.getenv("ARTIFACT_VERSION")
+final def staticAnalysisReportFolderTarget = project.rootDir.absolutePath + "/staticAnalysisReport"
+
+rootProject.ext {
+	//Application details
+	androidVersionCode = inducedVersion != null ? Integer.parseInt(inducedVersion) : 0 // Depending on the git method locally causes IDE issues
+	androidVersionName = String.valueOf(androidVersionCode)
+	androidTestInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
+	androidApplicationIdBase = "org.stoyicker.ms.%s"
+	javaVersion = JavaVersion.VERSION_1_7
+	staticAnalysisReportTarget = staticAnalysisReportFolderTarget
+}
+
+task clean(type: Delete, overwrite: true) {
+  group "Verification"
+  description "Deletes the build directories of the whole project and the static analysis result."
+  rootProject.allprojects.each {
+  	delete it.buildDir
+  	delete Paths.get(it.projectDir.absolutePath, staticAnalysisReportFolderTarget).toAbsolutePath().toString()
+  }
+}

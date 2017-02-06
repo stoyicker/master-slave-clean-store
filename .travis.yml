@@ -1,0 +1,31 @@
+language: android
+android:
+  components:
+    - android-25
+    - build-tools-25.0.3
+    - extra-android-m2repository
+    - extra-google-m2repository
+    - platform-tools
+branches:
+  except:
+    - /^[0-9]/ # Workaround to not to trigger Travis with tags - https://github.com/travis-ci/travis-ci/issues/1532
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+before_script:
+  - |
+      if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
+        echo "Do not open PRs against master; merge dev into master locally and push instead."
+        exit 1
+      fi
+script:
+  - ./gradlew clean build
+after_success:
+  - |
+      if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
+        echo "CI on master succeded. Executing release tasks..."
+      fi

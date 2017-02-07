@@ -29,3 +29,9 @@ after_success:
       if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
         echo "CI on master succeded. Executing release tasks..."
       fi
+notifications:
+  email:
+    recipients:
+      - jorge.diazbenitosoriano@gmail.com
+    on_success: change
+    on_failure: always

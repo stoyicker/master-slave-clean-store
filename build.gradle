@@ -28,7 +28,7 @@ rootProject.ext {
 	androidVersionCode = inducedVersion != null ? Integer.parseInt(inducedVersion) : 0 // Depending on the git method locally causes IDE issues
 	androidVersionName = String.valueOf(androidVersionCode)
 	androidTestInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
-	androidApplicationIdBase = "org.stoyicker.ms.%s"
+	androidApplicationIdBase = "org.jorge.ms.%s"
 	javaVersion = JavaVersion.VERSION_1_7
 	staticAnalysisReportTarget = staticAnalysisReportFolderTarget
 }

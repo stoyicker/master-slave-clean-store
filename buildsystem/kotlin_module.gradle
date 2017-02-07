@@ -1,5 +1,5 @@
-
-apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: 'org.jetbrains.dokka'
 
 //noinspection GroovyUnusedAssignment
 sourceCompatibility = 1.7
@@ -7,11 +7,11 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 configurations {
-  provided
+    provided
 }
 
 sourceSets {
-  main {
-    compileClasspath += configurations.provided
-  }
+    main {
+      compileClasspath += configurations.provided
+    }
 }

@@ -1,1 +1,1 @@
-apply from: "../buildsystem/java_module.gradle"
+apply from: "../buildsystem/kotlin_module.gradle"

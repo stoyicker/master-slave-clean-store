@@ -5,15 +5,19 @@ apply from: 'buildsystem/dependencies.gradle'
 
 buildscript {
 	repositories {
-    jcenter()
-	}
-	final def androidPluginVersion = "2.2.3"
-  final def classpathDependencies = [
-    "com.android.tools.build:gradle:${androidPluginVersion}"
-  ]
-  dependencies {
-    classpath classpathDependencies
-  }
+        jcenter()
+    }
+    final def androidPluginVersion = "2.2.3"
+    final def kotlinPluginVersion = rootProject.ext.kotlinVersion = "1.0.6"
+    final def dokkaPluginVersion = "0.9.13"
+    final def classpathDependencies = [
+        "com.android.tools.build:gradle:$androidPluginVersion",
+        "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinPluginVersion",
+        "org.jetbrains.dokka:dokka-gradle-plugin:$dokkaPluginVersion"
+    ]
+    dependencies {
+        classpath classpathDependencies
+    }
 }
 
 final def inducedVersion = System.getenv("ARTIFACT_VERSION")
@@ -30,10 +34,10 @@ rootProject.ext {
 }
 
 task clean(type: Delete, overwrite: true) {
-  group "Verification"
-  description "Deletes the build directories of the whole project and the static analysis result."
-  rootProject.allprojects.each {
-  	delete it.buildDir
-  	delete Paths.get(it.projectDir.absolutePath, staticAnalysisReportFolderTarget).toAbsolutePath().toString()
+    group "Verification"
+    description "Deletes the build directories of the whole project and the static analysis result."
+    rootProject.allprojects.each {
+        delete it.buildDir
+  	    delete Paths.get(it.projectDir.absolutePath, staticAnalysisReportFolderTarget).toAbsolutePath().toString()
   }
 }

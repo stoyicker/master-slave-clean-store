@@ -15,3 +15,7 @@ sourceSets {
       compileClasspath += configurations.provided
     }
 }
+
+dependencies {
+    compile rootProject.ext.compileDependencies
+}

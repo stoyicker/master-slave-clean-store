@@ -1,8 +1,0 @@
-// When we execute in CI we want full clean builds, no pre-dexing.
-subprojects {
-  project.plugins.whenPluginAdded { final plugin ->
-    if ('com.android.build.gradle.AppPlugin'.equals(plugin.class.name) || ('com.android.build.gradle.LibraryPlugin').equals(plugin.class.name)) {
-      project.android.dexOptions.preDexLibraries = !"true".contentEquals(System.getenv("CI"))
-    }
-  }
-}

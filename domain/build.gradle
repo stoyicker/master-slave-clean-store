@@ -1,16 +1,6 @@
 apply plugin: 'kotlin'
 apply plugin: 'org.jetbrains.dokka'
 
-configurations {
-    provided
-}
-
-sourceSets {
-    main {
-        compileClasspath += configurations.provided
-    }
-}
-
 repositories {
     jcenter()
 }

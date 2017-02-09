@@ -1,5 +1,5 @@
 final def kotlinVersion = rootProject.ext.kotlinVersion
 
-final def compileDependencies = [
+rootProject.ext.compileDependencies = [
         "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 ]

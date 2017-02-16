@@ -1,2 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="org.jorge.ms.data"/>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="org.jorge.ms.data">
+    <uses-permission android:name="android.permission.INTERNET"/>
+</manifest>

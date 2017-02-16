@@ -22,7 +22,7 @@ uploadReleaseToGitHub() {
         \"body\": \"$RELEASE_NOTES\"
     }"
 
-    # Create the release in GitHub and extract its id from the response
+    # Create the release in GitHub and extract its id from the data.network.response
     RESPONSE_BODY=$(curl \
             -u ${REPO_USER}:${GITHUB_TOKEN} \
             --header "Accept: application/vnd.github.v3+json" \

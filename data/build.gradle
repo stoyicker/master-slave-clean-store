@@ -16,6 +16,8 @@ android {
         minSdkVersion rootProject.ext.androidMinSdkVersion
         targetSdkVersion rootProject.ext.androidTargetSdkVersion
         testInstrumentationRunner rootProject.ext.androidTestInstrumentationRunner
+        buildConfigField "String", "API_URL", System.getenv("API_URL") != null ? System.getenv("API_URL") : prop_api_url
+        buildConfigField "String", "API_KEY", System.getenv("API_KEY") != null ? System.getenv("API_KEY") : prop_api_key
     }
 
     dexOptions {
@@ -48,4 +50,5 @@ repositories {
 dependencies {
     compile project(':domain')
     compile rootProject.ext.compileDependencies
+    compile rootProject.ext.compileDataDependencies
 }

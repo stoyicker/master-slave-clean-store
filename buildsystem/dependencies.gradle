@@ -1,5 +1,16 @@
 final def kotlinVersion = rootProject.ext.kotlinVersion
+final def retrofitVersion = "2.1.0"
+final def storeVersion = "2.0.0"
 
 rootProject.ext.compileDependencies = [
         "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+]
+
+rootProject.ext.compileDataDependencies = [
+        "com.squareup.retrofit2:retrofit:$retrofitVersion",
+        "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion",
+        "com.nytimes.android:store:$storeVersion",
+        "com.nytimes.android:middleware:$storeVersion",
+        "com.nytimes.android:filesystem:$storeVersion",
+        "com.nytimes.android:cache:$storeVersion"
 ]

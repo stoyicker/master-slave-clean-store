@@ -1,7 +1,6 @@
 package app
 
 import android.app.Application
-import data.DataProvider
 
 /**
  * Custom application.
@@ -9,6 +8,5 @@ import data.DataProvider
 class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        DataProvider.init(cacheDir)
     }
 }

@@ -17,7 +17,6 @@ android {
         targetSdkVersion rootProject.ext.androidTargetSdkVersion
         testInstrumentationRunner rootProject.ext.androidTestInstrumentationRunner
         buildConfigField "String", "API_URL", System.getenv("API_URL") != null ? System.getenv("API_URL") : prop_api_url
-        buildConfigField "String", "API_KEY", System.getenv("API_KEY") != null ? System.getenv("API_KEY") : prop_api_key
     }
 
     dexOptions {
@@ -38,8 +37,8 @@ android {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
 
-    sourceSets {
-        main.java.srcDirs = ['src/main/kotlin']
+    sourceSets.forEach {
+        it.java.srcDirs = ["src/$it.name/kotlin"]
     }
 }
 
@@ -50,5 +49,7 @@ repositories {
 dependencies {
     compile project(':domain')
     compile rootProject.ext.compileDependencies
+    provided rootProject.ext.providedDataDependencies
     compile rootProject.ext.compileDataDependencies
+    testCompile rootProject.ext.testCompileDataDependencies
 }

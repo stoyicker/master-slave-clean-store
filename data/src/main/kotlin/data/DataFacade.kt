@@ -1,0 +1,57 @@
+package data
+
+import data.network.top.TopRequestDataContainer
+import data.network.top.TopRequestEntityMapper
+import data.network.top.TopRequestParameters
+import data.network.top.TopRequestSource
+import domain.entity.Post
+import domain.entity.TimeRange
+import rx.Observable
+
+/**
+ * Exposes entry points to data obtained by and handled in this module. If we were to have more
+ * requests, it would probably be a good idea to have more facades, not necessarily on a 1:1
+ * facade-request proportion, but just so we don't end up exposing too many requests in the same
+ * facade.
+ * Having a Facade might seem like "too much decoupling" (if such a thing exists) since we
+ * already have a dedicated data module, but it eases separating unit from integration tests,
+ * since the request sources, like TopRequestSource, just default to already unit-tested third-party
+ * delegates, and therefore only really need to have integration tests.
+ */
+object DataFacade {
+
+    /**
+     * Gets top posts in a given subreddit, first trying the network and updating the cache if
+     * successful, or falling back to the cache if unsuccessful.
+     * @param subreddit The subreddit to fetch.
+     * @param time The time range (one of hour, day, week, month, or all).
+     * @param after The key of the lowest item not to return.
+     * @param limit The largest amount of items to retrieve.
+     */
+    fun fetchTop(subreddit: CharSequence, time: TimeRange, after: CharSequence?, limit: Int)
+        : Observable<Post> = sanitizeTopResponse(
+            TopRequestSource.fetch(TopRequestParameters(subreddit, time.value, after, limit)))
+
+    /**
+     * Gets top posts in a given subreddit, first trying the cache and then falling back to
+     * the network. Use when fast response is more important that getting the latest content.
+     * @param subreddit The subreddit to fetch.
+     * @param time The time range (one of hour, day, week, month, or all).
+     * @param after The key of the lowest item not to return.
+     * @param limit The largest amount of items to retrieve.
+     */
+    fun getTop(subreddit: CharSequence, time: TimeRange, after: CharSequence?, limit: Int)
+        : Observable<Post> = sanitizeTopResponse(
+                TopRequestSource.get(TopRequestParameters(subreddit, time.value, after, limit)))
+
+    /**
+     * Prepares the data in a top response to be consumed by outer modules.
+     * @param parsedDataResponse The response as it is made available to this module after parsing.
+     */
+    private fun sanitizeTopResponse(parsedDataResponse: Observable<TopRequestDataContainer>)
+        = parsedDataResponse.flatMapIterable {
+            it.data.children.map {
+                TopRequestEntityMapper.transform(it.data)
+            }
+        }
+}

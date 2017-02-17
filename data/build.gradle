@@ -50,6 +50,11 @@ dependencies {
     compile project(':domain')
     compile rootProject.ext.compileDependencies
     provided rootProject.ext.providedDataDependencies
-    compile rootProject.ext.compileDataDependencies
-    testCompile rootProject.ext.testCompileDataDependencies
+    rootProject.ext.compileDataDependencies.forEach {
+        compile(it) {
+            // RxJava is brought by the domain module
+            exclude group: 'io.reactivex'
+        }
+    }
+    testCompile rootProject.ext.testCompileDependencies
 }

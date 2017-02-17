@@ -63,6 +63,11 @@ internal object TopRequestSource {
      */
     private fun topFetcher(topRequestParameters: TopRequestParameters) = retrofit
             .top(topRequestParameters.subreddit, topRequestParameters.time,
-                    pageMap[topRequestParameters.page], topRequestParameters.limit)
+                    if (pageMap.containsKey(topRequestParameters.page))
+                        pageMap[topRequestParameters.page]
+                    else
+                        // Skipping pages is not possible, on attempt just prevent it
+                        pageMap[pageMap.keys.last()]
+                    , topRequestParameters.limit)
             .map { it.source() }
 }

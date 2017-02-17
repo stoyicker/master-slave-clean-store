@@ -25,12 +25,12 @@ import java.net.UnknownHostException
 // TODO If time: there seems to be some duplicated code here
 
 /**
- * Unit tests for DataFacade.
- * @see DataFacade
+ * Unit tests for TopPostsFacade.
+ * @see TopPostsFacade
  */
 @RunWith(JUnitPlatform::class)
-internal class DataFacadeSpek : SubjectSpek<DataFacade>({
-    subject { DataFacade } // <- DataFacade singleton instance as test subject
+internal class TopPostsFacadeSpek : SubjectSpek<TopPostsFacade>({
+    subject { TopPostsFacade } // <- TopPostsFacade singleton instance as test subject
 
     it("should provide an observable of domain posts when calling get") {
         val expectedAfter = "a random after"

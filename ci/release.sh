@@ -9,7 +9,7 @@ uploadReleaseToGitHub() {
     LAST_TAG=$(git describe --tags --abbrev=0)
     THIS_RELEASE=$(git rev-parse --short ${BRANCH_NAME})
     local IFS=$'\n'
-    RELEASE_NOTES_ARRAY=($(git log --format=%B $LAST_TAG..$THIS_RELEASE | grep "*" | tr -d '\r'))
+    RELEASE_NOTES_ARRAY=($(git log --format=%B $LAST_TAG..$THIS_RELEASE | tr -d '\r'))
     for i in "${RELEASE_NOTES_ARRAY[@]}"
     do
         RELEASE_NOTES="$RELEASE_NOTES\\n$i"
@@ -37,9 +37,9 @@ uploadReleaseToGitHub() {
     UPLOAD_URL=$(echo ${UPLOAD_URL} | sed 's/{?name,label}/?name=app-debug.aar/')
 
     # Build the aar
-    ./gradlew :sdk:assembleImplementedDebug
+    ./gradlew :sdk:assembleDebug
     # Copy it out of its cave
-    cp sdk/build/outputs/aar/app-implemented-debug.apk app-debug.apk
+    cp sdk/build/outputs/aar/app-debug.apk .
 
     # Attach the artifact
     curl -D - \
@@ -49,6 +49,8 @@ uploadReleaseToGitHub() {
     --data-binary "@app-debug.apk" \
     --request POST \
     ${UPLOAD_URL}
+
+    echo "Release complete."
 }
 
 case ${BRANCH_NAME} in

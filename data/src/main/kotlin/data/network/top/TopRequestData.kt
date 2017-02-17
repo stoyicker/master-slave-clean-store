@@ -22,4 +22,5 @@ internal data class TopDataPostContainer(@SerializedName("data") val data: DataP
 /**
  * Models the relevant information about a top request data.
  */
-internal data class TopRequestData(@SerializedName("children") val children: List<TopDataPostContainer>)
+internal data class TopRequestData(@SerializedName("children") val children: List<TopDataPostContainer>,
+                                   @SerializedName("after") val after: String)

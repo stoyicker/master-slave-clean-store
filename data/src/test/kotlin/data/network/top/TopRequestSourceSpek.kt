@@ -41,8 +41,12 @@ internal class TopRequestSourceSpek : Spek({
                 children ->
                     assertEquals(expectedSize, children.size, "Amount of posts not as expected")
                     children.forEach {
-                        assertTrue { it.data.title.isNotEmpty() }
-                        assertEquals(expectedSubreddit, it.data.subreddit, "Subreddit not as expected")
+                        it.data.let { post ->
+                            assertTrue { post.title.isNotEmpty() }
+                            assertEquals(expectedSubreddit, post.subreddit, "Subreddit not as expected")
+                            assertTrue { post.score > 0 }
+                            assertTrue { post.permalink.isNotEmpty() }
+                        }
                     }
             }
         }

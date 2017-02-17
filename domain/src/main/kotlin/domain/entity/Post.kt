@@ -5,4 +5,4 @@ package domain.entity
  * see it without knowing about how it is retrieved (this is, depending on gson for
  * @SerializedName).
  */
-data class Post(val title: String, val subreddit: String, val score: Int)
+data class Post(val title: String, val subreddit: String, val score: Int, val detailLink: String)

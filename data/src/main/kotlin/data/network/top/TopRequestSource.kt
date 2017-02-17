@@ -20,6 +20,8 @@ internal object TopRequestSource {
             .validateEagerly(true)
             .build()
             .create(ApiService::class.java)
+    // This wraps the implementation of pagination in the API
+    private val pageMap = mutableMapOf(0 to "")
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal var delegate: Store<TopRequestDataContainer, TopRequestParameters>
 
@@ -47,14 +49,11 @@ internal object TopRequestSource {
      * @param topRequestParameters The parameters of the request.
      * @see Store
      */
-    internal fun fetch(topRequestParameters: TopRequestParameters) = delegate.fetch(topRequestParameters)
-
-    /**
-     * Delegates to its internal responsible for the request.
-     * @param topRequestParameters The parameters of the request.
-     * @see Store
-     */
     internal fun get(topRequestParameters: TopRequestParameters) = delegate.get(topRequestParameters)
+            // The doOnNext allows us to intercept the interpretation of pagination of the API
+            // so that the app only needs to know what page it wants, not how the API implements
+            // pagination
+            .doOnNext { pageMap.put(topRequestParameters.page + 1, it.data.after) }
 
     /**
      * Provides a Fetcher for the top store.
@@ -62,7 +61,7 @@ internal object TopRequestSource {
      * @see com.nytimes.android.external.store.base.Fetcher
      */
     private fun topFetcher(topRequestParameters: TopRequestParameters) = retrofit
-            .top(topRequestParameters.subreddit, topRequestParameters.time, topRequestParameters.after,
-                    topRequestParameters.limit)
+            .top(topRequestParameters.subreddit, topRequestParameters.time,
+                    pageMap[topRequestParameters.page], topRequestParameters.limit)
             .map { it.source() }
 }

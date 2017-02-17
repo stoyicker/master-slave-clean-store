@@ -21,28 +21,15 @@ import rx.Observable
 object DataFacade {
 
     /**
-     * Gets top posts in a given subreddit, first trying the network and updating the cache if
-     * successful, or falling back to the cache if unsuccessful.
-     * @param subreddit The subreddit to fetch.
-     * @param time The time range (one of hour, day, week, month, or all).
-     * @param after The key of the lowest item not to return.
-     * @param limit The largest amount of items to retrieve.
-     */
-    fun fetchTop(subreddit: CharSequence, time: TimeRange, after: CharSequence?, limit: Int)
-        : Observable<Post> = sanitizeTopResponse(
-            TopRequestSource.fetch(TopRequestParameters(subreddit, time.value, after, limit)))
-
-    /**
      * Gets top posts in a given subreddit, first trying the cache and then falling back to
      * the network. Use when fast response is more important that getting the latest content.
      * @param subreddit The subreddit to fetch.
      * @param time The time range (one of hour, day, week, month, or all).
-     * @param after The key of the lowest item not to return.
-     * @param limit The largest amount of items to retrieve.
+     * @param page The page to request.
      */
-    fun getTop(subreddit: CharSequence, time: TimeRange, after: CharSequence?, limit: Int)
+    fun getTop(subreddit: CharSequence, time: TimeRange, page: Int)
         : Observable<Post> = sanitizeTopResponse(
-                TopRequestSource.get(TopRequestParameters(subreddit, time.value, after, limit)))
+                TopRequestSource.get(TopRequestParameters(subreddit, time.value, page)))
 
     /**
      * Prepares the data in a top response to be consumed by outer modules.

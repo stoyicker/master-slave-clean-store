@@ -8,4 +8,5 @@ import com.google.gson.annotations.SerializedName
  */
 internal data class DataPost(@SerializedName("title") val title: String,
                              @SerializedName("subreddit") val subreddit: String,
-                             @SerializedName("score") val score: Int)
+                             @SerializedName("score") val score: Int,
+                             @SerializedName("permalink") val permalink: String)

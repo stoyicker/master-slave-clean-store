@@ -17,22 +17,22 @@ internal class TopRequestEntityMapperSpek : SubjectSpek<TopRequestEntityMapper>(
     subject { TopRequestEntityMapper } // <- Specify the test subject (the singleton instance, in this case)
 
     it("should transform a happy case") {
-        val source = DataPost("random title", "random subreddit", 23)
+        val source = DataPost("random title", "random subreddit", 23, "some permalink")
         assertEquivalent(source, subject.transform(source))
     }
 
     it("should transform an all empty/0s case") {
-        val source = DataPost("", "", 0)
+        val source = DataPost("", "", 0, "")
         assertEquivalent(source, subject.transform(source))
     }
 
     it("should transform a mixed case") {
-        val source = DataPost("", "another subreddit", 0)
+        val source = DataPost("", "another subreddit", 0, "another permalink")
         assertEquivalent(source, subject.transform(source))
     }
 
     it("should transform when score is negative") {
-        val source = DataPost("another title", "yet another subreddit", -7)
+        val source = DataPost("another title", "yet another subreddit", -7, "one more permalink")
         assertEquivalent(source, subject.transform(source))
     }
 }) {

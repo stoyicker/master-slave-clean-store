@@ -4,6 +4,7 @@ import data.network.common.DataPost
 import domain.entity.Post
 import org.jetbrains.spek.api.SubjectSpek
 import org.jetbrains.spek.api.dsl.it
+import org.jorge.ms.data.BuildConfig
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
 import kotlin.test.assertEquals
@@ -41,6 +42,7 @@ internal class TopRequestEntityMapperSpek : SubjectSpek<TopRequestEntityMapper>(
             assertEquals(dataPost.title, post.title)
             assertEquals(dataPost.subreddit, post.subreddit)
             assertEquals(dataPost.score, post.score)
+            assertEquals("${BuildConfig.API_URL}/${dataPost.permalink}", post.detailLink)
         }
     }
 }

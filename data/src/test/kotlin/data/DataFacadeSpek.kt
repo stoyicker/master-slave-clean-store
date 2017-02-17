@@ -33,13 +33,15 @@ internal class DataFacadeSpek : SubjectSpek<DataFacade>({
     subject { DataFacade } // <- DataFacade singleton instance as test subject
 
     it("should provide an observable of domain posts when calling get") {
+        val expectedAfter = "a random after"
         // Mocking data classes is not possible directly without using some trick, so we will
         // instantiate them instead
         val expectedValues = listOf(
                 TopDataPostContainer(DataPost("post2", "subreddit", 100, "permalink")),
                 TopDataPostContainer(DataPost("post87", "", -9, "another permalink")),
                 TopDataPostContainer(DataPost("143141", "r", 0, "some other permalink")))
-        val mockResult = Observable.just(TopRequestDataContainer(TopRequestData(expectedValues, "")))
+        val mockResult = Observable.just(TopRequestDataContainer(
+                TopRequestData(expectedValues, expectedAfter)))
         val mockStore = mock<Store<TopRequestDataContainer, TopRequestParameters>>()
         // Now we inject our mock into the data source. You could do this with Dagger, but it is
         // an overkill from my point of view, or you could also write a testing flavor for the
@@ -50,6 +52,8 @@ internal class DataFacadeSpek : SubjectSpek<DataFacade>({
         // Parameters do not matter because of the mocked method on the injected delegate
         subject.getTop("", TimeRange.ALL_TIME, 0)  // Parameters do not matter because of the injected delegate
                 .subscribe(testSubscriber)
+        testSubscriber.awaitTerminalEvent()
+        TopRequestSource.pageMap[1] = expectedAfter
         testSubscriber.assertNoErrors()
         testSubscriber.assertValues(
                 *(expectedValues.map { TopRequestEntityMapper.transform(it.data) }).toTypedArray())

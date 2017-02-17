@@ -37,6 +37,7 @@ internal class TopRequestSourceSpek : Spek({
                 .subscribe(testSubscriber)
         testSubscriber.assertNoErrors()
         testSubscriber.onNextEvents.forEach {
+            assertTrue { it.data.after.isNotEmpty() }
             it.data.children.let {
                 children ->
                     assertEquals(expectedSize, children.size, "Amount of posts not as expected")

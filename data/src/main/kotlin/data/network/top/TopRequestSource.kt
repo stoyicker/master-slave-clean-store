@@ -21,7 +21,8 @@ internal object TopRequestSource {
             .build()
             .create(ApiService::class.java)
     // This wraps the implementation of pagination in the API
-    private val pageMap = mutableMapOf(0 to "")
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal val pageMap = mutableMapOf(0 to "")
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal var delegate: Store<TopRequestDataContainer, TopRequestParameters>
 
@@ -51,8 +52,8 @@ internal object TopRequestSource {
      */
     internal fun get(topRequestParameters: TopRequestParameters) = delegate.get(topRequestParameters)
             // The doOnNext allows us to intercept the interpretation of pagination of the API
-            // so that the app only needs to know what page it wants, not how the API implements
-            // pagination
+            // so that the outer world only needs to know what page it wants, not how the API
+            // implements pagination
             .doOnNext { pageMap.put(topRequestParameters.page + 1, it.data.after) }
 
     /**

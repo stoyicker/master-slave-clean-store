@@ -37,9 +37,9 @@ uploadReleaseToGitHub() {
     UPLOAD_URL=$(echo ${UPLOAD_URL} | sed 's/{?name,label}/?name=app-debug.aar/')
 
     # Build the aar
-    ./gradlew :sdk:assembleDebug
+    ./gradlew :assembleDebug
     # Copy it out of its cave
-    cp sdk/build/outputs/aar/app-debug.apk .
+    cp app/build/outputs/aar/app-debug.apk .
 
     # Attach the artifact
     curl -D - \
@@ -55,7 +55,6 @@ uploadReleaseToGitHub() {
 
 case ${BRANCH_NAME} in
     "master")
-        ./gradlew :sdk:assembleImplementedDebug
         ARTIFACT_VERSION=$(git rev-list --count HEAD)
         uploadReleaseToGitHub
         ;;

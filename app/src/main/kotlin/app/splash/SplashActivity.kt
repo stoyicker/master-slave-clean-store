@@ -2,6 +2,7 @@ package app.splash
 
 import android.content.Intent
 import android.os.Handler
+import android.support.annotation.VisibleForTesting
 import android.support.v7.app.AppCompatActivity
 import app.gaming.TopGamingActivity
 
@@ -43,6 +44,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val SHOW_TIME_MILLIS = 2000L
+        @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+        internal const val SHOW_TIME_MILLIS = 2000L
     }
 }

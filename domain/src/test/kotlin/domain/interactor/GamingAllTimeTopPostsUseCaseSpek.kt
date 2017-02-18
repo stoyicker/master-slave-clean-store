@@ -70,7 +70,7 @@ internal class GamingAllTimeTopPostsUseCaseSpek : SubjectSpek<GamingAllTimeTopPo
         verifyNoMoreInteractions(MOCK_FACADE)
     }
 }) {
-    companion object {
+    private companion object {
         private const val PAGE = 0
         private val EXECUTION_THREAD_SCHEDULE_IMMEDIATELY = object : PostExecutionThread {
             override fun provideScheduler(): Scheduler = Schedulers.immediate()

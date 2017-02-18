@@ -15,7 +15,7 @@ class TopGamingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_top_gaming)
     }
 
-    companion object {
+    internal companion object {
         /**
          * Safe way to provide an intent to route to this activity. More useful if it were to have
          * parameters for example, but a good idea to have nevertheless.

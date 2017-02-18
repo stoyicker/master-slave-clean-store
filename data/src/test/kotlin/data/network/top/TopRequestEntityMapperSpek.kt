@@ -37,7 +37,7 @@ internal class TopRequestEntityMapperSpek : SubjectSpek<TopRequestEntityMapper>(
         assertEquivalent(source, subject.transform(source))
     }
 }) {
-    companion object {
+    private companion object {
         private fun assertEquivalent(dataPost: DataPost, post: Post) {
             assertEquals(dataPost.title, post.title)
             assertEquals(dataPost.subreddit, post.subreddit)

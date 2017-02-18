@@ -5,9 +5,10 @@ import rx.Scheduler
 import rx.schedulers.Schedulers
 
 /**
- * This class acts as a dependency holder. You could also a DI framework like Dagger for example,
- * but to only inject a single dependency, which is also a singleton, might as well do it myself
- * instead.
+ * Global configuration holder for the module.
+ * Note how this class acts as a dependency holder. You could also a DI framework like Dagger for
+ * example, but to only inject a single dependency, which is also a singleton, might as well do it
+ * myself instead.
  */
 object Domain {
     internal lateinit var topPostsFacade: DomainTopPostsFacade

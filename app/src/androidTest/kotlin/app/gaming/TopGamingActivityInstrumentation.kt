@@ -18,7 +18,7 @@ import org.junit.rules.ExpectedException
 /**
  * Instrumentation for TopGamingActivityInstrumentation.
  */
-class TopGamingActivityInstrumentation {
+internal class TopGamingActivityInstrumentation {
     @JvmField
     @Rule
     val activityTestRule = ActivityTestRule(TopGamingActivity::class.java)

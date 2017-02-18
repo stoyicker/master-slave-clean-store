@@ -4,7 +4,9 @@ import android.support.annotation.VisibleForTesting
 import com.nytimes.android.external.store.base.impl.Store
 import com.nytimes.android.external.store.base.impl.StoreBuilder
 import com.nytimes.android.external.store.middleware.GsonParserFactory
+import data.CacheablePagedSource
 import data.network.common.ApiService
+import domain.interactor.GamingAllTimeTopPostsUseCase
 import okio.BufferedSource
 import org.jorge.ms.data.BuildConfig
 import retrofit2.Retrofit
@@ -13,7 +15,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 /**
  * Contains the data source for top requests.
  */
-internal object TopRequestSource {
+internal object TopRequestSource : CacheablePagedSource {
     private val retrofit: ApiService = Retrofit.Builder()
             .baseUrl(BuildConfig.API_URL)
             .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -57,12 +59,27 @@ internal object TopRequestSource {
             .doOnNext { pageMap.put(topRequestParameters.page + 1, it.data.after) }
 
     /**
+     * Clears cached entries starting from a given page.
+     * @param page The page to start from (inclusive).
+     */
+    override fun clearCacheFromPage(page: Int) {
+        val safePage = Math.max(0, page)
+        while (pageMap.size > safePage) {
+            pageMap.remove(pageMap.size - 1)
+            delegate.clear(TopRequestParameters(
+                    GamingAllTimeTopPostsUseCase.SUBREDDIT,
+                    GamingAllTimeTopPostsUseCase.TIME_RANGE,
+                    0))
+        }
+    }
+
+    /**
      * Provides a Fetcher for the top store.
      * @param topRequestParameters The parameters for the request.
      * @see com.nytimes.android.external.store.base.Fetcher
      */
     private fun topFetcher(topRequestParameters: TopRequestParameters) = retrofit
-            .top(topRequestParameters.subreddit, topRequestParameters.time,
+            .top(topRequestParameters.subreddit, topRequestParameters.time.value,
                     if (pageMap.containsKey(topRequestParameters.page))
                         pageMap[topRequestParameters.page]
                     else

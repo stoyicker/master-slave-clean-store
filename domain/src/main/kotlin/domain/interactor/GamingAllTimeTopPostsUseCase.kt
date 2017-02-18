@@ -24,7 +24,7 @@ class GamingAllTimeTopPostsUseCase(page: Int, postExecutionThread: PostExecution
             = Domain.topPostsFacade.getTop(SUBREDDIT, TIME_RANGE, safePage)
 
     companion object {
-        private const val SUBREDDIT = "gaming"
-        private val TIME_RANGE = TimeRange.ALL_TIME
+        const val SUBREDDIT = "gaming"
+        val TIME_RANGE = TimeRange.ALL_TIME
     }
 }

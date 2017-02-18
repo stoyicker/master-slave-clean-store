@@ -3,7 +3,7 @@ package data.network.top
 import com.google.gson.Gson
 import data.network.common.ApiService
 import domain.entity.TimeRange
-import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.SubjectSpek
 import org.jetbrains.spek.api.dsl.it
 import org.jorge.ms.data.BuildConfig
 import org.junit.platform.runner.JUnitPlatform
@@ -18,7 +18,9 @@ import kotlin.test.assertTrue
  * Integration test to guarantee validity of endpoint, request formation and model.
  */
 @RunWith(JUnitPlatform::class)
-internal class TopRequestSourceIntegrationSpek : Spek({
+internal class TopRequestSourceIntegrationSpek : SubjectSpek<TopRequestSource>({
+    subject { TopRequestSource } // <- Specify singleton instance as test subject
+
     it("should always fetch models with non-empty values for the attributes kept") {
         val retrofit: ApiService = Retrofit.Builder()
                 .baseUrl(BuildConfig.API_URL)

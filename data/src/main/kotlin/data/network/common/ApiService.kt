@@ -24,7 +24,7 @@ internal interface ApiService {
             @Query(QUERY_PARAM_AFTER) after: CharSequence?,
             @Query(QUERY_PARAM_LIMIT) limit: Int): Observable<ResponseBody>
 
-    companion object {
+    private companion object {
         private const val ROUTE_SUBREDDIT = "r"
         private const val PATH_PARAM_SUBREDDIT_NAME = "subreddit"
         private const val METHOD_TOP = "top"

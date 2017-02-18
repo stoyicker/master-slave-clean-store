@@ -13,7 +13,7 @@ import org.junit.Test
 /**
  * Instrumentation for SplashActivity.
  */
-class SplashActivityInstrumentation {
+internal class SplashActivityInstrumentation {
     @JvmField
     @Rule
     val activityTestRule = ActivityTestRule(SplashActivity::class.java)

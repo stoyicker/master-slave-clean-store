@@ -1,4 +1,4 @@
-package data
+package data.facade
 
 import data.network.top.TopRequestDataContainer
 import data.network.top.TopRequestEntityMapper
@@ -30,7 +30,7 @@ object TopPostsFacade : DomainTopPostsFacade {
      */
     override fun getTop(subreddit: CharSequence, timeRange: TimeRange, page: Int)
         : Observable<Post> = sanitizeTopResponse(
-                TopRequestSource.get(TopRequestParameters(subreddit, timeRange.value, page)))
+                TopRequestSource.get(TopRequestParameters(subreddit, timeRange, page)))
 
     /**
      * Prepares the data in a top response to be consumed by outer modules.

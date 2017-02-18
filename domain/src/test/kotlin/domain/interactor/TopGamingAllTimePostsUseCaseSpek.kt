@@ -24,11 +24,11 @@ import rx.schedulers.Schedulers
 
 /**
  * Tests for the all-time gaming top posts use case.
- * @see GamingAllTimeTopPostsUseCase
+ * @see TopGamingAllTimePostsUseCase
  */
 @RunWith(JUnitPlatform::class)
-internal class GamingAllTimeTopPostsUseCaseSpek : SubjectSpek<GamingAllTimeTopPostsUseCase>({
-    subject { GamingAllTimeTopPostsUseCase(PAGE, EXECUTION_THREAD_SCHEDULE_IMMEDIATELY) }
+internal class TopGamingAllTimePostsUseCaseSpek : SubjectSpek<TopGamingAllTimePostsUseCase>({
+    subject { TopGamingAllTimePostsUseCase(PAGE, EXECUTION_THREAD_SCHEDULE_IMMEDIATELY) }
 
     beforeEachTest {
         reset(MOCK_FACADE)

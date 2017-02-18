@@ -4,6 +4,7 @@ final def jUnitVersion = "4.12"
 final def kotlinVersion = rootProject.ext.kotlinVersion
 final def mockitoKotlinVersion = "1.1.0"
 final def retrofitVersion = "2.1.0"
+final def rxAndroidVersion = "1.2.1"
 final def rxJavaVersion = "1.2.6"
 final def spekVersion = "1.1.0-beta2"
 final def storeVersion = "2.0.0"
@@ -37,12 +38,13 @@ rootProject.ext.compileDataDependencies = [
         "com.nytimes.android:middleware:$storeVersion"
 ]
 
-rootProject.ext.compilePresentationDependencies = [
-        "com.android.support:appcompat-v7:$supportVersion",
-        "com.android.support:design:$supportVersion"
-]
-
-rootProject.ext.androidTestPresentationDependencies = [
+rootProject.ext.androidTestCompilePresentationDependencies = [
         "com.android.support.test.espresso:espresso-core:$espressoVersion",
         "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
+]
+
+rootProject.ext.compilePresentationDependencies = [
+        "io.reactivex:rxandroid:$rxAndroidVersion",
+        "com.android.support:appcompat-v7:$supportVersion",
+        "com.android.support:design:$supportVersion"
 ]

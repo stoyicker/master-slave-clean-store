@@ -6,7 +6,7 @@ import com.nytimes.android.external.store.base.impl.StoreBuilder
 import com.nytimes.android.external.store.middleware.GsonParserFactory
 import data.CacheablePagedSource
 import data.network.common.ApiService
-import domain.interactor.GamingAllTimeTopPostsUseCase
+import domain.interactor.TopGamingAllTimePostsUseCase
 import okio.BufferedSource
 import org.jorge.ms.data.BuildConfig
 import retrofit2.Retrofit
@@ -67,8 +67,8 @@ internal object TopRequestSource : CacheablePagedSource {
         while (pageMap.size > safePage) {
             pageMap.remove(pageMap.size - 1)
             delegate.clear(TopRequestParameters(
-                    GamingAllTimeTopPostsUseCase.SUBREDDIT,
-                    GamingAllTimeTopPostsUseCase.TIME_RANGE,
+                    TopGamingAllTimePostsUseCase.SUBREDDIT,
+                    TopGamingAllTimePostsUseCase.TIME_RANGE,
                     0))
         }
     }

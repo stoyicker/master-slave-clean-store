@@ -5,7 +5,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
-import domain.interactor.GamingAllTimeTopPostsUseCase
+import domain.interactor.TopGamingAllTimePostsUseCase
 import org.jetbrains.spek.api.SubjectSpek
 import org.jetbrains.spek.api.dsl.it
 import org.junit.platform.runner.JUnitPlatform
@@ -47,8 +47,8 @@ internal class TopRequestSourceSpek : SubjectSpek<TopRequestSource>({
             subject.clearCacheFromPage(fromPage)
             verify(TopRequestSource.delegate, times(size - safePage))
                     .clear(eq(TopRequestParameters(
-                            GamingAllTimeTopPostsUseCase.SUBREDDIT,
-                            GamingAllTimeTopPostsUseCase.TIME_RANGE,
+                            TopGamingAllTimePostsUseCase.SUBREDDIT,
+                            TopGamingAllTimePostsUseCase.TIME_RANGE,
                             0)))
             verifyNoMoreInteractions(TopRequestSource.delegate)
             assertEquals(safePage, TopRequestSource.pageMap.size)

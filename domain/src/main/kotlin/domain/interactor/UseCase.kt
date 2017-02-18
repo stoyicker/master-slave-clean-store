@@ -4,28 +4,29 @@ import domain.Domain
 import domain.exec.PostExecutionThread
 import rx.Observable
 import rx.Subscriber
+import rx.Subscription
 import rx.subscriptions.Subscriptions
 
 /**
  * Abstraction used to represent domain needs.
  */
 abstract class UseCase<T>(private val postExecutionThread: PostExecutionThread) {
-    private var subscription = Subscriptions.empty()
+    private lateinit var subscription: Subscription
 
     /**
      * Defines the observable that represents this use case.
      */
-    abstract fun buildUseCaseObservable(): Observable<T>
+    protected abstract fun buildUseCaseObservable(): Observable<T>
 
     /**
      * Executes the use case.
      * @param subscriber The subscriber to notify of the results.
      */
-    fun execute(subscriber: Subscriber<T>) {
-        subscription = buildUseCaseObservable()
+    fun execute(subscriber: Subscriber<T>?) {
+        val observable = buildUseCaseObservable()
                 .subscribeOn(Domain.useCaseScheduler)
                 .observeOn(postExecutionThread.provideScheduler())
-                .subscribe(subscriber)
+        subscription = observable.subscribe(subscriber) ?: Subscriptions.empty()
     }
 
     /**

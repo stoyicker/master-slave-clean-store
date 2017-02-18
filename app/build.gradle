@@ -48,12 +48,12 @@ repositories {
 dependencies {
     compile project(':data')
     compile project(':domain')
-    compile rootProject.ext.compileDependencies
-    compile rootProject.ext.compilePresentationDependencies
-    rootProject.ext.androidTestPresentationDependencies.forEach {
+    rootProject.ext.androidTestCompilePresentationDependencies.forEach {
         compile(it) {
             exclude group: 'com.google.code.findbugs'
             exclude module: 'support-annotations'
         }
     }
+    compile rootProject.ext.compileDependencies
+    compile rootProject.ext.compilePresentationDependencies
 }

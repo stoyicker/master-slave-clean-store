@@ -1,8 +1,9 @@
 package app.splash
 
-import android.os.Bundle
+import android.content.Intent
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
+import app.gaming.TopGamingActivity
 
 /**
  * A simple activity that acts as a splash screen.
@@ -11,8 +12,10 @@ import android.support.v7.app.AppCompatActivity
  * to be drawn.
  */
 class SplashActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private lateinit var handler: Handler
+
+    override fun onResume() {
+        super.onResume()
         scheduleContentOpening()
     }
 
@@ -20,15 +23,23 @@ class SplashActivity : AppCompatActivity() {
      * Schedules the app content to be shown.
      */
     private fun scheduleContentOpening() {
-        Handler().postDelayed({ openContent() }, SHOW_TIME_MILLIS)
+        handler = Handler()
+        handler.postDelayed({ openContent() }, SHOW_TIME_MILLIS)
     }
 
     /**
      * Closes the splash and introduces the actual content of the app.
      */
     private fun openContent() {
-//      TODO TopPostsActivity.getCallingIntent() yadayada and append flags to not to keep the stack
+        val intent = TopGamingActivity.getCallingIntent(this)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
         supportFinishAfterTransition()
+    }
+
+    override fun onPause() {
+        handler.removeCallbacksAndMessages(null)
+        super.onPause()
     }
 
     companion object {

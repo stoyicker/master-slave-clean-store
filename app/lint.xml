@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <lint>
-    <issue id="GoogleAppIndexingWarning" severity="ignore" />
+    <issue id="GoogleAppIndexingWarning" severity="ignore"/>
     <issue id="InvalidPackage">
         <ignore regexp="junit"/>
     </issue>
+    <!-- This check is broken when using Kotlin -->
+    <issue id="UnusedResources" severity="ignore"/>
 </lint>

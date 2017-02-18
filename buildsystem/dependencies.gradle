@@ -38,7 +38,8 @@ rootProject.ext.compileDataDependencies = [
 ]
 
 rootProject.ext.compilePresentationDependencies = [
-        "com.android.support:appcompat-v7:$supportVersion"
+        "com.android.support:appcompat-v7:$supportVersion",
+        "com.android.support:design:$supportVersion"
 ]
 
 rootProject.ext.androidTestPresentationDependencies = [

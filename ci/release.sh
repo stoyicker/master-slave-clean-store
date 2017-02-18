@@ -9,7 +9,7 @@ uploadReleaseToGitHub() {
     LAST_TAG=$(git describe --tags --abbrev=0)
     THIS_RELEASE=$(git rev-parse --short ${BRANCH_NAME})
     local IFS=$'\n'
-    RELEASE_NOTES_ARRAY=($(git log --format=%B $LAST_TAG..$THIS_RELEASE | tr -d '\r'))
+    RELEASE_NOTES_ARRAY=($(git log --format=%B $LAST_TAG..$THIS_RELEASE | grep * | tr -d '\r'))
     for i in "${RELEASE_NOTES_ARRAY[@]}"
     do
         RELEASE_NOTES="$RELEASE_NOTES\\n$i"

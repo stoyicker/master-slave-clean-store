@@ -16,6 +16,5 @@ object TopRequestEntityMapper {
             dataPost.title,
             dataPost.subreddit,
             dataPost.score,
-            // TODO If time: Convert permalink in something self-contained more cleanly
             "${BuildConfig.API_URL}/${dataPost.permalink}")
 }

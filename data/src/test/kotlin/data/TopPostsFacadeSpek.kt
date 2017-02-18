@@ -21,8 +21,7 @@ import org.junit.runner.RunWith
 import rx.Observable
 import rx.observers.TestSubscriber
 import java.net.UnknownHostException
-
-// TODO If time: there seems to be some duplicated code here
+import kotlin.test.assertEquals
 
 /**
  * Unit tests for TopPostsFacade.
@@ -53,7 +52,7 @@ internal class TopPostsFacadeSpek : SubjectSpek<TopPostsFacade>({
         subject.getTop("", TimeRange.ALL_TIME, 0)  // Parameters do not matter because of the injected delegate
                 .subscribe(testSubscriber)
         testSubscriber.awaitTerminalEvent()
-        TopRequestSource.pageMap[1] = expectedAfter
+        assertEquals(TopRequestSource.pageMap[1], expectedAfter, "Last item not saved.")
         testSubscriber.assertNoErrors()
         testSubscriber.assertValues(
                 *(expectedValues.map { TopRequestEntityMapper.transform(it.data) }).toTypedArray())

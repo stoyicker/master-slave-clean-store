@@ -5,5 +5,5 @@ code documentation generation tool for Kotlin, similar to what Javadoc is for Ja
  `module_name/build/dokka/module_name/index.html`.
 # Tests
  Unit and integration tests are written using [Spek](htts://spekframework.org), the specification
- framework for Kotlin. Run them with the `test` Gradle task in each module. To run them from the
- IDE, you can install the Spek plugin from the IDEA plugin browser.
+ framework for Kotlin. Run them with the `test` Gradle task in each module.
+ Instrumentation tests are only present in the `app` module and can be run using the `cAT` task.

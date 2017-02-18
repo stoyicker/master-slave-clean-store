@@ -15,12 +15,10 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 /**
- * "Integration" tests to guarantee validity of endpoint, request formation and model.
- * // TODO If time: separate integration tests into their own source set with their own task
- * // TODO If time: more cases, guarantee good behaviour on non-happy cases
+ * Integration test to guarantee validity of endpoint, request formation and model.
  */
 @RunWith(JUnitPlatform::class)
-internal class TopRequestSourceSpek : Spek({
+internal class TopRequestSourceIntegrationSpek : Spek({
     it("should always fetch models with non-empty values for the attributes kept") {
         val retrofit: ApiService = Retrofit.Builder()
                 .baseUrl(BuildConfig.API_URL)

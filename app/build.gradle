@@ -36,8 +36,8 @@ android {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
 
-    sourceSets {
-        main.java.srcDirs = ['src/main/kotlin']
+    sourceSets.forEach {
+        it.java.srcDirs = ["src/$it.name/kotlin"]
     }
 }
 
@@ -49,4 +49,11 @@ dependencies {
     compile project(':data')
     compile project(':domain')
     compile rootProject.ext.compileDependencies
+    compile rootProject.ext.compilePresentationDependencies
+    rootProject.ext.androidTestPresentationDependencies.forEach {
+        compile(it) {
+            exclude group: 'com.google.code.findbugs'
+            exclude module: 'support-annotations'
+        }
+    }
 }

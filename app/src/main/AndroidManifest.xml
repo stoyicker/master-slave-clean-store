@@ -5,8 +5,12 @@
     <application
         android:name="app.MainApplication"
         android:allowBackup="false"
-        android:icon="@android:mipmap/sym_def_app_icon">
-        <activity android:name="app.MainActivity">
+        android:icon="@null"
+        android:launchMode="singleTask"
+        android:theme="@style/AppTheme.SplashTheme">
+        <activity
+            android:name="app.splash.SplashActivity"
+            android:screenOrientation="locked">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

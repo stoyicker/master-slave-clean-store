@@ -2,11 +2,17 @@
 <resources>
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
+        <item name="colorAccent">@color/accent</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
-        <item name="android:textColorSecondary">@color/textColorPrimary</item>
-        <item name="android:colorBackground">@color/background</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
+        <item name="android:windowBackground">@color/windowBackground</item>
+        <item name="android:progressBarStyleHorizontal">@style/ProgressBarHorizontalMaterial</item>
     </style>
     <style name="AppTheme.SplashTheme">
         <item name="android:windowBackground">@drawable/splash_background</item>
+    </style>
+    <style name="ProgressBarHorizontalMaterial" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
+        <!-- Unify pre-lollipop. The material one is an animated vector so it is a no-go -->
+        <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_holo</item>
     </style>
 </resources>

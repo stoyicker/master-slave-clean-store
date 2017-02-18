@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_label">reddit</string>
+    <string name="top_posts_error_description">Finished loading</string>
+    <string name="top_posts_error_action">Retry</string>
 </resources>

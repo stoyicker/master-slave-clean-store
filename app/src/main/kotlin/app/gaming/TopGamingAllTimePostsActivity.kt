@@ -20,7 +20,7 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_top_gaming)
         // https://kotlinlang.org/docs/tutorials/android-plugin.html#using-kotlin-android-extensions
         coordinator = TopGamingListCoordinator(TopGamingAllTimePostsView(content, progress, error))
-        coordinator.actionLoadNextPage()
+//        coordinator.actionLoadNextPage() TODO Uncomment this, see what happens with API level
     }
 
     /**

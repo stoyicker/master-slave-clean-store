@@ -6,7 +6,7 @@ import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.rule.ActivityTestRule
-import app.gaming.TopGamingActivity
+import app.gaming.TopGamingAllTimePostsActivity
 import org.junit.Rule
 import org.junit.Test
 
@@ -26,7 +26,7 @@ internal class SplashActivityInstrumentation {
     @Test
     fun finishesIntoContent() {
         val activityMonitor = Instrumentation.ActivityMonitor(
-                TopGamingActivity::class.java.name, null, true)
+                TopGamingAllTimePostsActivity::class.java.name, null, true)
         assert(activityMonitor.waitForActivityWithTimeout(SplashActivity.SHOW_TIME_MILLIS * 2)
                 != null)
         assert(activityTestRule.activity.isFinishing)

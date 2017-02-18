@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Handler
 import android.support.annotation.VisibleForTesting
 import android.support.v7.app.AppCompatActivity
-import app.gaming.TopGamingActivity
+import app.gaming.TopGamingAllTimePostsActivity
 
 /**
  * A simple activity that acts as a splash screen.
@@ -32,7 +32,7 @@ class SplashActivity : AppCompatActivity() {
      * Closes the splash and introduces the actual content of the app.
      */
     private fun openContent() {
-        val intent = TopGamingActivity.getCallingIntent(this)
+        val intent = TopGamingAllTimePostsActivity.getCallingIntent(this)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
         supportFinishAfterTransition()

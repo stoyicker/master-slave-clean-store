@@ -21,7 +21,7 @@ import org.junit.rules.ExpectedException
 internal class TopGamingActivityInstrumentation {
     @JvmField
     @Rule
-    val activityTestRule = ActivityTestRule(TopGamingActivity::class.java)
+    val activityTestRule = ActivityTestRule(TopGamingAllTimePostsActivity::class.java)
     @JvmField
     @Rule
     val expectedException: ExpectedException = ExpectedException.none()
@@ -46,7 +46,7 @@ internal class TopGamingActivityInstrumentation {
     }
 
     @Test
-    fun scrollingCausesToolbarToCollapse() {
+    fun scrollingCausesToolbarToCollapseAndRequestsALoad() {
 
     }
 

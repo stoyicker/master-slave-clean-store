@@ -9,7 +9,7 @@ import kotlin.properties.Delegates
 
 /**
  * A use case for loading all-time top posts in r/gaming. If this app was to support different
- * subreddits or time ranges I would let the presenter choose which, but because they are
+ * subreddits or time ranges I would let an upper layer choose which, but because they are
  * constrained at the business level they make more sense here.
  * @param page The page to load, 0-indexed.
  * @param postExecutionThread A representation of thread to receive the results of the execution.

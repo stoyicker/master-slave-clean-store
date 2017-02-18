@@ -6,4 +6,10 @@
     </issue>
     <!-- This check is broken when using Kotlin -->
     <issue id="UnusedResources" severity="ignore"/>
+    <!-- This check is broken when using KotlinX -->
+    <issue id="UnusedIds">
+        <ignore regexp="content"/>
+        <ignore regexp="progress"/>
+        <ignore regexp="error"/>
+    </issue>
 </lint>

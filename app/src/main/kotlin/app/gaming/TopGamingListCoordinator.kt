@@ -5,22 +5,31 @@ import app.LoadableContentView
 import app.UIPostExecutionThread
 import domain.entity.Post
 import domain.interactor.TopGamingAllTimePostsUseCase
+import domain.interactor.UseCase
 import rx.Subscriber
 
 /**
- * A presenter that takes care of binding the logic of the top gaming posts request to the view
- * that shows its outcome.
- * @param view The view associated to this presenter.
+ * Takes care of binding the logic of the top gaming posts request to the view that shows its
+ * outcome.
+ * @param view The view associated to this object.
  */
-internal class TopGamingListPresenter(private val view: LoadableContentView<Post>) {
+internal class TopGamingListCoordinator(private val view: LoadableContentView<Post>) {
     private var page = -1
+    private var ongoingUseCase: UseCase<Post>? = null
 
     /**
      * Triggers the load of the next page.
      */
     internal fun actionLoadNextPage() {
-        TopGamingAllTimePostsUseCase(++page, UIPostExecutionThread)
-                .execute(NextPageLoadSubscriber())
+        ongoingUseCase = TopGamingAllTimePostsUseCase(++page, UIPostExecutionThread)
+        ongoingUseCase!!.execute(NextPageLoadSubscriber())
+    }
+
+    /**
+     * Aborts the on-going next page load, if any.
+     */
+    internal fun abortActionLoadNextPage() {
+        ongoingUseCase?.terminate()
     }
 
     /**
@@ -44,12 +53,14 @@ internal class TopGamingListPresenter(private val view: LoadableContentView<Post
         }
 
         override fun onError(throwable: Throwable?) {
+            ongoingUseCase = null
             view.hideLoadingLayout()
             view.hideContentLayout()
             view.showErrorLayout(throwable)
         }
 
         override fun onCompleted() {
+            ongoingUseCase = null
             view.hideLoadingLayout()
             // * is the spread operator. We use it just to build an immutable list
             view.showContentLayout(listOf(*posts.toTypedArray()))

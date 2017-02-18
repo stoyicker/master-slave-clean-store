@@ -37,7 +37,7 @@ uploadReleaseToGitHub() {
     UPLOAD_URL=$(echo ${UPLOAD_URL} | sed 's/{?name,label}/?name=app-debug.aar/')
 
     # Build the aar
-    ./gradlew :assembleDebug
+    ./gradlew :app:assembleDebug
     # Copy it out of its cave
     cp app/build/outputs/aar/app-debug.apk .
 

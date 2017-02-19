@@ -6,12 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    tools:targetApi="honeycomb"> <!-- Because of animateLayoutChanges -->
+    android:fitsSystemWindows="true"
+    tools:targetApi="honeycomb">
     <android.support.design.widget.AppBarLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:layout_height="wrap_content">
         <include layout="@layout/include_toolbar"
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content"

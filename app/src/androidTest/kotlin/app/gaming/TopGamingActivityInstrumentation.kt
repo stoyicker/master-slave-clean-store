@@ -16,7 +16,11 @@ import org.junit.Test
 import org.junit.rules.ExpectedException
 
 /**
- * Instrumentation for TopGamingActivityInstrumentation.
+ * Instrumentation for TopGamingActivityInstrumentation. Here we could tests other things like
+ * the error and progress views being shown when they are supposed to or the toolbar hiding on
+ * scroll. However this would require using mockito, which breaks the dex limit, so we would
+ * need a new flavor and some additional setup to ensure that the main flavor does not get
+ * multidexed so I am leaving it aside.
  */
 internal class TopGamingActivityInstrumentation {
     @JvmField
@@ -27,36 +31,21 @@ internal class TopGamingActivityInstrumentation {
     val expectedException: ExpectedException = ExpectedException.none()
 
     @Test
-    fun activityIsShown() {
+    internal fun activityIsShown() {
         onView(withId(android.R.id.content)).check(matches(isCompletelyDisplayed()))
     }
 
     @Test
-    fun toolbarIsCompletelyShownOnOpening() {
+    internal fun toolbarIsCompletelyShownOnOpening() {
         val completelyDisplayedMatcher = matches(isCompletelyDisplayed())
         onView(isAssignableFrom(Toolbar::class.java)).check(completelyDisplayedMatcher)
         onView(withText(R.string.app_label)).check(completelyDisplayedMatcher)
     }
 
     @Test
-    fun goingBackPausesApp() {
+    internal fun goingBackPausesApp() {
         expectedException.expect(NoActivityResumedException::class.java)
         expectedException.expectMessage("Pressed back and killed the app")
         pressBack()
-    }
-
-    @Test
-    fun scrollingCausesToolbarToCollapseAndRequestsALoad() {
-
-    }
-
-    @Test
-    fun clickingCausesIntentToBeCalledIfItCanBeHandled() {
-
-    }
-
-    @Test
-    fun clickingCausesDialogToBeShownIfItCanNotBeHandled() {
-
     }
 }

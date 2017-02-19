@@ -9,11 +9,11 @@ import domain.interactor.UseCase
 import rx.Subscriber
 
 /**
- * Takes care of binding the logic of the top gaming posts request to the view that shows its
+ * Takes care of binding the logic of the top gaming posts request to the view that handles its
  * outcome.
  * @param view The view associated to this object.
  */
-internal class TopGamingListCoordinator(private val view: LoadableContentView<Post>) {
+internal class TopGamingAllTimePostsCoordinator(private val view: LoadableContentView<Post>) {
     private var page = 0
     private var ongoingUseCase: UseCase<Post>? = null
 
@@ -54,17 +54,17 @@ internal class TopGamingListCoordinator(private val view: LoadableContentView<Po
 
         override fun onError(throwable: Throwable?) {
             ongoingUseCase = null
+            view.showErrorLayout()
             view.hideLoadingLayout()
             view.hideContentLayout()
-            view.showErrorLayout(throwable)
         }
 
         override fun onCompleted() {
             page++
             ongoingUseCase = null
-            view.hideLoadingLayout()
             // * is the spread operator. We use it just to build an immutable list
             view.showContentLayout(listOf(*posts.toTypedArray()))
+            view.hideLoadingLayout()
             view.hideErrorLayout()
         }
     }

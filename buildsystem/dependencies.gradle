@@ -34,8 +34,7 @@ rootProject.ext.providedDataDependencies = [
 rootProject.ext.compileDataDependencies = [
         "com.squareup.retrofit2:retrofit:$retrofitVersion",
         "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion",
-        "com.nytimes.android:store:$storeVersion",
-        "com.nytimes.android:middleware:$storeVersion"
+        "com.nytimes.android:store:$storeVersion"
 ]
 
 rootProject.ext.androidTestCompilePresentationDependencies = [

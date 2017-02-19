@@ -4,4 +4,5 @@
         <ignore regexp="okio"/>
         <ignore regexp="retrofit"/>
     </issue>
+    <issue id="NewerVersionAvailable" severity="ignore"/>
 </lint>

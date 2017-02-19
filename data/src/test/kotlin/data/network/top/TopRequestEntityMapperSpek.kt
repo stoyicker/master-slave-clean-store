@@ -33,7 +33,7 @@ internal class TopRequestEntityMapperSpek : SubjectSpek<TopRequestEntityMapper>(
     }
 
     it("should transform when score is negative") {
-        val source = DataPost("another title", "yet another subreddit", -7, "one more permalink")
+        val source = DataPost("a title", "yet another subreddit", -7, "one more permalink")
         assertEquivalent(source, subject.transform(source))
     }
 }) {

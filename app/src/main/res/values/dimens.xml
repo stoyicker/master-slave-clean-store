@@ -2,4 +2,8 @@
 <resources>
     <dimen name="appbar_horizontal_padding">16dp</dimen>
     <dimen name="content_horizontal_margin">16dp</dimen>
+    <dimen name="footer_padding">32dp</dimen>
+    <dimen name="item_separation">16dp</dimen>
+    <dimen name="section_separator">16dp</dimen>
+    <dimen name="text_separation">12dp</dimen>
 </resources>

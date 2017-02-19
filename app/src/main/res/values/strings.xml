@@ -3,4 +3,5 @@
     <string name="app_label">reddit</string>
     <string name="top_posts_error_description">Finished loading</string>
     <string name="top_posts_error_action">Retry</string>
+    <string name="subreddit_template">/r/%s</string>
 </resources>

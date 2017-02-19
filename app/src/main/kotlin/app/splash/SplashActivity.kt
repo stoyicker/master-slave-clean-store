@@ -46,6 +46,6 @@ class SplashActivity : AppCompatActivity() {
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal companion object {
         @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-        internal const val SHOW_TIME_MILLIS = 2000L
+        internal const val SHOW_TIME_MILLIS = 1500L
     }
 }

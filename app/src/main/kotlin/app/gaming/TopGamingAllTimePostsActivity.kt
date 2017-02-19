@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import kotlinx.android.synthetic.main.include_toolbar.toolbar
 import kotlinx.android.synthetic.main.include_top_posts_view.content
 import kotlinx.android.synthetic.main.include_top_posts_view.error
 import kotlinx.android.synthetic.main.include_top_posts_view.progress
@@ -13,14 +14,16 @@ import org.jorge.ms.app.R
  * An Activity that shows the top posts from /r/gaming.
  */
 class TopGamingAllTimePostsActivity : AppCompatActivity() {
-    private lateinit var coordinator: TopGamingListCoordinator
+    private lateinit var coordinator: TopGamingAllTimePostsCoordinator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_top_gaming)
         // https://kotlinlang.org/docs/tutorials/android-plugin.html#using-kotlin-android-extensions
-        coordinator = TopGamingListCoordinator(TopGamingAllTimePostsView(content, progress, error))
-//        coordinator.actionLoadNextPage() TODO Uncomment this, see what happens with API level
+        setSupportActionBar(toolbar)
+        TopGamingAllTimePostsContentViewConfig.dumpOnto(content)
+        coordinator = TopGamingAllTimePostsCoordinator(TopGamingAllTimePostsView(content, error, progress))
+        coordinator.actionLoadNextPage()
     }
 
     /**

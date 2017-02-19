@@ -14,14 +14,14 @@ import rx.Subscriber
  * @param view The view associated to this object.
  */
 internal class TopGamingListCoordinator(private val view: LoadableContentView<Post>) {
-    private var page = -1
+    private var page = 0
     private var ongoingUseCase: UseCase<Post>? = null
 
     /**
      * Triggers the load of the next page.
      */
     internal fun actionLoadNextPage() {
-        ongoingUseCase = TopGamingAllTimePostsUseCase(++page, UIPostExecutionThread)
+        ongoingUseCase = TopGamingAllTimePostsUseCase(page, UIPostExecutionThread)
         ongoingUseCase!!.execute(NextPageLoadSubscriber())
     }
 
@@ -60,6 +60,7 @@ internal class TopGamingListCoordinator(private val view: LoadableContentView<Po
         }
 
         override fun onCompleted() {
+            page++
             ongoingUseCase = null
             view.hideLoadingLayout()
             // * is the spread operator. We use it just to build an immutable list

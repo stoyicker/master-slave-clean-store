@@ -1,20 +1,17 @@
 package app.gaming
 
 import android.content.Context
-import android.support.v4.view.ViewCompat
-import android.support.v4.view.ViewPropertyAnimatorListener
-import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
 import app.ext.getDimension
-import app.ext.getInteger
 import domain.entity.Post
 import org.jorge.ms.app.R
+
+
 
 /**
  * Configures the recycler view holding the post list.
@@ -24,11 +21,15 @@ internal object TopGamingAllTimePostsContentViewConfig {
      * Configures a view.
      * @recyclerView The view to configure.
      */
-    internal fun dumpOnto(recyclerView: RecyclerView) {
-        recyclerView.adapter = provideAdapter()
-        recyclerView.itemAnimator = provideItemAnimator()
-        recyclerView.layoutManager = provideLayoutManager(recyclerView.context)
-        recyclerView.setHasFixedSize(false)
+    internal fun dumpOnto(view: TopGamingAllTimePostsView, callback: CoordinatorBridgeCallback) {
+        view.contentView.let { recyclerView ->
+            recyclerView.adapter = provideAdapter()
+            recyclerView.layoutManager = provideLayoutManager(recyclerView.context)
+            recyclerView.addOnScrollListener(provideEndlessLoadListener(
+                    recyclerView.layoutManager, callback))
+            recyclerView.setHasFixedSize(false)
+        }
+        view.errorView.setOnClickListener { callback.onPageLoadRequested() }
     }
 
     /**
@@ -41,15 +42,18 @@ internal object TopGamingAllTimePostsContentViewConfig {
     }
 
     /**
-     * Provides an alpha-based item animator.
-     */
-    private fun provideItemAnimator() = ItemAnimator()
-
-    /**
      * Provides a layout manager based on the size of the screen.
      * @param context The context
      */
     private fun provideLayoutManager(context: Context) = LinearLayoutManager(context)
+
+    private fun provideEndlessLoadListener(layoutManager: RecyclerView.LayoutManager,
+                                           callback: CoordinatorBridgeCallback)
+            = object : EndlessLoadListener(layoutManager as LinearLayoutManager) {
+        override fun onLoadMore() {
+            callback.onPageLoadRequested()
+        }
+    }
 }
 
 /**
@@ -92,10 +96,11 @@ internal class Adapter : RecyclerView.Adapter<Adapter.ViewHolder>() {
         val firstInsertedPosition = items.size
         items.addAll(toAdd)
         notifyItemRangeInserted(firstInsertedPosition, toAdd.size)
+        notifyItemChanged(firstInsertedPosition - 1) // To remove the space for the footer
     }
 
     /**
-     * Very simple viewholder.
+     * Very simple viewholder that sets text and click event handling.
      * @param itemView The view to dump the held data.
      */
     internal class ViewHolder internal constructor(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -109,6 +114,7 @@ internal class Adapter : RecyclerView.Adapter<Adapter.ViewHolder>() {
          */
         internal fun render(item: Post) {
             DEFAULT_BOTTOM_MARGIN = (itemView.layoutParams as RecyclerView.LayoutParams).bottomMargin
+            // TODO onItemClicked here somehow
             titleView.text = item.title
             scoreView.text = item.score.toString()
             subredditView.text = itemView.context.getString(R.string.subreddit_template, item.subreddit)
@@ -137,32 +143,28 @@ internal class Adapter : RecyclerView.Adapter<Adapter.ViewHolder>() {
 }
 
 /**
- * A simple item animator for this recycler view. There will be no removals, so there is no need
- * to specify an animation for them either.
+ * @see <a href="https://gist.githubusercontent.com/nesquena/d09dc68ff07e845cc622/raw/e2429b173f75afb408b420ad4088fed68240334c/EndlessRecyclerViewScrollListener.java">Adapted from CodePath</a>
  */
-private class ItemAnimator : DefaultItemAnimator() {
-    override fun animateAdd(holder: RecyclerView.ViewHolder?): Boolean {
-        if (holder != null) {
-            ViewCompat.setAlpha(holder.itemView, 0F)
-            ViewCompat.animate(holder.itemView)
-                    .alphaBy(1F)
-                    .setInterpolator(DecelerateInterpolator())
-                    .setDuration(holder.itemView.context
-                            .getInteger(android.R.integer.config_longAnimTime).toLong())
-                    .setListener(object : ViewPropertyAnimatorListener {
-                        override fun onAnimationStart(view: View) {
-                            dispatchAddStarting(holder)
-                        }
+abstract class EndlessLoadListener(
+        private val layoutManager: LinearLayoutManager) : RecyclerView.OnScrollListener() {
+    private var loading = true
+    private var previousTotalItemCount = 0
 
-                        override fun onAnimationEnd(view: View) {
-                            dispatchAddFinished(holder)
-                        }
-
-                        override fun onAnimationCancel(view: View) {}
-                    })
-            return true
+    override fun onScrolled(view: RecyclerView?, dx: Int, dy: Int) {
+        val lastVisibleItemPosition= layoutManager.findLastVisibleItemPosition()
+        val totalItemCount = layoutManager.itemCount
+        if (loading && (totalItemCount > previousTotalItemCount)) {
+            loading = false
+            previousTotalItemCount = totalItemCount
         }
-        return false
+        if (!loading && lastVisibleItemPosition == totalItemCount - 1) {
+            loading = true
+            onLoadMore()
+        }
     }
-}
 
+    /**
+     * Implement your refresh logic here.
+     */
+    protected abstract fun onLoadMore()
+}

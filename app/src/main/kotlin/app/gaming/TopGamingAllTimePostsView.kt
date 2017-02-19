@@ -9,8 +9,8 @@ import domain.entity.Post
  * Wraps UI behavior for top all time gaming posts scenario.
  */
 class TopGamingAllTimePostsView(
-       private val contentView: RecyclerView,
-       private val errorView: View,
+       internal val contentView: RecyclerView,
+       internal val errorView: View,
        private val progressView: View) : LoadableContentView<Post> {
     override fun showLoadingLayout() {
         progressView.visibility = View.VISIBLE

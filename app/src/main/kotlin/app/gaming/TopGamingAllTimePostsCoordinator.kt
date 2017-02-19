@@ -69,3 +69,19 @@ internal class TopGamingAllTimePostsCoordinator(private val view: LoadableConten
         }
     }
 }
+
+/**
+ * An interface for the view to communicate with the coordinator.
+ */
+internal interface CoordinatorBridgeCallback {
+    /**
+     * To be called when an item click happens.
+     * @param item The item clicked.
+     */
+    fun onItemClicked(item: Post)
+
+    /**
+     * To be called when a page load is requested.
+     */
+    fun onPageLoadRequested()
+}

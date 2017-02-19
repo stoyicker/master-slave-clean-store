@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import domain.entity.Post
 import kotlinx.android.synthetic.main.include_toolbar.toolbar
 import kotlinx.android.synthetic.main.include_top_posts_view.content
 import kotlinx.android.synthetic.main.include_top_posts_view.error
@@ -20,9 +21,18 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_top_gaming)
         // https://kotlinlang.org/docs/tutorials/android-plugin.html#using-kotlin-android-extensions
+        val view = TopGamingAllTimePostsView(content, error, progress)
         setSupportActionBar(toolbar)
-        TopGamingAllTimePostsContentViewConfig.dumpOnto(content)
-        coordinator = TopGamingAllTimePostsCoordinator(TopGamingAllTimePostsView(content, error, progress))
+        coordinator = TopGamingAllTimePostsCoordinator(view)
+        TopGamingAllTimePostsContentViewConfig.dumpOnto(view, object : CoordinatorBridgeCallback {
+            override fun onItemClicked(item: Post) {
+                // TODO Go to activity if supported
+            }
+
+            override fun onPageLoadRequested() {
+                coordinator.actionLoadNextPage()
+            }
+        })
         coordinator.actionLoadNextPage()
     }
 

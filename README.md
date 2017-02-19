@@ -1,3 +1,8 @@
+# Architecture
+This is a reactive app: it runs by reacting to user interactions. Here
+is how:
+![Architecture](Diagram1.png)
+
 # Language choice
 I chose Kotlin over Java because:
 * It compiles to Java bytecode.

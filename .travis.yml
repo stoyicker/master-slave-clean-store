@@ -2,42 +2,44 @@ language: android
 jdk: oraclejdk8
 android:
   components:
-    - tools
-    - platform-tools
-    - android-25
-    - build-tools-25.0.2
-    - extra-android-m2repository
-    - extra-google-m2repository
-    - platform-tools
+  - tools
+  - platform-tools
+  - android-25
+  - build-tools-25.0.2
+  - extra-android-m2repository
+  - extra-google-m2repository
+  - platform-tools
 branches:
   except:
-    - /^[0-9]/ # Workaround to not to trigger Travis with tags - https://github.com/travis-ci/travis-ci/issues/1532
+  - "/^[0-9]/"
 before_cache:
-  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+- rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
 before_install:
-  - echo org.gradle.jvmargs=-Xmx8704M > gradle.properties
+- openssl aes-256-cbc -K $encrypted_e70c6b8316b7_key -iv $encrypted_e70c6b8316b7_iv
+  -in alias.keystore.enc -out alias.keystore -d
+- echo org.gradle.jvmargs=-Xmx8704M > gradle.properties
 before_script:
-  - |
-      if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
-        echo "Do not open PRs against master; merge dev into master locally and push instead."
-        exit 1
-      fi
+- |
+  if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
+    echo "Do not open PRs against master; merge dev into master locally and push instead."
+    exit 1
+  fi
 script:
-  - ./gradlew clean build check dokka
+- "./gradlew clean build check dokka"
 after_success:
-  - |
-      if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
-        echo "CI on master succeded. Executing release tasks..."
-        ./ci/release.sh
-      fi
+- |
+  if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
+    echo "CI on master succeded. Executing release tasks..."
+    ./ci/release.sh
+  fi
 notifications:
   email:
     recipients:
-      - jorge.diazbenitosoriano@gmail.com
+    - jorge.diazbenitosoriano@gmail.com
     on_success: change
     on_failure: always

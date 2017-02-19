@@ -10,7 +10,7 @@
         android:id="@+id/text_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textIsSelectable="true"
+        android:textIsSelectable="false"
         android:clickable="false"
         android:background="@null"
         style="@style/TextAppearance.AppCompat.Title"/>
@@ -32,14 +32,14 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/text_separation"
             android:layout_marginEnd="@dimen/text_separation"
-            android:textIsSelectable="true"
+            android:textIsSelectable="false"
             android:background="@null"
             style="@style/TextAppearance.AppCompat.Subhead"/>
         <TextView
             android:id="@+id/text_subreddit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textIsSelectable="true"
+            android:textIsSelectable="false"
             android:background="@null"
             style="@style/TextAppearance.AppCompat.Subhead"/>
     </LinearLayout>

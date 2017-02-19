@@ -7,6 +7,24 @@ android {
     compileSdkVersion rootProject.ext.androidCompileSdkVersion
     buildToolsVersion rootProject.ext.androidBuildToolsVersion
 
+    signingConfigs {
+        minify {
+            storeFile new File("alias.keystore")
+            storePassword("keystorePwd")
+            keyAlias("alias")
+            keyPassword("keyPwd")
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.minify
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            shrinkResources true
+        }
+    }
+
     compileOptions {
         incremental false
     }

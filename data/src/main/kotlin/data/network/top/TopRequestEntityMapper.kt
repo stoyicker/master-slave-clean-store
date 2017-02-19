@@ -18,5 +18,5 @@ object TopRequestEntityMapper {
             dataPost.score,
             // This is rather ugly but I do not want to pass a Context to the module just ro
             // resolve a string template (for usage of Context#getString(int resId, String... args)
-            "${BuildConfig.API_URL}/${dataPost.permalink}")
+            "${BuildConfig.API_URL}${dataPost.permalink.drop(1)}")
 }

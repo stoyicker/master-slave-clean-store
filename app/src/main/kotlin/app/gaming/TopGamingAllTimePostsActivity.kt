@@ -1,7 +1,10 @@
 package app.gaming
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import domain.entity.Post
@@ -9,7 +12,10 @@ import kotlinx.android.synthetic.main.include_toolbar.toolbar
 import kotlinx.android.synthetic.main.include_top_posts_view.content
 import kotlinx.android.synthetic.main.include_top_posts_view.error
 import kotlinx.android.synthetic.main.include_top_posts_view.progress
+import org.jorge.ms.app.BuildConfig
 import org.jorge.ms.app.R
+
+
 
 /**
  * An Activity that shows the top posts from /r/gaming.
@@ -24,15 +30,7 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
         val view = TopGamingAllTimePostsView(content, error, progress)
         setSupportActionBar(toolbar)
         coordinator = TopGamingAllTimePostsCoordinator(view)
-        TopGamingAllTimePostsContentViewConfig.dumpOnto(view, object : CoordinatorBridgeCallback {
-            override fun onItemClicked(item: Post) {
-                // TODO Go to activity if supported
-            }
-
-            override fun onPageLoadRequested() {
-                coordinator.actionLoadNextPage()
-            }
-        })
+        TopGamingAllTimePostsContentViewConfig.dumpOnto(view, provideCoordinatorBridgeCallback())
         coordinator.actionLoadNextPage()
     }
 
@@ -46,6 +44,33 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
         coordinator.abortActionLoadNextPage()
     }
 
+    /**
+     * Provides a callback to define the responses to certain user interactions.
+     */
+    private fun provideCoordinatorBridgeCallback()
+        = object : BehaviorCallback {
+        @SuppressLint("InlinedApi")
+        override fun onItemClicked(item: Post) {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.detailLink))
+            // https://developer.android.com/training/implementing-navigation/descendant.html#external-activities
+            if (BuildConfig.VERSION_CODE > Build.VERSION_CODES.LOLLIPOP) {
+                @Suppress("DEPRECATION")
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
+            } else {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
+            }
+            val candidates = this@TopGamingAllTimePostsActivity.packageManager
+                    .queryIntentActivities(intent, 0)
+            if (candidates.size > 0) {
+                startActivity(intent)
+            }
+        }
+
+        override fun onPageLoadRequested() {
+            coordinator.actionLoadNextPage()
+        }
+    }
+
     internal companion object {
         /**
          * Safe way to provide an intent to route to this activity. More useful if it were to have
@@ -54,4 +79,20 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
          */
         fun getCallingIntent(context: Context) = Intent(context, TopGamingAllTimePostsActivity::class.java)
     }
+}
+
+/**
+ * An interface for the view to communicate with the coordinator.
+ */
+internal interface BehaviorCallback {
+    /**
+     * To be called when an item click happens.
+     * @param item The item clicked.
+     */
+    fun onItemClicked(item: Post)
+
+    /**
+     * To be called when a page load is requested.
+     */
+    fun onPageLoadRequested()
 }

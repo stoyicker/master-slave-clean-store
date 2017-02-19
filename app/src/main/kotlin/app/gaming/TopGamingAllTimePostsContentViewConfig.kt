@@ -11,8 +11,6 @@ import app.ext.getDimension
 import domain.entity.Post
 import org.jorge.ms.app.R
 
-
-
 /**
  * Configures the recycler view holding the post list.
  */
@@ -21,9 +19,9 @@ internal object TopGamingAllTimePostsContentViewConfig {
      * Configures a view.
      * @recyclerView The view to configure.
      */
-    internal fun dumpOnto(view: TopGamingAllTimePostsView, callback: CoordinatorBridgeCallback) {
+    internal fun dumpOnto(view: TopGamingAllTimePostsView, callback: BehaviorCallback) {
         view.contentView.let { recyclerView ->
-            recyclerView.adapter = provideAdapter()
+            recyclerView.adapter = provideAdapter(callback)
             recyclerView.layoutManager = provideLayoutManager(recyclerView.context)
             recyclerView.addOnScrollListener(provideEndlessLoadListener(
                     recyclerView.layoutManager, callback))
@@ -34,9 +32,15 @@ internal object TopGamingAllTimePostsContentViewConfig {
 
     /**
      * Provides an adapter with stable ids.
+     * @param callback The callback to feed events back to the coordinator.
      */
-    private fun provideAdapter(): RecyclerView.Adapter<out RecyclerView.ViewHolder> {
-        val adapter = Adapter()
+    private fun provideAdapter(callback: BehaviorCallback)
+            : RecyclerView.Adapter<Adapter.ViewHolder> {
+        val adapter = Adapter(object : OnItemClickListener<Post> {
+            override fun onItemClicked(item: Post) {
+                callback.onItemClicked(item)
+            }
+        })
         adapter.setHasStableIds(true)
         return adapter
     }
@@ -48,7 +52,7 @@ internal object TopGamingAllTimePostsContentViewConfig {
     private fun provideLayoutManager(context: Context) = LinearLayoutManager(context)
 
     private fun provideEndlessLoadListener(layoutManager: RecyclerView.LayoutManager,
-                                           callback: CoordinatorBridgeCallback)
+                                           callback: BehaviorCallback)
             = object : EndlessLoadListener(layoutManager as LinearLayoutManager) {
         override fun onLoadMore() {
             callback.onPageLoadRequested()
@@ -61,12 +65,13 @@ internal object TopGamingAllTimePostsContentViewConfig {
  * An alternative would have been to use the databinding library, but the fact that it does not
  * support `merge` layouts would make diverse screen support more complicated.
  */
-internal class Adapter : RecyclerView.Adapter<Adapter.ViewHolder>() {
+internal class Adapter(private val listener: OnItemClickListener<Post>)
+    : RecyclerView.Adapter<Adapter.ViewHolder>() {
     private val items = mutableListOf<Post>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
             = ViewHolder(LayoutInflater.from(parent.context).inflate(
-                R.layout.item_post, parent, false))
+                R.layout.item_post, parent, false), listener)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.render(items[position])
@@ -103,7 +108,9 @@ internal class Adapter : RecyclerView.Adapter<Adapter.ViewHolder>() {
      * Very simple viewholder that sets text and click event handling.
      * @param itemView The view to dump the held data.
      */
-    internal class ViewHolder internal constructor(itemView: View): RecyclerView.ViewHolder(itemView) {
+    internal class ViewHolder internal constructor(
+            itemView: View,
+            private val listener: OnItemClickListener<Post>): RecyclerView.ViewHolder(itemView) {
         private val titleView: TextView = itemView.findViewById(R.id.text_title) as TextView
         private val scoreView: TextView = itemView.findViewById(R.id.text_score) as TextView
         private val subredditView: TextView = itemView.findViewById(R.id.text_subreddit) as TextView
@@ -114,10 +121,10 @@ internal class Adapter : RecyclerView.Adapter<Adapter.ViewHolder>() {
          */
         internal fun render(item: Post) {
             DEFAULT_BOTTOM_MARGIN = (itemView.layoutParams as RecyclerView.LayoutParams).bottomMargin
-            // TODO onItemClicked here somehow
             titleView.text = item.title
             scoreView.text = item.score.toString()
             subredditView.text = itemView.context.getString(R.string.subreddit_template, item.subreddit)
+            itemView.setOnClickListener { listener.onItemClicked(item) }
         }
 
         /**
@@ -140,6 +147,17 @@ internal class Adapter : RecyclerView.Adapter<Adapter.ViewHolder>() {
             private var DEFAULT_BOTTOM_MARGIN: Int = 0
         }
     }
+}
+
+/**
+ * An interface to transmit click events.
+ */
+internal interface OnItemClickListener<in T> {
+    /**
+     * To be called then the view for an item is clicked.
+     * @param item The item corresponding to the view clicked.
+     */
+    fun onItemClicked(item: T)
 }
 
 /**

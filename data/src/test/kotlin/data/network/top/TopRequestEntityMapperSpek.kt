@@ -42,7 +42,7 @@ internal class TopRequestEntityMapperSpek : SubjectSpek<TopRequestEntityMapper>(
             assertEquals(dataPost.title, post.title)
             assertEquals(dataPost.subreddit, post.subreddit)
             assertEquals(dataPost.score, post.score)
-            assertEquals("${BuildConfig.API_URL}/${dataPost.permalink}", post.detailLink)
+            assertEquals("${BuildConfig.API_URL}${dataPost.permalink.drop(1)}", post.detailLink)
         }
     }
 }

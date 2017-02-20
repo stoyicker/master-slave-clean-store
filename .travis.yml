@@ -22,7 +22,6 @@ cache:
 before_install:
 - openssl aes-256-cbc -K $encrypted_e70c6b8316b7_key -iv $encrypted_e70c6b8316b7_iv
   -in alias.keystore.enc -out alias.keystore -d
-- echo org.gradle.jvmargs=-Xmx8704M > gradle.properties
 before_script:
 - |
   if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then

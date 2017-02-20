@@ -36,10 +36,10 @@ uploadReleaseToGitHub() {
     # And replace the end of it, which is generic and useless, by a relevant one
     UPLOAD_URL=$(echo ${UPLOAD_URL} | sed 's/{?name,label}/?name=app-release.aar/')
 
-    # Build the aar
-    ./gradlew :app:assembleRelease
+    # Build the aapk
+    ./gradlew assembleRelease
     # Copy it out of its cave
-    cp app/build/outputs/aar/app-release.apk .
+    cp app/build/outputs/apk/app-release.apk .
 
     # Attach the artifact
     curl -D - \

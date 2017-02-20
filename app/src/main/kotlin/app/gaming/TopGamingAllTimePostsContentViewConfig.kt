@@ -3,11 +3,14 @@ package app.gaming
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.TextView
 import app.ext.getDimension
+import app.ext.isPortrait
 import domain.entity.Post
 import org.jorge.ms.app.R
 
@@ -49,11 +52,19 @@ internal object TopGamingAllTimePostsContentViewConfig {
      * Provides a layout manager based on the size of the screen.
      * @param context The context
      */
-    private fun provideLayoutManager(context: Context) = LinearLayoutManager(context)
+    private fun provideLayoutManager(context: Context): RecyclerView.LayoutManager {
+        if (context.isPortrait()) {
+            return LinearLayoutManager(context)
+        } else {
+            val ret = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
+            ret.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
+            return ret
+        }
+    }
 
     private fun provideEndlessLoadListener(layoutManager: RecyclerView.LayoutManager,
                                            callback: BehaviorCallback)
-            = object : EndlessLoadListener(layoutManager as LinearLayoutManager) {
+            = object : EndlessLoadListener(layoutManager) {
         override fun onLoadMore() {
             callback.onPageLoadRequested()
         }
@@ -68,17 +79,20 @@ internal object TopGamingAllTimePostsContentViewConfig {
 internal class Adapter(private val listener: OnItemClickListener<Post>)
     : RecyclerView.Adapter<Adapter.ViewHolder>() {
     private val items = mutableListOf<Post>()
+    private lateinit var recyclerView: RecyclerView
+
+    override fun onAttachedToRecyclerView(target: RecyclerView) {
+        recyclerView = target
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
             = ViewHolder(LayoutInflater.from(parent.context).inflate(
-                R.layout.item_post, parent, false), listener)
+                R.layout.item_post, parent, false), recyclerView, listener)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.render(items[position])
         if (position == items.size - 1) {
-            holder.addLastItemMargin()
-        } else {
-            holder.clearMargin()
+            holder.addBottomMargin()
         }
     }
 
@@ -101,7 +115,7 @@ internal class Adapter(private val listener: OnItemClickListener<Post>)
         val firstInsertedPosition = items.size
         items.addAll(toAdd)
         notifyItemRangeInserted(firstInsertedPosition, toAdd.size)
-        notifyItemChanged(firstInsertedPosition - 1) // To remove the space for the footer
+        (recyclerView.layoutParams as FrameLayout.LayoutParams).bottomMargin = 0
     }
 
     /**
@@ -110,6 +124,7 @@ internal class Adapter(private val listener: OnItemClickListener<Post>)
      */
     internal class ViewHolder internal constructor(
             itemView: View,
+            private val recyclerView: RecyclerView,
             private val listener: OnItemClickListener<Post>): RecyclerView.ViewHolder(itemView) {
         private val titleView: TextView = itemView.findViewById(R.id.text_title) as TextView
         private val scoreView: TextView = itemView.findViewById(R.id.text_score) as TextView
@@ -120,7 +135,6 @@ internal class Adapter(private val listener: OnItemClickListener<Post>)
          * @title The item to draw.
          */
         internal fun render(item: Post) {
-            DEFAULT_BOTTOM_MARGIN = (itemView.layoutParams as RecyclerView.LayoutParams).bottomMargin
             titleView.text = item.title
             scoreView.text = item.score.toString()
             subredditView.text = itemView.context.getString(R.string.subreddit_template, item.subreddit)
@@ -128,23 +142,11 @@ internal class Adapter(private val listener: OnItemClickListener<Post>)
         }
 
         /**
-         * Clears the margin added for the footer.
+         * Adds a margin under the recycler view for the progress and error views to show.
          */
-        internal fun clearMargin() {
-            (itemView.layoutParams as RecyclerView.LayoutParams).bottomMargin = 0
-        }
-
-        /**
-         * Not very proud of this, but a real footer with a custom decoration would have taken
-         * extra time.
-         */
-        internal fun addLastItemMargin() {
-            (itemView.layoutParams as RecyclerView.LayoutParams).bottomMargin +=
+        internal fun addBottomMargin() {
+            (recyclerView.layoutParams as FrameLayout.LayoutParams).bottomMargin =
                 itemView.context.getDimension(R.dimen.footer_padding).toInt()
-        }
-
-        companion object {
-            private var DEFAULT_BOTTOM_MARGIN: Int = 0
         }
     }
 }
@@ -164,12 +166,12 @@ internal interface OnItemClickListener<in T> {
  * @see <a href="https://gist.githubusercontent.com/nesquena/d09dc68ff07e845cc622/raw/e2429b173f75afb408b420ad4088fed68240334c/EndlessRecyclerViewScrollListener.java">Adapted from CodePath</a>
  */
 abstract class EndlessLoadListener(
-        private val layoutManager: LinearLayoutManager) : RecyclerView.OnScrollListener() {
+        private val layoutManager: RecyclerView.LayoutManager) : RecyclerView.OnScrollListener() {
     private var loading = true
     private var previousTotalItemCount = 0
 
     override fun onScrolled(view: RecyclerView?, dx: Int, dy: Int) {
-        val lastVisibleItemPosition= layoutManager.findLastVisibleItemPosition()
+        val lastVisibleItemPosition = findLastVisibleItemPosition()
         val totalItemCount = layoutManager.itemCount
         if (loading && (totalItemCount > previousTotalItemCount)) {
             loading = false
@@ -179,6 +181,31 @@ abstract class EndlessLoadListener(
             loading = true
             onLoadMore()
         }
+    }
+
+    /**
+     * Independent of the layout manager in use.
+     */
+    private fun findLastVisibleItemPosition() =
+        when (layoutManager) {
+            is LinearLayoutManager -> layoutManager.findLastVisibleItemPosition()
+            is StaggeredGridLayoutManager -> getLastVisibleItem(
+                    layoutManager.findLastVisibleItemPositions(null))
+            else -> throw IllegalStateException(
+                    """Only ${LinearLayoutManager::class.java.name} or
+                    ${StaggeredGridLayoutManager::class.java.name}""")
+        }
+
+    private fun getLastVisibleItem(lastVisibleItemPositions: IntArray): Int {
+        var maxSize = 0
+        for (i in lastVisibleItemPositions.indices) {
+            if (i == 0) {
+                maxSize = lastVisibleItemPositions[i]
+            } else if (lastVisibleItemPositions[i] > maxSize) {
+                maxSize = lastVisibleItemPositions[i]
+            }
+        }
+        return maxSize
     }
 
     /**

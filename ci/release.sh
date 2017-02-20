@@ -34,7 +34,7 @@ uploadReleaseToGitHub() {
     # Extract the upload_url value
     UPLOAD_URL=$(echo ${RESPONSE_BODY} | python -c 'import sys, json; print json.load(sys.stdin)[sys.argv[1]]' upload_url)
     # And replace the end of it, which is generic and useless, by a relevant one
-    UPLOAD_URL=$(echo ${UPLOAD_URL} | sed 's/{?name,label}/?name=app-release.aar/')
+    UPLOAD_URL=$(echo ${UPLOAD_URL} | sed 's/{?name,label}/?name=app-release.apk/')
 
     # Build the aapk
     ./gradlew assembleRelease

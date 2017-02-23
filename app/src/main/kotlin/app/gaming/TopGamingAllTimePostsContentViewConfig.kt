@@ -52,13 +52,13 @@ internal object TopGamingAllTimePostsContentViewConfig {
      * Provides a layout manager based on the size of the screen.
      * @param context The context
      */
-    private fun provideLayoutManager(context: Context): RecyclerView.LayoutManager {
-        if (context.isPortrait()) {
-            return LinearLayoutManager(context)
+    private fun provideLayoutManager(context: Context): RecyclerView.LayoutManager
+        = if (context.isPortrait()) {
+            LinearLayoutManager(context)
         } else {
             val ret = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
             ret.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
-            return ret
+            ret
         }
     }
 
@@ -69,7 +69,6 @@ internal object TopGamingAllTimePostsContentViewConfig {
             callback.onPageLoadRequested()
         }
     }
-}
 
 /**
  * A very simple adapter backed by a mutable list that exposes a method to add items.

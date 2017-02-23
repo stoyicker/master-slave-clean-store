@@ -8,7 +8,7 @@ android {
     buildToolsVersion rootProject.ext.androidBuildToolsVersion
 
     signingConfigs {
-        minify {
+        release {
             storeFile new File("alias.keystore")
             storePassword("keystorePwd")
             keyAlias("alias")
@@ -18,7 +18,7 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.minify
+            signingConfig signingConfigs.release
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             shrinkResources true

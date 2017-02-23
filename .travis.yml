@@ -20,7 +20,7 @@ cache:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
 before_install:
-- openssl aes-256-cbc -K $encrypted_e70c6b8316b7_key -iv $encrypted_e70c6b8316b7_iv
+- openssl aes-256-cbc -K $encrypted_90d766e4084d_key -iv $encrypted_90d766e4084d_iv
   -in alias.keystore.enc -out alias.keystore -d
 before_script:
 - |

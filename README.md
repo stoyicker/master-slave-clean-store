@@ -1,3 +1,13 @@
+# Build instructions
+
+Place the key to the API in the root gradle.properties file following
+the format below:
+````
+prop_api_url="https://api-url.com/"
+````
+
+__Make sure to include the quotes.__
+
 # Architecture
 This is a reactive app: it runs by reacting to user interactions. Here
 is how:

@@ -7,4 +7,6 @@ repositories {
 
 dependencies {
     compile rootProject.ext.compileDependencies
+    compile rootProject.ext.compileDomainDependencies
+    testCompile rootProject.ext.testCompileDependencies
 }

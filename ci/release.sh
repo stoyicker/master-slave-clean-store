@@ -9,7 +9,7 @@ uploadReleaseToGitHub() {
     LAST_TAG=$(git describe --tags --abbrev=0)
     THIS_RELEASE=$(git rev-parse --short ${BRANCH_NAME})
     local IFS=$'\n'
-    RELEASE_NOTES_ARRAY=($(git log --format=%B $LAST_TAG..$THIS_RELEASE | grep "*" | tr -d '\r'))
+    RELEASE_NOTES_ARRAY=($(git log --format=%B $LAST_TAG..$THIS_RELEASE | grep '*' | tr -d '\r'))
     for i in "${RELEASE_NOTES_ARRAY[@]}"
     do
         RELEASE_NOTES="$RELEASE_NOTES\\n$i"
@@ -34,26 +34,27 @@ uploadReleaseToGitHub() {
     # Extract the upload_url value
     UPLOAD_URL=$(echo ${RESPONSE_BODY} | python -c 'import sys, json; print json.load(sys.stdin)[sys.argv[1]]' upload_url)
     # And replace the end of it, which is generic and useless, by a relevant one
-    UPLOAD_URL=$(echo ${UPLOAD_URL} | sed 's/{?name,label}/?name=app-debug.aar/')
+    UPLOAD_URL=$(echo ${UPLOAD_URL} | sed 's/{?name,label}/?name=app-release.apk/')
 
-    # Build the aar
-    ./gradlew :sdk:assembleImplementedDebug
+    # Build the apk
+    ./gradlew assembleRelease
     # Copy it out of its cave
-    cp sdk/build/outputs/aar/app-implemented-debug.apk app-debug.apk
+    cp app/build/outputs/apk/app-release.apk .
 
     # Attach the artifact
     curl -D - \
     -u ${REPO_USER}:${GITHUB_TOKEN} \
     --header "Accept: application/vnd.github.v3+json" \
     --header "Content-Type: application/zip" \
-    --data-binary "@app-debug.apk" \
+    --data-binary "@app-release.apk" \
     --request POST \
     ${UPLOAD_URL}
+
+    echo "Release complete."
 }
 
 case ${BRANCH_NAME} in
     "master")
-        ./gradlew :sdk:assembleImplementedDebug
         ARTIFACT_VERSION=$(git rev-list --count HEAD)
         uploadReleaseToGitHub
         ;;

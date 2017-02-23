@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <lint>
-    <issue id="GoogleAppIndexingWarning" severity="ignore" />
+    <issue id="GoogleAppIndexingWarning" severity="ignore"/>
+    <issue id="InvalidPackage">
+        <ignore regexp="junit"/>
+    </issue>
+    <!-- This check is broken when using Kotlin -->
+    <issue id="UnusedResources" severity="ignore"/>
+    <!-- This check is broken when using KotlinX -->
+    <issue id="UnusedIds">
+        <ignore regexp="toolbar"/>
+        <ignore regexp="text_title"/>
+        <ignore regexp="text_score"/>
+        <ignore regexp="text_subreddit"/>
+        <ignore regexp="content"/>
+        <ignore regexp="progress"/>
+        <ignore regexp="error"/>
+    </issue>
+    <issue id="MergeRootFrame">
+        <ignore regexp="include_top_posts_view"/>
+    </issue>
 </lint>

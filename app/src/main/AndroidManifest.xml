@@ -5,12 +5,19 @@
     <application
         android:name="app.MainApplication"
         android:allowBackup="false"
-        android:icon="@android:mipmap/sym_def_app_icon">
-        <activity android:name="app.MainActivity">
+        android:icon="@null"
+        android:launchMode="singleTask">
+        <activity
+            android:label="@string/app_label"
+            android:name="app.splash.SplashActivity"
+            android:theme="@style/AppTheme.SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name="app.gaming.TopGamingAllTimePostsActivity"
+            android:theme="@style/AppTheme"/>
     </application>
 </manifest>

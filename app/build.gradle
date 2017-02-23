@@ -1,10 +1,29 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.jetbrains.dokka-android'
 
 android {
     compileSdkVersion rootProject.ext.androidCompileSdkVersion
     buildToolsVersion rootProject.ext.androidBuildToolsVersion
+
+    signingConfigs {
+        release {
+            storeFile new File("alias.keystore")
+            storePassword("keystorePwd")
+            keyAlias("alias")
+            keyPassword("keyPwd")
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            shrinkResources true
+        }
+    }
 
     compileOptions {
         incremental false
@@ -36,17 +55,27 @@ android {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
 
-    sourceSets {
-        main.java.srcDirs = ['src/main/kotlin']
+    sourceSets.forEach {
+        it.java.srcDirs = ["src/$it.name/kotlin"]
     }
 }
 
 repositories {
     jcenter()
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
     compile project(':data')
     compile project(':domain')
+    rootProject.ext.androidTestCompilePresentationDependencies.forEach {
+        compile(it) {
+            exclude group: 'com.google.code.findbugs'
+            exclude module: 'support-annotations'
+        }
+    }
     compile rootProject.ext.compileDependencies
+    compile rootProject.ext.compilePresentationDependencies
 }

@@ -17,7 +17,6 @@ android {
         targetSdkVersion rootProject.ext.androidTargetSdkVersion
         testInstrumentationRunner rootProject.ext.androidTestInstrumentationRunner
         buildConfigField "String", "API_URL", System.getenv("API_URL") != null ? System.getenv("API_URL") : prop_api_url
-        buildConfigField "String", "API_KEY", System.getenv("API_KEY") != null ? System.getenv("API_KEY") : prop_api_key
     }
 
     dexOptions {
@@ -38,17 +37,32 @@ android {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
 
-    sourceSets {
-        main.java.srcDirs = ['src/main/kotlin']
+    sourceSets.forEach {
+        it.java.srcDirs = ["src/$it.name/kotlin"]
     }
 }
 
 repositories {
     jcenter()
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
     compile project(':domain')
+    // The public version is bugged. I opened a PR (https://github.com/NYTimes/Store/pull/133) that
+    // fixes it but cannot wait for it to be released so I compiled the project myself with the fix
+    // Because it is not a fat jar, I need to bring GSON manually too.
+    compile 'com.google.code.gson:gson:2.6.2'
+    compile(name:'middleware-fixed', ext:'jar')
     compile rootProject.ext.compileDependencies
-    compile rootProject.ext.compileDataDependencies
+    provided rootProject.ext.providedDataDependencies
+    rootProject.ext.compileDataDependencies.forEach {
+        compile(it) {
+            // RxJava is brought by the domain module
+            exclude group: 'io.reactivex'
+        }
+    }
+    testCompile rootProject.ext.testCompileDependencies
 }

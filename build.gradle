@@ -24,7 +24,7 @@ final def staticAnalysisReportFolderTarget = project.rootDir.absolutePath + "/st
 
 rootProject.ext {
     androidCompileSdkVersion = 25
-    androidMinSdkVersion = 16
+    androidMinSdkVersion = 9
     androidTargetSdkVersion = 25
     androidBuildToolsVersion = '25.0.2'
 	androidVersionCode = inducedVersion != null ? Integer.parseInt(inducedVersion) : 0 // Depending on the git method locally causes IDE issues

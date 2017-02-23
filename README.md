@@ -10,11 +10,6 @@ I chose Kotlin over Java because:
 * It is more natural both to read and write, which makes
 writing code easier and faster while still allowing Java developers
 who have never seen it to understand it.
-Not to say it does not have its fallbacks, like the questionable lack
-of a package-private access modifier, the ~6k extra methods or the
-static analysis tools (aside from the IntelliJ IDEA inspector, which
-is hard to set up in CI servers). I just don't see any of these issues
-as blockers for a small and fast project.
 
 # Documentation
 Documentation is generated using [Dokka](https://github.com/Kotlin/dokka), which is the

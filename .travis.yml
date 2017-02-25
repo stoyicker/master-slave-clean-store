@@ -12,9 +12,6 @@ android:
 branches:
   except:
   - "/^[0-9]/"
-before_cache:
-- rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
   - "$HOME/.gradle/caches/"
@@ -30,6 +27,11 @@ before_script:
   fi
 script:
 - "./gradlew clean build check dokka"
+before_cache:
+- rm -f /home/travis/.gradle/caches/modules-2/modules-2.lock
+- rm -fr /home/travis/.gradle/caches/*/plugin-resolution/
+- rm -f /home/travis/.gradle/caches/3.4/fileHashes/fileHashes.bin
+- rm -f /home/travis/.gradle/caches/3.4/fileHashes/fileHashes.lock
 after_success:
 - |
   if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then

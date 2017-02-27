@@ -1,8 +1,8 @@
 package app.gaming
 
 import android.support.annotation.VisibleForTesting
-import app.LoadableContentView
 import app.UIPostExecutionThread
+import app.widget.LoadableContentView
 import domain.entity.Post
 import domain.interactor.TopGamingAllTimePostsUseCase
 import domain.interactor.UseCase

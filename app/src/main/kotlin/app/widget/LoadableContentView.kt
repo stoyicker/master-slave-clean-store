@@ -1,4 +1,4 @@
-package app
+package app.widget
 
 /**
  * An interface describing the behavior required by views bound to coordinators.

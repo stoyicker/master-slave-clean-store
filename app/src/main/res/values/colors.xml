@@ -5,4 +5,5 @@
     <color name="textColorPrimary">@android:color/white</color>
     <color name="textColorSecondary">#f71818</color>
     <color name="windowBackground">#e3e3e3</color>
+    <color name="default_ripple">#42ffffff</color>
 </resources>

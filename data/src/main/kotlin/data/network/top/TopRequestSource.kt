@@ -32,7 +32,7 @@ internal object TopRequestSource : CacheablePagedSource {
      * Initializes the actual store.
      */
     init {
-        // We want to have long-term caching , since it is about all-time tops, which does not
+        // We want to have long-term caching, since it is about all-time tops, which do not
         // change very frequently. Therefore we are fine using the default memory cache
         // implementation which expires items in 24h after acquisition.
         // We will, however, not use disk-level caching because we always want fresh data on

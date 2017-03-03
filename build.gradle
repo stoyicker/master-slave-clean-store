@@ -7,7 +7,7 @@ buildscript {
         jcenter()
     }
     final def androidPluginVersion = "2.2.3"
-    final def kotlinPluginVersion = rootProject.ext.kotlinVersion = "1.0.6"
+    final def kotlinPluginVersion = rootProject.ext.kotlinVersion = "1.1.0"
     final def dokkaPluginVersion = "0.9.13"
     final def classpathDependencies = [
         "com.android.tools.build:gradle:$androidPluginVersion",

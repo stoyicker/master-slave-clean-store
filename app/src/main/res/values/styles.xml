@@ -18,5 +18,6 @@
     </style>
     <style name="AppTheme.Card">
         <item name="android:background">@drawable/card_background</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
     </style>
 </resources>

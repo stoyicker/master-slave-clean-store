@@ -44,9 +44,6 @@ android {
 
 repositories {
     jcenter()
-    flatDir {
-        dirs 'libs'
-    }
 }
 
 dependencies {
@@ -54,8 +51,6 @@ dependencies {
     // The public version is bugged. I opened a PR (https://github.com/NYTimes/Store/pull/133) that
     // fixes it but cannot wait for it to be released so I compiled the project myself with the fix
     // Because it is not a fat jar, I need to bring GSON manually too.
-    compile 'com.google.code.gson:gson:2.6.2'
-    compile(name:'middleware-fixed', ext:'jar')
     compile rootProject.ext.compileDependencies
     provided rootProject.ext.providedDataDependencies
     rootProject.ext.compileDataDependencies.forEach {

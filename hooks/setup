@@ -1,0 +1,6 @@
+if [ "$EUID" == 0 ]
+    then "Do not run random files from the Internet as root you fool!"
+    exit
+fi
+cd .git/hooks/
+ln -s ../../hooks/pre-push .

@@ -1,0 +1,1 @@
+./gradlew clean check assemble test cAT || { exit 1; }

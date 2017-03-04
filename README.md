@@ -1,3 +1,11 @@
+# Setup for contributions
+
+Once cloned, just setup the scripts:
+
+```shell
+$<project-dir>: ./hooks/setup
+```
+
 # Build instructions
 
 Place the key to the API in the root gradle.properties file following

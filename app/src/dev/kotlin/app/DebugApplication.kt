@@ -34,7 +34,6 @@ internal class DebugApplication : MainApplication() {
         StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
                 .detectAll()
                 .penaltyLog()
-                .penaltyDeath()
                 .build())
     }
 }

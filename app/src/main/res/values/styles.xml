@@ -12,12 +12,19 @@
         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
     <style name="ProgressBarHorizontalMaterial" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
-        <!-- Unify (and color change, tinting is slow) pre-lollipop.
+        <!-- Unify (and color-change, tinting is slow) pre-lollipop.
         The material one is an animated vector so it is a no-go -->
         <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_holo</item>
     </style>
     <style name="AppTheme.Card">
         <item name="android:background">@drawable/card_background</item>
-        <item name="android:foreground">?attr/selectableItemBackground</item>
+    </style>
+    <style name="AppTheme.TextTitle" parent="@style/TextAppearance.AppCompat.Title">
+        <item name="android:background">@null</item>
+        <item name="android:foreground">@null</item>
+    </style>
+    <style name="AppTheme.TextSubhead" parent="@style/TextAppearance.AppCompat.Subhead">
+        <item name="android:background">@null</item>
+        <item name="android:foreground">@null</item>
     </style>
 </resources>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<app.widget.CompatRippleLinearLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,8 +12,7 @@
         android:layout_height="wrap_content"
         android:textIsSelectable="false"
         android:clickable="false"
-        android:background="@null"
-        style="@style/TextAppearance.AppCompat.Title"/>
+        style="@style/AppTheme.TextTitle"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -25,21 +24,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="false"
-        android:background="@null">
+        android:background="@null"
+        android:foreground="@null">
         <TextView
             android:id="@+id/text_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/text_separation"
             android:textIsSelectable="false"
-            android:background="@null"
-            style="@style/TextAppearance.AppCompat.Subhead"/>
+            style="@style/AppTheme.TextSubhead"/>
         <TextView
             android:id="@+id/text_subreddit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textIsSelectable="false"
-            android:background="@null"
-            style="@style/TextAppearance.AppCompat.Subhead"/>
+            style="@style/AppTheme.TextSubhead"/>
     </LinearLayout>
-</app.widget.CompatRippleLinearLayout>
+</LinearLayout>

@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.jorge.ms.app">
     <application
-        android:name="app.MainApplication"
         android:allowBackup="false"
         android:icon="@null"
         android:launchMode="singleTask">

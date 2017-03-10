@@ -29,14 +29,6 @@ android {
         incremental false
     }
 
-    defaultConfig {
-        versionCode rootProject.ext.androidVersionCode
-        versionName rootProject.ext.androidVersionName
-        minSdkVersion rootProject.ext.androidMinSdkVersion
-        targetSdkVersion rootProject.ext.androidTargetSdkVersion
-        testInstrumentationRunner rootProject.ext.androidTestInstrumentationRunner
-    }
-
     dexOptions {
         preDexLibraries true
         javaMaxHeapSize "8g"
@@ -53,6 +45,23 @@ android {
 
     packagingOptions {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
+
+    productFlavors {
+        dev {
+            versionCode rootProject.ext.androidVersionCode
+            versionName rootProject.ext.androidVersionName
+            minSdkVersion rootProject.ext.androidMinSdkVersion
+            targetSdkVersion rootProject.ext.androidTargetSdkVersion
+            testInstrumentationRunner rootProject.ext.androidTestInstrumentationRunner
+        }
+        prod {
+            versionCode rootProject.ext.androidVersionCode
+            versionName rootProject.ext.androidVersionName
+            minSdkVersion rootProject.ext.androidMinSdkVersion
+            targetSdkVersion rootProject.ext.androidTargetSdkVersion
+            testInstrumentationRunner rootProject.ext.androidTestInstrumentationRunner
+        }
     }
 
     sourceSets.forEach {

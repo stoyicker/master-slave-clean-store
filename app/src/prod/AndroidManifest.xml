@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="org.jorge.ms.app">
+    <application
+        android:name="app.MainApplication"
+        tools:ignore="AllowBackup"/>
+        <!-- The main manifest takes care of AllowBackup -->
+</manifest>

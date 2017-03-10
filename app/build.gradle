@@ -67,6 +67,21 @@ android {
     sourceSets.forEach {
         it.java.srcDirs = ["src/$it.name/kotlin"]
     }
+
+    variantFilter {
+        switch (it.buildType.name) {
+            case 'debug':
+                if (it.flavors[0].name.contentEquals("prod")) {
+                    it.setIgnore(true)
+                }
+                break;
+            case 'release':
+                if (it.flavors[0].name.contentEquals("dev")) {
+                    it.setIgnore(true)
+                }
+                break;
+        }
+    }
 }
 
 repositories {

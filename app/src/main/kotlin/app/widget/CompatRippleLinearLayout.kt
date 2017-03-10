@@ -30,7 +30,7 @@ internal class CompatRippleLinearLayout(context: Context, attrs: AttributeSet)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (event.action === MotionEvent.ACTION_UP) {
+        if (event.action == MotionEvent.ACTION_UP) {
             sourceCoordinates = PointF(event.x, event.y)
             maxBoundary = Math.max(width, height)
             val animation = BoundedAnimation(0, maxBoundary)

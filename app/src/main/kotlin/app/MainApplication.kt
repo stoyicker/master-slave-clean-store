@@ -12,7 +12,7 @@ import domain.callback.Urgency
 /**
  * Custom application.
  */
-internal class MainApplication : Application() {
+internal open class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         Domain.inject(TopPostsFacade)
@@ -22,11 +22,11 @@ internal class MainApplication : Application() {
      * onTrimMemory is not called before API 14, so we need to reroute according to the
      * documentation.
      */
-    override fun onLowMemory() {
+    override final fun onLowMemory() {
         onTrimMemory(TRIM_MEMORY_COMPLETE_VALUE)
     }
 
-    override fun onTrimMemory(level: Int) {
+    override final fun onTrimMemory(level: Int) {
         val urgency: Urgency
         when (level) {
             ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN -> return
@@ -41,7 +41,7 @@ internal class MainApplication : Application() {
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal companion object {
         /**
-         * For compat use, define a const there is no need to rely on the platform run against
+         * For compat use, define a const so there is no need to rely on the platform run against
          */
         @SuppressLint("InlinedApi")
         @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)

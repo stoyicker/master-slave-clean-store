@@ -136,7 +136,8 @@ internal class Adapter(private val listener: OnItemClickListener<Post>)
         internal fun render(item: Post) {
             titleView.text = item.title
             scoreView.text = item.score.toString()
-            subredditView.text = itemView.context.getString(R.string.subreddit_template, item.subreddit)
+            subredditView.text = itemView.context.getString(R.string.subreddit_template,
+                    item.subreddit)
             itemView.setOnClickListener { listener.onItemClicked(item) }
         }
 

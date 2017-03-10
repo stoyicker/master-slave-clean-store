@@ -29,14 +29,6 @@ android {
         incremental false
     }
 
-    defaultConfig {
-        versionCode rootProject.ext.androidVersionCode
-        versionName rootProject.ext.androidVersionName
-        minSdkVersion rootProject.ext.androidMinSdkVersion
-        targetSdkVersion rootProject.ext.androidTargetSdkVersion
-        testInstrumentationRunner rootProject.ext.androidTestInstrumentationRunner
-    }
-
     dexOptions {
         preDexLibraries true
         javaMaxHeapSize "8g"
@@ -55,8 +47,40 @@ android {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
 
+    productFlavors {
+        dev {
+            versionCode rootProject.ext.androidVersionCode
+            versionName rootProject.ext.androidVersionName
+            minSdkVersion rootProject.ext.androidMinSdkVersion
+            targetSdkVersion rootProject.ext.androidTargetSdkVersion
+            testInstrumentationRunner rootProject.ext.androidTestInstrumentationRunner
+        }
+        prod {
+            versionCode rootProject.ext.androidVersionCode
+            versionName rootProject.ext.androidVersionName
+            minSdkVersion rootProject.ext.androidMinSdkVersion
+            targetSdkVersion rootProject.ext.androidTargetSdkVersion
+            testInstrumentationRunner rootProject.ext.androidTestInstrumentationRunner
+        }
+    }
+
     sourceSets.forEach {
         it.java.srcDirs = ["src/$it.name/kotlin"]
+    }
+
+    variantFilter {
+        switch (it.buildType.name) {
+            case 'debug':
+                if (it.flavors[0].name.contentEquals("prod")) {
+                    it.setIgnore(true)
+                }
+                break;
+            case 'release':
+                if (it.flavors[0].name.contentEquals("dev")) {
+                    it.setIgnore(true)
+                }
+                break;
+        }
     }
 }
 

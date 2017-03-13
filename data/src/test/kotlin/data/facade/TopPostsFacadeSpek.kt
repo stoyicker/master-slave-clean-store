@@ -49,7 +49,7 @@ internal class TopPostsFacadeSpek : SubjectSpek<TopPostsFacade>({
         val testSubscriber = TestSubscriber<Post>()
         whenever(mockStore.get(anyVararg())) doReturn mockResult
         // Parameters do not matter because of the mocked method on the injected delegate
-        subject.getTop("", TimeRange.ALL_TIME, 0)  // Parameters do not matter because of the injected delegate
+        subject.fetchTop("", TimeRange.ALL_TIME, 0)  // Parameters do not matter because of the injected delegate
                 .subscribe(testSubscriber)
         testSubscriber.awaitTerminalEvent()
         assertEquals(TopRequestSource.pageMap[1], expectedAfter, "Last item not saved.")
@@ -70,7 +70,7 @@ internal class TopPostsFacadeSpek : SubjectSpek<TopPostsFacade>({
         val testSubscriber = TestSubscriber<Post>()
         whenever(mockStore.get(anyVararg())) doReturn mockResult
         // Parameters do not matter because of the mocked method on the injected delegate
-        subject.getTop("", TimeRange.ALL_TIME, 0)  // Parameters do not matter because of the injected delegate
+        subject.fetchTop("", TimeRange.ALL_TIME, 0)  // Parameters do not matter because of the injected delegate
                 .subscribe(testSubscriber)
         testSubscriber.assertError(expectedError)
         testSubscriber.assertNoValues()

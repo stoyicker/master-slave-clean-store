@@ -11,8 +11,8 @@ import android.net.Uri
  */
 internal class InitializationContentProvider : ContentProvider() {
     override fun onCreate(): Boolean {
-        Data.context = this.context.applicationContext
-        throw RuntimeException("Content provider received")
+        Data.cacheDir = this.context.cacheDir
+        return true
     }
 
     override fun insert(uri: Uri?, values: ContentValues?) = null

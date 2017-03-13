@@ -1,6 +1,5 @@
 package data.network.top
 
-import android.graphics.Path
 import android.support.annotation.VisibleForTesting
 import com.nytimes.android.external.fs.FileSystemPersister
 import com.nytimes.android.external.fs.PathResolver
@@ -12,8 +11,11 @@ import data.CacheablePagedSource
 import data.Data
 import data.network.common.ApiService
 import data.network.common.RxApiClient
+import data.network.top.TopRequestSource.delegate
+import data.network.top.TopRequestSource.pageMap
 import domain.interactor.TopGamingAllTimePostsUseCase
 import okio.BufferedSource
+import rx.Observable
 
 /**
  * Contains the data source for top requests.
@@ -24,41 +26,43 @@ internal object TopRequestSource : CacheablePagedSource {
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal val pageMap = mutableMapOf(0 to "")
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    internal var delegate: Store<TopRequestDataContainer, TopRequestParameters>
-
-    /**
-     * Initializes the actual store.
-     */
-    init {
+    internal val delegate by lazy {
         // We want to have long-term caching, since it is about all-time tops, which do not
         // change very frequently. Therefore we are fine using the default memory cache
         // implementation which expires items in 24h after acquisition.
         // We will also use disk caching to prepare against connectivity-related problems, but
         // we will default to checking the network because on app opening it is reasonable to
         // expected that, if network connectivity available, the data shown should be the latest
-        delegate = StoreBuilder.parsedWithKey<TopRequestParameters, BufferedSource, TopRequestDataContainer>()
-                .fetcher({ this.topFetcher(it) })
-                .parser(GsonParserFactory.createSourceParser<TopRequestDataContainer>(TopRequestDataContainer::class.java))
-                .persister(FileSystemPersister.create(
-                        FileSystemFactory.create(Data.context.cacheDir),
-                        PathResolver<TopRequestParameters> { key -> key.toString() }))
-                // Never try to refresh from network on stale since it will very likely not be worth
-                // and it is not required because we do it on app launch anyway
-                .refreshOnStale()
-                .open()
+        StoreBuilder.parsedWithKey<TopRequestParameters, BufferedSource, TopRequestDataContainer>()
+            .fetcher({ this.topFetcher(it) })
+            .parser(GsonParserFactory.createSourceParser<TopRequestDataContainer>(
+                    TopRequestDataContainer::class.java))
+            .persister(FileSystemPersister.create(
+                    FileSystemFactory.create(Data.cacheDir!!),
+                    PathResolver<TopRequestParameters> { key -> key.toString() }))
+            // Never try to refresh from network on stale since it will very likely not be worth
+            // and it is not required because we do it on app launch anyway
+            .refreshOnStale()
+            .open()
     }
 
     /**
-     * Delegates to its internal responsible for the request.
+     * Delegates to its internal responsible for the request. Cache is ignored, but updated on
+     * success.
      * @param topRequestParameters The parameters of the request.
      * @see Store
      */
-    internal fun fetch(topRequestParameters: TopRequestParameters) = delegate
-            .fetch(topRequestParameters)
-            // The doOnNext allows us to intercept the interpretation of pagination of the API
-            // so that the outer world only needs to know what page it wants, not how the API
-            // implements pagination
-            .doOnNext { pageMap.put(topRequestParameters.page + 1, it.data.after) }
+    internal fun fetch(topRequestParameters: TopRequestParameters) =
+            updatePageMapAndContinue(topRequestParameters.page,
+                    delegate.fetch(topRequestParameters))
+
+    /**
+     * Delegates to its internal responsible for the request. Cache checks: memory > disk > network.
+     * @param topRequestParameters The parameters of the request.
+     * @see Store
+     */
+    internal fun get(topRequestParameters: TopRequestParameters) =
+            updatePageMapAndContinue(topRequestParameters.page, delegate.get(topRequestParameters))
 
     /**
      * Clears cached entries starting from a given page.
@@ -89,4 +93,15 @@ internal object TopRequestSource : CacheablePagedSource {
                         pageMap[pageMap.keys.last()]
                     , topRequestParameters.limit)
             .map { it.source() }
+
+    /**
+     * Update the pagination representation: The doOnNext allows us to intercept the interpretation
+     * of pagination of the API so that the outer world only needs to know what page it wants, not
+     * how the API implements pagination.
+     * @param requestPage The page requested.
+     * @param from An observable of the desired data.
+     */
+    private fun updatePageMapAndContinue(requestPage: Int,
+                                         from: Observable<TopRequestDataContainer>)
+            = from.doOnNext { pageMap.put(requestPage + 1, it.data.after) }
 }

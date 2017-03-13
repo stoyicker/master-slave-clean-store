@@ -4,7 +4,8 @@ import android.support.annotation.VisibleForTesting
 import app.UIPostExecutionThread
 import app.widget.LoadableContentView
 import domain.entity.Post
-import domain.interactor.TopGamingAllTimePostsUseCase
+import domain.interactor.TopGamingAllTimeFetchPostsUseCase
+import domain.interactor.TopGamingAllTimeGetPostsUseCase
 import domain.interactor.UseCase
 import rx.Subscriber
 
@@ -24,7 +25,11 @@ internal class TopGamingAllTimePostsCoordinator(private val view: LoadableConten
      * resorts to memory and disk cache, checking for data availability in that order.
      */
     internal fun actionLoadNextPage(startedManually: Boolean = false) {
-        ongoingUseCase = TopGamingAllTimePostsUseCase(page, UIPostExecutionThread)
+        ongoingUseCase = if (startedManually) {
+            TopGamingAllTimeFetchPostsUseCase(page, UIPostExecutionThread)
+        } else {
+            TopGamingAllTimeGetPostsUseCase(page, UIPostExecutionThread)
+        }
         ongoingUseCase.execute(NextPageLoadSubscriber())
     }
 

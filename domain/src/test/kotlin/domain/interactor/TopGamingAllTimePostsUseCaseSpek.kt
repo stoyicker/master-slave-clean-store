@@ -42,7 +42,7 @@ internal class TopGamingAllTimePostsUseCaseSpek : SubjectSpek<TopGamingAllTimePo
         val values = arrayOf(Post("title", "sr", -8, "permalink"),
                 Post("titfle", "eeesr", 9, ""),
                 Post("titlea", "sr", 0, "pfaefaermalink"))
-        whenever(MOCK_FACADE.getTop(any(), any(), any())) doReturn Observable.from(values)
+        whenever(MOCK_FACADE.fetchTop(any(), any(), any())) doReturn Observable.from(values)
         subject.execute(testSubscriber)
         testSubscriber.assertValues(*values)
         testSubscriber.assertNoErrors()
@@ -51,7 +51,7 @@ internal class TopGamingAllTimePostsUseCaseSpek : SubjectSpek<TopGamingAllTimePo
 
     it("should unsubscribe on terminate") {
         val testSubscriber = TestSubscriber<Post>()
-        whenever(MOCK_FACADE.getTop(any(), any(), any())) doReturn Observable.empty<Post>()
+        whenever(MOCK_FACADE.fetchTop(any(), any(), any())) doReturn Observable.empty<Post>()
         subject.execute(testSubscriber)
         subject.terminate()
         testSubscriber.assertUnsubscribed()
@@ -64,9 +64,9 @@ internal class TopGamingAllTimePostsUseCaseSpek : SubjectSpek<TopGamingAllTimePo
         val subreddit = "gaming"
         val timeRange = TimeRange.ALL_TIME
         val page = 0
-        whenever(MOCK_FACADE.getTop(any(), any(), any())) doReturn Observable.empty<Post>()
+        whenever(MOCK_FACADE.fetchTop(any(), any(), any())) doReturn Observable.empty<Post>()
         subject.execute(testSubscriber)
-        verify(MOCK_FACADE).getTop(eq(subreddit), eq(timeRange), eq(page))
+        verify(MOCK_FACADE).fetchTop(eq(subreddit), eq(timeRange), eq(page))
         verifyNoMoreInteractions(MOCK_FACADE)
     }
 }) {

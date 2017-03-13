@@ -31,7 +31,8 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         coordinator = TopGamingAllTimePostsCoordinator(view)
         TopGamingAllTimePostsContentViewConfig.dumpOnto(view, provideCoordinatorBridgeCallback())
-        coordinator.actionLoadNextPage()
+        coordinator.actionLoadNextPage(savedInstanceState
+                ?.getBoolean(TopGamingAllTimePostsActivity.KEY_STARTED_MANUALLY) ?: false)
     }
 
     /**
@@ -72,12 +73,17 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
     }
 
     internal companion object {
+        private const val KEY_STARTED_MANUALLY = "KEY_STARTED_MANUALLY"
         /**
          * Safe way to provide an intent to route to this activity. More useful if it were to have
          * parameters for example, but a good idea to have nevertheless.
          * @param context The context to start this activity from.
          */
-        fun getCallingIntent(context: Context) = Intent(context, TopGamingAllTimePostsActivity::class.java)
+        fun getCallingIntent(context: Context): Intent {
+            val intent = Intent(context, TopGamingAllTimePostsActivity::class.java)
+            intent.putExtra(TopGamingAllTimePostsActivity.KEY_STARTED_MANUALLY, true)
+            return intent
+        }
     }
 }
 

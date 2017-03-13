@@ -1,5 +1,6 @@
 package data
 
+import android.content.Context
 import android.support.annotation.VisibleForTesting
 import data.network.top.TopRequestSource
 import domain.callback.MemoryCallbacks
@@ -9,6 +10,7 @@ import domain.callback.Urgency
  *  Holder for the module.
  */
 object Data : MemoryCallbacks {
+    internal lateinit var context: Context
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal var cacheablePagedSources: Array<CacheablePagedSource> = arrayOf(TopRequestSource)
 

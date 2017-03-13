@@ -31,7 +31,7 @@ import kotlin.test.assertEquals
 internal class TopPostsFacadeSpek : SubjectSpek<TopPostsFacade>({
     subject { TopPostsFacade } // <- TopPostsFacade singleton instance as test subject
 
-    it("should provide an observable of domain posts when calling get") {
+    it("should provide an observable of domain posts when calling fetch") {
         val expectedAfter = "a random after"
         // Mocking data classes is not possible directly without using some trick, so we will
         // instantiate them instead
@@ -59,7 +59,7 @@ internal class TopPostsFacadeSpek : SubjectSpek<TopPostsFacade>({
         testSubscriber.assertCompleted()
     }
 
-    it("should propagate the error on failed get") {
+    it("should propagate the error on failed fetch") {
         val expectedError = mock<UnknownHostException>()
         val mockResult = Observable.error<TopRequestDataContainer>(expectedError)
         val mockStore = mock<Store<TopRequestDataContainer, TopRequestParameters>>()

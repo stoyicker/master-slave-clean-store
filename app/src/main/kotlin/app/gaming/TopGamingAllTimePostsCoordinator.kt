@@ -15,21 +15,24 @@ import rx.Subscriber
  */
 internal class TopGamingAllTimePostsCoordinator(private val view: LoadableContentView<Post>) {
     private var page = 0
-    private var ongoingUseCase: UseCase<Post>? = null
+    private lateinit var ongoingUseCase: UseCase<Post>
 
     /**
      * Triggers the load of the next page.
+     * @param startedManually In order to decide whether or not to resort to the cache, a boolean
+     * indicating if this load was triggered manually. Defaults to <code>false</code>, which
+     * resorts to memory and disk cache, checking for data availability in that order.
      */
-    internal fun actionLoadNextPage() {
+    internal fun actionLoadNextPage(startedManually: Boolean = false) {
         ongoingUseCase = TopGamingAllTimePostsUseCase(page, UIPostExecutionThread)
-        ongoingUseCase!!.execute(NextPageLoadSubscriber())
+        ongoingUseCase.execute(NextPageLoadSubscriber())
     }
 
     /**
      * Aborts the on-going next page load, if any.
      */
     internal fun abortActionLoadNextPage() {
-        ongoingUseCase?.terminate()
+        ongoingUseCase.terminate()
     }
 
     /**
@@ -53,7 +56,6 @@ internal class TopGamingAllTimePostsCoordinator(private val view: LoadableConten
         }
 
         override fun onError(throwable: Throwable?) {
-            ongoingUseCase = null
             view.showErrorLayout()
             view.hideLoadingLayout()
             view.hideContentLayout()
@@ -61,7 +63,6 @@ internal class TopGamingAllTimePostsCoordinator(private val view: LoadableConten
 
         override fun onCompleted() {
             page++
-            ongoingUseCase = null
             // * is the spread operator. We use it just to build an immutable list
             view.showContentLayout(listOf(*posts.toTypedArray()))
             view.hideLoadingLayout()

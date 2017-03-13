@@ -1,10 +1,15 @@
 package data.network.top
 
+import android.graphics.Path
 import android.support.annotation.VisibleForTesting
+import com.nytimes.android.external.fs.FileSystemPersister
+import com.nytimes.android.external.fs.PathResolver
+import com.nytimes.android.external.fs.filesystem.FileSystemFactory
 import com.nytimes.android.external.store.base.impl.Store
 import com.nytimes.android.external.store.base.impl.StoreBuilder
 import com.nytimes.android.external.store.middleware.GsonParserFactory
 import data.CacheablePagedSource
+import data.Data
 import data.network.common.ApiService
 import data.network.common.RxApiClient
 import domain.interactor.TopGamingAllTimePostsUseCase
@@ -28,12 +33,15 @@ internal object TopRequestSource : CacheablePagedSource {
         // We want to have long-term caching, since it is about all-time tops, which do not
         // change very frequently. Therefore we are fine using the default memory cache
         // implementation which expires items in 24h after acquisition.
-        // We will, however, not use disk-level caching because we always want fresh data on
-        // entering the app (you would expect when you open your Reddit reader to see what is
-        // actually live, wouldn't you?)
+        // We will also use disk caching to prepare against connectivity-related problems, but
+        // we will default to checking the network because on app opening it is reasonable to
+        // expected that, if network connectivity available, the data shown should be the latest
         delegate = StoreBuilder.parsedWithKey<TopRequestParameters, BufferedSource, TopRequestDataContainer>()
                 .fetcher({ this.topFetcher(it) })
                 .parser(GsonParserFactory.createSourceParser<TopRequestDataContainer>(TopRequestDataContainer::class.java))
+                .persister(FileSystemPersister.create(
+                        FileSystemFactory.create(Data.context.cacheDir),
+                        PathResolver<TopRequestParameters> { key -> key.toString() }))
                 // Never try to refresh from network on stale since it will very likely not be worth
                 // and it is not required because we do it on app launch anyway
                 .refreshOnStale()
@@ -45,7 +53,8 @@ internal object TopRequestSource : CacheablePagedSource {
      * @param topRequestParameters The parameters of the request.
      * @see Store
      */
-    internal fun get(topRequestParameters: TopRequestParameters) = delegate.get(topRequestParameters)
+    internal fun fetch(topRequestParameters: TopRequestParameters) = delegate
+            .fetch(topRequestParameters)
             // The doOnNext allows us to intercept the interpretation of pagination of the API
             // so that the outer world only needs to know what page it wants, not how the API
             // implements pagination

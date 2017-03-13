@@ -6,22 +6,15 @@ import com.nytimes.android.external.store.base.impl.StoreBuilder
 import com.nytimes.android.external.store.middleware.GsonParserFactory
 import data.CacheablePagedSource
 import data.network.common.ApiService
+import data.network.common.RxApiClient
 import domain.interactor.TopGamingAllTimePostsUseCase
 import okio.BufferedSource
-import org.jorge.ms.data.BuildConfig
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 
 /**
  * Contains the data source for top requests.
  */
 internal object TopRequestSource : CacheablePagedSource {
-    private val retrofit: ApiService = Retrofit.Builder()
-            .baseUrl(BuildConfig.API_URL)
-            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-            .validateEagerly(true)
-            .build()
-            .create(ApiService::class.java)
+    private val apiService by lazy { RxApiClient.retrofit.create(ApiService::class.java) }
     // This wraps the implementation of pagination in the API
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal val pageMap = mutableMapOf(0 to "")
@@ -78,7 +71,7 @@ internal object TopRequestSource : CacheablePagedSource {
      * @param topRequestParameters The parameters for the request.
      * @see com.nytimes.android.external.store.base.Fetcher
      */
-    private fun topFetcher(topRequestParameters: TopRequestParameters) = retrofit
+    private fun topFetcher(topRequestParameters: TopRequestParameters) = apiService
             .top(topRequestParameters.subreddit, topRequestParameters.time.value,
                     if (pageMap.containsKey(topRequestParameters.page))
                         pageMap[topRequestParameters.page]

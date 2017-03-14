@@ -7,7 +7,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 /**
  * Holds the network client from which interfaces will be created.
  */
-internal object RxApiClient {
+internal object RxNetworkClient {
     internal val retrofit by lazy {
         Retrofit.Builder()
                 .baseUrl(BuildConfig.API_URL)

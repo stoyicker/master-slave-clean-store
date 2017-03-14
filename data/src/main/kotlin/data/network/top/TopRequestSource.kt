@@ -10,9 +10,7 @@ import com.nytimes.android.external.store.middleware.GsonParserFactory
 import data.CacheablePagedSource
 import data.Data
 import data.network.common.ApiService
-import data.network.common.RxApiClient
-import data.network.top.TopRequestSource.delegate
-import data.network.top.TopRequestSource.pageMap
+import data.network.common.RxNetworkClient
 import domain.interactor.TopGamingAllTimePostsUseCase
 import okio.BufferedSource
 import rx.Observable
@@ -21,7 +19,7 @@ import rx.Observable
  * Contains the data source for top requests.
  */
 internal object TopRequestSource : CacheablePagedSource {
-    private val apiService by lazy { RxApiClient.retrofit.create(ApiService::class.java) }
+    private val apiService by lazy { RxNetworkClient.retrofit.create(ApiService::class.java) }
     // This wraps the implementation of pagination in the API
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal val pageMap = mutableMapOf(0 to "")

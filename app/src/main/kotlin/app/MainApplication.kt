@@ -15,7 +15,7 @@ import domain.callback.Urgency
 internal open class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        Domain.inject(TopPostsFacade)
+        Domain.topPostsFacade(TopPostsFacade)
     }
 
     /**

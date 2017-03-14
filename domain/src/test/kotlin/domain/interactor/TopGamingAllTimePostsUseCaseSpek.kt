@@ -32,8 +32,8 @@ internal class TopGamingAllTimePostsUseCaseSpek : SubjectSpek<TopGamingAllTimePo
 
     beforeEachTest {
         reset(MOCK_FACADE)
-        Domain.inject(MOCK_FACADE)
-        Domain.inject(SCHEDULER_IMMEDIATE)
+        Domain.topPostsFacade(MOCK_FACADE)
+        Domain.scheduler(SCHEDULER_IMMEDIATE)
     }
 
     it("should build its implementation as an observable") {

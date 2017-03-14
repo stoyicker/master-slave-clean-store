@@ -18,13 +18,13 @@ internal class DomainSpek : SubjectSpek<Domain>({
 
     it("should hold the injected top posts facade") {
         val expectedFacade = mock<DomainTopPostsFacade>()
-        Domain.inject(expectedFacade)
+        Domain.topPostsFacade(expectedFacade)
         assertEquals(expectedFacade, Domain.topPostsFacade, "Top posts facade not held.")
     }
 
     it("should hold the injected scheduler") {
         val expectedScheduler = mock<Scheduler>()
-        Domain.inject(expectedScheduler)
+        Domain.scheduler(expectedScheduler)
         assertEquals(expectedScheduler, Domain.useCaseScheduler, "Scheduler not held.")
     }
 })

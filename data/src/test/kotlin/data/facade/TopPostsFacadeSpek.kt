@@ -31,7 +31,7 @@ import kotlin.test.assertEquals
 internal class TopPostsFacadeSpek : SubjectSpek<TopPostsFacade>({
     subject { TopPostsFacade } // <- TopPostsFacade singleton instance as test subject
 
-    it("should provide an observable of domain posts when calling fetch") {
+    it("should scheduler an observable of domain posts when calling fetch") {
         val expectedAfter = "a random after"
         // Mocking data classes is not possible directly without using some trick, so we will
         // instantiate them instead
@@ -42,7 +42,7 @@ internal class TopPostsFacadeSpek : SubjectSpek<TopPostsFacade>({
         val mockResult = Observable.just(TopRequestDataContainer(
                 TopRequestData(expectedValues, expectedAfter)))
         val mockStore = mock<Store<TopRequestDataContainer, TopRequestParameters>>()
-        // Now we inject our mock into the data source. You could do this with Dagger, but it is
+        // Now we scheduler our mock into the data source. You could do this with Dagger, but it is
         // an overkill from my point of view, or you could also write a testing flavor for the
         // module, but it will cause issues when being referenced from other modules
         TopRequestSource.delegate = mockStore
@@ -63,7 +63,7 @@ internal class TopPostsFacadeSpek : SubjectSpek<TopPostsFacade>({
         val expectedError = mock<UnknownHostException>()
         val mockResult = Observable.error<TopRequestDataContainer>(expectedError)
         val mockStore = mock<Store<TopRequestDataContainer, TopRequestParameters>>()
-        // Now we inject our mock into the data source. You could do this with Dagger, but it is
+        // Now we scheduler our mock into the data source. You could do this with Dagger, but it is
         // an overkill from my point of view, or you could also write a testing flavor for the
         // module, but it will cause issues when being referenced from other modules
         TopRequestSource.delegate = mockStore

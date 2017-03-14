@@ -1,7 +1,6 @@
 package app.ext
 
 import android.content.Context
-import android.content.res.Resources
 import android.os.Build
 import android.support.annotation.ColorRes
 import android.support.annotation.DimenRes
@@ -31,9 +30,8 @@ internal fun Context.getColorCompat(@ColorRes resId: Int) =
 internal fun Context.getDimension(@DimenRes resId: Int) = this.resources.getDimension(resId)
 
 /**
- * Internal function to check if the device is in portrait mode.
+ * Extension function to check if the device is in portrait mode.
  */
-internal fun Context.isPortrait(): Boolean {
-    val displayMetrics = Resources.getSystem().displayMetrics
-    return displayMetrics.heightPixels > displayMetrics.widthPixels
+internal fun Context.isPortrait() = this.resources.displayMetrics.let {
+    it.heightPixels > it.widthPixels
 }

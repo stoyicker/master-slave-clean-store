@@ -31,7 +31,7 @@ import kotlin.test.assertEquals
 internal class TopPostsFacadeSpek : SubjectSpek<TopPostsFacade>({
     subject { TopPostsFacade } // <- TopPostsFacade singleton instance as test subject
 
-    it("should scheduler an observable of domain posts when calling fetch") {
+    it("should schedule an observable of domain posts when calling fetch") {
         val expectedAfter = "a random after"
         // Mocking data classes is not possible directly without using some trick, so we will
         // instantiate them instead
@@ -45,7 +45,7 @@ internal class TopPostsFacadeSpek : SubjectSpek<TopPostsFacade>({
         // Now we schedule our mock into the data source. You could do this with Dagger, but it is
         // an overkill from my point of view, or you could also write a testing flavor for the
         // module, but it will cause issues when being referenced from other modules
-        TopRequestSource.delegate = mockStore
+        TopRequestSource.Inject.storeGenerator = { mockStore }
         val testSubscriber = TestSubscriber<Post>()
         whenever(mockStore.get(anyVararg())) doReturn mockResult
         // Parameters do not matter because of the mocked method on the injected delegate
@@ -66,7 +66,7 @@ internal class TopPostsFacadeSpek : SubjectSpek<TopPostsFacade>({
         // Now we schedule our mock into the data source. You could do this with Dagger, but it is
         // an overkill from my point of view, or you could also write a testing flavor for the
         // module, but it will cause issues when being referenced from other modules
-        TopRequestSource.delegate = mockStore
+        TopRequestSource.Inject.storeGenerator = { mockStore }
         val testSubscriber = TestSubscriber<Post>()
         whenever(mockStore.get(anyVararg())) doReturn mockResult
         // Parameters do not matter because of the mocked method on the injected delegate

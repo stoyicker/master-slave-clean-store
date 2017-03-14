@@ -11,7 +11,7 @@ import android.net.Uri
  */
 internal class InitializationContentProvider : ContentProvider() {
     override fun onCreate(): Boolean {
-        Data.cacheDir = this.context.cacheDir
+        Data.Inject.cacheDirGenerator = { this.context.cacheDir }
         return true
     }
 

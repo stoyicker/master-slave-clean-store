@@ -20,7 +20,7 @@ internal class TopRequestSourceSpek : SubjectSpek<TopRequestSource>({
     subject { TopRequestSource } // <- Specify singleton instance as test subject
 
     beforeEachTest {
-        TopRequestSource.delegate = mock()
+        TopRequestSource.Inject.storeGenerator = { mock() }
         TopRequestSource.pageMap.clear()
     }
 
@@ -45,12 +45,12 @@ internal class TopRequestSourceSpek : SubjectSpek<TopRequestSource>({
             }
             val size = TopRequestSource.pageMap.size
             subject.clearCacheFromPage(fromPage)
-            verify(TopRequestSource.delegate, times(size - safePage))
+            verify(TopRequestSource.store, times(size - safePage))
                     .clear(eq(TopRequestParameters(
                             TopGamingAllTimePostsUseCase.SUBREDDIT,
                             TopGamingAllTimePostsUseCase.TIME_RANGE,
                             0)))
-            verifyNoMoreInteractions(TopRequestSource.delegate)
+            verifyNoMoreInteractions(TopRequestSource.store)
             assertEquals(safePage, TopRequestSource.pageMap.size)
         }
     }

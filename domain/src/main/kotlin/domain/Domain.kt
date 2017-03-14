@@ -1,7 +1,6 @@
 package domain
 
 import domain.repository.DomainTopPostsFacade
-import rx.Scheduler
 import rx.schedulers.Schedulers
 
 /**
@@ -12,7 +11,7 @@ import rx.schedulers.Schedulers
  */
 object Domain {
     internal lateinit var topPostsFacade: DomainTopPostsFacade
-    internal var useCaseScheduler: Scheduler = Schedulers.io()
+    internal val useCaseScheduler by lazy { Inject.useCaseSchedulerGenerator.invoke() }
 
     /**
      * Set an implemented DomainTopPostsFacade.
@@ -22,12 +21,16 @@ object Domain {
         topPostsFacade = facade
     }
 
-    /**
-     * Set a Scheduler for UseCase execution (could also be configured per UseCase in more
-     * complex scenarios).
-     * @param scheduler The scheduler to set.
-     */
-    fun scheduler(scheduler: Scheduler) {
-        useCaseScheduler = scheduler
+    internal object Inject {
+        /**
+         * Set a Scheduler for UseCase execution (could also be configured per UseCase in more
+         * complex scenarios). The way to do it is by providing a generator function that will be
+         * invoked the first time the field is accessed.
+         */
+        var useCaseSchedulerGenerator = DEFAULTS.USE_CASE_SCHEDULER_GENERATOR
+    }
+
+    private object DEFAULTS {
+        internal val USE_CASE_SCHEDULER_GENERATOR = { Schedulers.io() }
     }
 }

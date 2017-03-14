@@ -27,13 +27,13 @@ import rx.schedulers.Schedulers
  * @see TopGamingAllTimePostsUseCase
  */
 @RunWith(JUnitPlatform::class)
-internal class TopGamingAllTimePostsUseCaseSpek : SubjectSpek<TopGamingAllTimePostsUseCase>({
-    subject { TopGamingAllTimePostsUseCase(PAGE, EXECUTION_THREAD_SCHEDULE_IMMEDIATELY) }
+internal class TopGamingAllTimePostsGetUseCaseSpek : SubjectSpek<TopGamingAllTimeGetPostsUseCase>({
+    subject { TopGamingAllTimeGetPostsUseCase(PAGE, EXECUTION_THREAD_SCHEDULE_IMMEDIATELY) }
 
     beforeEachTest {
         reset(MOCK_FACADE)
         Domain.topPostsFacade(MOCK_FACADE)
-        Domain.scheduler(SCHEDULER_IMMEDIATE)
+        Domain.Inject.useCaseSchedulerGenerator = { SCHEDULER_IMMEDIATE }
     }
 
     it("should build its implementation as an observable") {

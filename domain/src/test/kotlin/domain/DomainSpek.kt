@@ -24,7 +24,7 @@ internal class DomainSpek : SubjectSpek<Domain>({
 
     it("should hold the injected scheduler") {
         val expectedScheduler = mock<Scheduler>()
-        Domain.scheduler(expectedScheduler)
+        Domain.scheduler { expectedScheduler }
         assertEquals(expectedScheduler, Domain.useCaseScheduler, "Scheduler not held.")
     }
 })

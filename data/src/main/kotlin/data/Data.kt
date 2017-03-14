@@ -1,16 +1,25 @@
 package data
 
+import android.os.Environment
 import android.support.annotation.VisibleForTesting
 import data.network.top.TopRequestSource
 import domain.callback.MemoryCallbacks
 import domain.callback.Urgency
-import java.io.File
 
 /**
- *  Holder for the module.
+ * Global configuration holder for the module.
+ * Note how this class acts as a dependency holder. You could also a DI framework like Dagger for
+ * example, but to only provide a single dependency, which is also a singleton, might as well do it
+ * myself instead.
  */
 object Data : MemoryCallbacks {
-    internal var cacheDir: File? = null
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal const val PAGE_KEPT_ON_MEMORY_TRIM_LOW = 5
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal const val PAGE_KEPT_ON_MEMORY_TRIM_MEDIUM = 1
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal const val PAGE_KEPT_ON_MEMORY_TRIM_HIGH = 0
+    internal val cacheDir by lazy { Inject.cacheDirGenerator.invoke() }
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal var cacheablePagedSources: Array<CacheablePagedSource> = arrayOf(TopRequestSource)
 
@@ -24,12 +33,17 @@ object Data : MemoryCallbacks {
         cacheablePagedSources.forEach { it.clearCacheFromPage(page) }
     }
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    internal const val PAGE_KEPT_ON_MEMORY_TRIM_LOW = 5
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    internal const val PAGE_KEPT_ON_MEMORY_TRIM_MEDIUM = 1
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    internal const val PAGE_KEPT_ON_MEMORY_TRIM_HIGH = 0
+     internal object Inject {
+         /**
+          * Set a cache dir. The way to do it is by providing a generator function that will be
+          * invoked the first time the field is accessed.
+          */
+         var cacheDirGenerator = DEFAULTS.CACHE_DIR_GENERATOR
+    }
+
+    private object DEFAULTS {
+        internal val CACHE_DIR_GENERATOR = { Environment.getExternalStorageDirectory() }
+    }
 }
 
 /**

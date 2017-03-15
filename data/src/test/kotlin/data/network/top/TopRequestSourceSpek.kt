@@ -6,7 +6,7 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import domain.interactor.TopGamingAllTimePostsUseCase
-import goody.ResettableLazyManager
+import util.ResettableLazyManager
 import org.jetbrains.spek.api.SubjectSpek
 import org.jetbrains.spek.api.dsl.it
 import org.junit.platform.runner.JUnitPlatform

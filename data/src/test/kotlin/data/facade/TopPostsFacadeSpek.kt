@@ -13,7 +13,7 @@ import data.network.top.TopRequestParameters
 import data.network.top.TopRequestSource
 import domain.entity.Post
 import domain.entity.TimeRange
-import goody.ResettableLazyManager
+import util.ResettableLazyManager
 import org.jetbrains.spek.api.SubjectSpek
 import org.jetbrains.spek.api.dsl.it
 import org.junit.platform.runner.JUnitPlatform

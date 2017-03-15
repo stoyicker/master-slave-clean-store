@@ -1,4 +1,4 @@
-package goody
+package util
 
 import org.jetbrains.spek.api.SubjectSpek
 import org.jetbrains.spek.api.dsl.it

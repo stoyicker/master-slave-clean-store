@@ -12,7 +12,7 @@ import data.Data
 import data.network.common.ApiService
 import data.network.common.RxNetworkClient
 import domain.interactor.TopGamingAllTimePostsUseCase
-import goody.resettableLazy
+import util.resettableLazy
 import okio.BufferedSource
 import rx.Observable
 

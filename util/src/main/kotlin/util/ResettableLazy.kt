@@ -1,8 +1,7 @@
 @file:JvmName("ResettableLazyKt")
 
-package goody
+package util
 
-import android.support.annotation.RestrictTo
 import kotlin.reflect.KProperty
 
 /**
@@ -13,9 +12,8 @@ import kotlin.reflect.KProperty
  * implementation since the original <code>lazy</code> in the Kotlin runtime does not have this
  * functionality either).
  */
-@RestrictTo(RestrictTo.Scope.TESTS)
-internal object ResettableLazyManager {
-    private val managedDelegates = mutableMapOf<Any?, ResettableLazy<out Any>>()
+object ResettableLazyManager {
+    private val managedDelegates = mutableMapOf<Any, ResettableLazy<out Any>>()
 
     /**
      * Registers a resettable lazy property to be managed by this instance. DO NOT USE, THIS IS
@@ -23,7 +21,7 @@ internal object ResettableLazyManager {
      * @param target The target to register.
      * @param resettable The resettable representation of the property for later resets.
      */
-    fun register(target: Any, resettable: ResettableLazy<out Any>) {
+    internal fun <T : Any> register(target: T, resettable: ResettableLazy<T>) {
         synchronized (managedDelegates) {
             managedDelegates.put(target, resettable)
         }
@@ -35,7 +33,6 @@ internal object ResettableLazyManager {
      * @param managed The property to reset. If not initialized using <code>resettableLazy<code>,
      * this method is useless.
      */
-    @RestrictTo(RestrictTo.Scope.TESTS)
     fun reset(managed: Any) {
         synchronized (managedDelegates) {
             val target = managedDelegates[managed]
@@ -57,13 +54,12 @@ internal interface Resettable {
     fun reset()
 }
 
-
 /**
  * The real implementation. It just wraps a delegate which holds the actual valuable of the property
  * inside a non-resettable <code>lazy</code> block. When resetting, what is actually reset is
  * the delegate
  */
-internal class ResettableLazy<T : Any>(val init: () -> T) : Resettable {
+class ResettableLazy<T : Any>(val init: () -> T) : Resettable {
     @Volatile var lazyHolder = makeInitBlock()
 
     operator fun getValue(thisRef: Any, property: KProperty<*>): T {
@@ -90,6 +86,6 @@ internal class ResettableLazy<T : Any>(val init: () -> T) : Resettable {
 /**
  * This is the function that we use to offer a similar syntax as the original <code>lazy</code>.
  */
-internal fun <T : Any> resettableLazy(init: () -> T): ResettableLazy<T> {
+fun <T : Any> resettableLazy(init: () -> T): ResettableLazy<T> {
     return ResettableLazy(init)
 }

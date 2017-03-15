@@ -48,6 +48,7 @@ repositories {
 
 dependencies {
     compile project(':domain')
+    compile project(':util')
     compile rootProject.ext.compileDependencies
     provided rootProject.ext.providedDataDependencies
     rootProject.ext.compileDataDependencies.forEach {

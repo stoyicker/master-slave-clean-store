@@ -21,7 +21,7 @@ import kotlin.test.assertTrue
 internal class TopRequestSourceIntegrationSpek : SubjectSpek<TopRequestSource>({
     subject { TopRequestSource } // <- Specify singleton instance as test subject
 
-    it("should always fetch models with non-empty values for the attributes kept") {
+    it ("should always fetch models with non-empty values for the attributes kept") {
         val retrofit: ApiService = Retrofit.Builder()
                 .baseUrl(BuildConfig.API_URL)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())

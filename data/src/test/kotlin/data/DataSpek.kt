@@ -20,17 +20,17 @@ internal class DataSpek : SubjectSpek<Data>({
         Data.cacheablePagedSources = arrayOf(mock())
     }
 
-    it("should call its sources with page ${Data.PAGE_KEPT_ON_MEMORY_TRIM_LOW}") {
+    it ("should call its sources with page ${Data.PAGE_KEPT_ON_MEMORY_TRIM_LOW}") {
         subject.onTrimMemory(Urgency.LOW)
         verifySourceCalledWithPage(Data.PAGE_KEPT_ON_MEMORY_TRIM_LOW)
     }
 
-    it("should call its sources with page ${Data.PAGE_KEPT_ON_MEMORY_TRIM_MEDIUM}") {
+    it ("should call its sources with page ${Data.PAGE_KEPT_ON_MEMORY_TRIM_MEDIUM}") {
         subject.onTrimMemory(Urgency.MEDIUM)
         verifySourceCalledWithPage(Data.PAGE_KEPT_ON_MEMORY_TRIM_MEDIUM)
     }
 
-    it("should call its sources with page ${Data.PAGE_KEPT_ON_MEMORY_TRIM_HIGH}") {
+    it ("should call its sources with page ${Data.PAGE_KEPT_ON_MEMORY_TRIM_HIGH}") {
         subject.onTrimMemory(Urgency.HIGH)
         verifySourceCalledWithPage(Data.PAGE_KEPT_ON_MEMORY_TRIM_HIGH)
     }

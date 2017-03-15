@@ -13,6 +13,7 @@ import kotlin.reflect.KProperty
  * implementation since the original <code>lazy</code> in the Kotlin runtime does not have this
  * functionality either).
  */
+@RestrictTo(RestrictTo.Scope.TESTS)
 internal object ResettableLazyManager {
     private val managedDelegates = mutableMapOf<Any?, ResettableLazy<out Any>>()
 

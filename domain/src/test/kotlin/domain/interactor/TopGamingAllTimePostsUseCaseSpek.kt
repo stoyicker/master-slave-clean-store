@@ -33,7 +33,7 @@ internal class TopGamingAllTimePostsGetUseCaseSpek : SubjectSpek<TopGamingAllTim
     beforeEachTest {
         reset(MOCK_FACADE)
         Domain.topPostsFacade(MOCK_FACADE)
-        Domain.Inject.useCaseSchedulerGenerator = { SCHEDULER_IMMEDIATE }
+        Domain.Provide.useCaseSchedulerGenerator = { SCHEDULER_IMMEDIATE }
     }
 
     it("should build its implementation as an observable") {

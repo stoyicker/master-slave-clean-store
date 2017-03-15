@@ -24,7 +24,7 @@ internal object TopRequestSource : CacheablePagedSource {
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal val pageMap = mutableMapOf(0 to "")
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    internal val store by lazy { Inject.storeGenerator.invoke() }
+    internal val store by lazy { Provide.storeGenerator.invoke() }
 
     /**
      * Delegates to its internal responsible for the request. Cache is ignored, but updated on
@@ -85,34 +85,34 @@ internal object TopRequestSource : CacheablePagedSource {
                                          from: Observable<TopRequestDataContainer>)
             = from.doOnNext { pageMap.put(requestPage + 1, it.data.after) }
 
-    internal object Inject {
+    internal object Provide {
         /**
          * Set a Store for this data source. The way to do it is by providing a generator function
          * that will be invoked the first time the field is accessed.
          */
         var storeGenerator = DEFAULTS.STORE_GENERATOR
-    }
 
-    private object DEFAULTS {
-        internal val STORE_GENERATOR = {
-            // We want to have long-term caching, since it is about all-time tops, which do not
-            // change very frequently. Therefore we are fine using the default memory cache
-            // implementation which expires items in 24h after acquisition.
-            // We will also use disk caching to prepare against connectivity-related problems, but
-            // we will default to checking the network because on app opening it is reasonable to
-            // expected that, if network connectivity available, the data shown should be the latest
-            StoreBuilder
-                    .parsedWithKey<TopRequestParameters, BufferedSource, TopRequestDataContainer>()
-                    .fetcher({ TopRequestSource.topFetcher(it) })
-                    .parser(GsonParserFactory.createSourceParser<TopRequestDataContainer>(
-                            TopRequestDataContainer::class.java))
-                    .persister(FileSystemPersister.create(
-                            FileSystemFactory.create(Data.cacheDir!!),
-                            PathResolver<TopRequestParameters> { key -> key.toString() }))
-                    // Never try to refresh from network on stale since it will very likely not be
-                    // worth and it is not required because we do it on app launch anyway
-                    .refreshOnStale()
-                    .open()
+        private object DEFAULTS {
+            internal val STORE_GENERATOR = {
+                // We want to have long-term caching, since it is about all-time tops, which do not
+                // change very frequently. Therefore we are fine using the default memory cache
+                // implementation which expires items in 24h after acquisition.
+                // We will also use disk caching to prepare against connectivity-related problems, but
+                // we will default to checking the network because on app opening it is reasonable to
+                // expected that, if network connectivity available, the data shown should be the latest
+                StoreBuilder
+                        .parsedWithKey<TopRequestParameters, BufferedSource, TopRequestDataContainer>()
+                        .fetcher({ TopRequestSource.topFetcher(it) })
+                        .parser(GsonParserFactory.createSourceParser<TopRequestDataContainer>(
+                                TopRequestDataContainer::class.java))
+                        .persister(FileSystemPersister.create(
+                                FileSystemFactory.create(Data.cacheDir!!),
+                                PathResolver<TopRequestParameters> { key -> key.toString() }))
+                        // Never try to refresh from network on stale since it will very likely not be
+                        // worth and it is not required because we do it on app launch anyway
+                        .refreshOnStale()
+                        .open()
+            }
         }
     }
 }

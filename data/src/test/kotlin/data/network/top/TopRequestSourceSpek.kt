@@ -20,7 +20,7 @@ internal class TopRequestSourceSpek : SubjectSpek<TopRequestSource>({
     subject { TopRequestSource } // <- Specify singleton instance as test subject
 
     beforeEachTest {
-        TopRequestSource.Inject.storeGenerator = { mock() }
+        TopRequestSource.Provide.storeGenerator = { mock() }
         TopRequestSource.pageMap.clear()
     }
 

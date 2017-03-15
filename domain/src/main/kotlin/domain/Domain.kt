@@ -11,7 +11,7 @@ import rx.schedulers.Schedulers
  */
 object Domain {
     internal lateinit var topPostsFacade: DomainTopPostsFacade
-    internal val useCaseScheduler by lazy { Inject.useCaseSchedulerGenerator.invoke() }
+    internal val useCaseScheduler by lazy { Provide.useCaseSchedulerGenerator.invoke() }
 
     /**
      * Set an implemented DomainTopPostsFacade.
@@ -21,16 +21,16 @@ object Domain {
         topPostsFacade = facade
     }
 
-    internal object Inject {
+    internal object Provide {
         /**
          * Set a Scheduler for UseCase execution (could also be configured per UseCase in more
          * complex scenarios). The way to do it is by providing a generator function that will be
          * invoked the first time the field is accessed.
          */
         var useCaseSchedulerGenerator = DEFAULTS.USE_CASE_SCHEDULER_GENERATOR
-    }
 
-    private object DEFAULTS {
-        internal val USE_CASE_SCHEDULER_GENERATOR = { Schedulers.io() }
+        private object DEFAULTS {
+            internal val USE_CASE_SCHEDULER_GENERATOR = { Schedulers.io() }
+        }
     }
 }

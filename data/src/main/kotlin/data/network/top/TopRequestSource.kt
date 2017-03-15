@@ -12,6 +12,7 @@ import data.Data
 import data.network.common.ApiService
 import data.network.common.RxNetworkClient
 import domain.interactor.TopGamingAllTimePostsUseCase
+import goody.resettableLazy
 import okio.BufferedSource
 import rx.Observable
 
@@ -24,7 +25,7 @@ internal object TopRequestSource : CacheablePagedSource {
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal val pageMap = mutableMapOf(0 to "")
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    internal val store by lazy { Provide.storeGenerator.invoke() }
+    internal val store by resettableLazy { Provide.storeGenerator() }
 
     /**
      * Delegates to its internal responsible for the request. Cache is ignored, but updated on

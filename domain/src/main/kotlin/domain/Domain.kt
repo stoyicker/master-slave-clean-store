@@ -11,7 +11,7 @@ import rx.schedulers.Schedulers
  */
 object Domain {
     internal lateinit var topPostsFacade: DomainTopPostsFacade
-    internal val useCaseScheduler by lazy { Provide.useCaseSchedulerGenerator.invoke() }
+    internal val useCaseScheduler by lazy { Provide.useCaseSchedulerGenerator() }
 
     /**
      * Set an implemented DomainTopPostsFacade.

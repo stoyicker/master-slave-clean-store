@@ -15,8 +15,6 @@ import kotlinx.android.synthetic.main.include_top_posts_view.progress
 import org.jorge.ms.app.BuildConfig
 import org.jorge.ms.app.R
 
-
-
 /**
  * An Activity that shows the top posts from /r/gaming.
  */

@@ -19,7 +19,7 @@ object Data : MemoryCallbacks {
     internal const val PAGE_KEPT_ON_MEMORY_TRIM_MEDIUM = 1
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal const val PAGE_KEPT_ON_MEMORY_TRIM_HIGH = 0
-    internal val cacheDir by lazy { Provide.cacheDirGenerator.invoke() }
+    internal val cacheDir by lazy { Provide.cacheDirGenerator() }
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal var cacheablePagedSources: Array<CacheablePagedSource> = arrayOf(TopRequestSource)
 

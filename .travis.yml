@@ -33,8 +33,9 @@ script:
 before_cache:
 - rm -f /home/travis/.gradle/caches/modules-2/modules-2.lock
 - rm -fr /home/travis/.gradle/caches/*/plugin-resolution/
-- rm -f /home/travis/.gradle/caches/3.4/fileHashes/fileHashes.bin
-- rm -f /home/travis/.gradle/caches/3.4/fileHashes/fileHashes.lock
+- rm -f /home/travis/.gradle/caches/*/fileHashes/fileHashes.bin
+- rm -f /home/travis/.gradle/caches/*/fileHashes/fileHashes.bin
+- rm -f /home/travis/.gradle/caches/*/scripts/*
 after_success:
 - |
   if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then

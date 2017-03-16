@@ -9,10 +9,14 @@ buildscript {
     final def androidPluginVersion = "2.2.3"
     final def kotlinPluginVersion = rootProject.ext.kotlinVersion = "1.1.0"
     final def dokkaPluginVersion = "0.9.13"
+    final def googleServicesPluginVersion = "3.0.0"
+    final def firebasePluginsVersion = "1.0.5"
     final def classpathDependencies = [
         "com.android.tools.build:gradle:$androidPluginVersion",
         "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinPluginVersion",
-        "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokkaPluginVersion"
+        "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokkaPluginVersion",
+        "com.google.gms:google-services:$googleServicesPluginVersion",
+        "com.google.firebase:firebase-plugins:$firebasePluginsVersion"
     ]
     dependencies {
         classpath classpathDependencies
@@ -24,10 +28,10 @@ final def staticAnalysisReportFolderTarget = project.rootDir.absolutePath + "/st
 
 rootProject.ext {
     androidCompileSdkVersion = 25
-    androidMinSdkVersion = 9
+    androidMinSdkVersion = 14
     androidTargetSdkVersion = 25
     androidBuildToolsVersion = '25.0.2'
-	androidVersionCode = inducedVersion != null ? Integer.parseInt(inducedVersion) : 0 // Depending on the git method locally causes IDE issues
+	androidVersionCode = inducedVersion != null ? Integer.parseInt(inducedVersion) : 1 // Depending on the git method locally causes IDE issues
 	androidVersionName = String.valueOf(androidVersionCode)
 	androidTestInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
 	androidApplicationIdBase = "org.jorge.ms.%s"

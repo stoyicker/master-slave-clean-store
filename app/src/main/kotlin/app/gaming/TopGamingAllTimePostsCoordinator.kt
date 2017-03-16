@@ -3,6 +3,7 @@ package app.gaming
 import android.support.annotation.VisibleForTesting
 import app.UIPostExecutionThread
 import app.widget.LoadableContentView
+import com.google.firebase.crash.FirebaseCrash
 import domain.entity.Post
 import domain.interactor.TopGamingAllTimeFetchPostsUseCase
 import domain.interactor.TopGamingAllTimeGetPostsUseCase
@@ -61,6 +62,7 @@ internal class TopGamingAllTimePostsCoordinator(private val view: LoadableConten
         }
 
         override fun onError(throwable: Throwable?) {
+            FirebaseCrash.report(throwable)
             view.showErrorLayout()
             view.hideLoadingLayout()
             view.hideContentLayout()

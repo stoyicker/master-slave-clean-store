@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.jetbrains.dokka-android'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.firebase-crash'
 
 android {
     compileSdkVersion rootProject.ext.androidCompileSdkVersion
@@ -17,6 +19,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug" // Do not change as Firebase depends on this
+        }
         release {
             signingConfig signingConfigs.release
             minifyEnabled true
@@ -92,12 +97,12 @@ dependencies {
     compile project(':data')
     compile project(':domain')
     compile project(':util-android')
-    rootProject.ext.androidTestCompilePresentationDependencies.forEach {
+    rootProject.ext.androidTestCompileAppDependencies.forEach {
         compile(it) {
             exclude group: 'com.google.code.findbugs'
             exclude module: 'support-annotations'
         }
     }
     compile rootProject.ext.compileDependencies
-    compile rootProject.ext.compilePresentationDependencies
+    compile rootProject.ext.compileAppDependencies
 }

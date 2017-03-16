@@ -1,3 +1,4 @@
+final def firebaseVersion = "10.2.0"
 final def espressoVersion = "2.2.2"
 final def junitPlatformRunnerVersion = "1.0.0-M3"
 final def jUnitVersion = "4.12"
@@ -39,12 +40,13 @@ rootProject.ext.compileDataDependencies = [
         "com.nytimes.android:filesystem:$storeVersion"
 ]
 
-rootProject.ext.androidTestCompilePresentationDependencies = [
+rootProject.ext.androidTestCompileAppDependencies = [
         "com.android.support.test.espresso:espresso-core:$espressoVersion",
-        "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
+        "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion",
+        "com.google.firebase:firebase-crash:$firebaseVersion"
 ]
 
-rootProject.ext.compilePresentationDependencies = [
+rootProject.ext.compileAppDependencies = [
         "io.reactivex:rxandroid:$rxAndroidVersion",
         "com.android.support:appcompat-v7:$supportVersion",
         "com.android.support:design:$supportVersion"

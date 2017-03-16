@@ -9,3 +9,5 @@ captures
 dependencyReport
 staticAnalysisReport/
 *.keystore
+google-services.json
+master-slave-clean-store-firebase-crashreporting-private-key.json

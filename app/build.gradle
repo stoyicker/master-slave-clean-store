@@ -74,3 +74,6 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+
+setProperty("FirebaseServiceAccountFilePath", rootProject.rootDir.absolutePath + "/" +
+        "master-slave-clean-store-firebase-crashreporting-private-key.json")

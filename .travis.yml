@@ -11,47 +11,47 @@ android:
   - platform-tools
 branches:
   except:
-    - "/^[0-9]/"
+  - "/^[0-9]/"
 cache:
   directories:
-    - "$HOME/.gradle/caches/"
-    - "$HOME/.gradle/wrapper/"
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
 before_install:
-  - openssl aes-256-cbc -K $encrypted_90d766e4084d_key -iv $encrypted_90d766e4084d_iv
-    -in app/src/release/google-services.json.enc -out app/src/release/google-services.json -d
-  - openssl aes-256-cbc -K $encrypted_90d766e4084d_key -iv $encrypted_90d766e4084d_iv
-    -in app/src/debug/google-services.json.enc -out app/src/debug/google-services.json
-    -d
-  - openssl aes-256-cbc -K $encrypted_90d766e4084d_key -iv $encrypted_90d766e4084d_iv
-    -in master-slave-clean-store-firebase-crashreporting-private-key.json.enc -out master-slave-clean-store-firebase-crashreporting-private-key.json
-    -d
-  - openssl aes-256-cbc -K $encrypted_90d766e4084d_key -iv $encrypted_90d766e4084d_iv
-    -in alias.keystore.enc -out alias.keystore -d
+- openssl aes-256-cbc -K $encrypted_90d766e4084d_key -iv $encrypted_90d766e4084d_iv
+  -in app/src/debug/google-services.json.enc -out app/src/debug/google-services.json -d
+- openssl aes-256-cbc -K $encrypted_90d766e4084d_key -iv $encrypted_90d766e4084d_iv
+  -in app/src/release/google-services.json.enc -out app/src/release/google-services.json
+  -d
+- openssl aes-256-cbc -K $encrypted_90d766e4084d_key -iv $encrypted_90d766e4084d_iv
+  -in master-slave-clean-store-firebase-crashreporting-private-key.json.enc -out master-slave-clean-store-firebase-crashreporting-private-key.json
+  -d
+- openssl aes-256-cbc -K $encrypted_90d766e4084d_key -iv $encrypted_90d766e4084d_iv
+  -in alias.keystore.enc -out alias.keystore -d
 before_script:
-  - |
-    if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
-      echo "Do not open PRs against master; merge dev into master locally and push instead."
-      exit 1
-    fi
+- |
+  if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
+    echo "Do not open PRs against master; merge dev into master locally and push instead."
+    exit 1
+  fi
 script:
-  - "./gradlew clean build check dokka"
+- "./gradlew clean build check dokka"
 before_cache:
-  - rm -f /home/travis/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr /home/travis/.gradle/caches/*/plugin-resolution/
-  - rm -f /home/travis/.gradle/caches/3.4/fileHashes/fileHashes.bin
-  - rm -f /home/travis/.gradle/caches/3.4/fileHashes/fileHashes.lock
+- rm -f /home/travis/.gradle/caches/modules-2/modules-2.lock
+- rm -fr /home/travis/.gradle/caches/*/plugin-resolution/
+- rm -f /home/travis/.gradle/caches/3.4/fileHashes/fileHashes.bin
+- rm -f /home/travis/.gradle/caches/3.4/fileHashes/fileHashes.lock
 after_success:
-  - |
-    if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
-      echo "CI on master succeded. Executing release tasks..."
-      ./ci/release.sh
-      echo "Uploading mapping to Firebase..."
-      ./gradlew -PFirebaseServiceAccountFilePath=master-slave-clean-store-firebase-crashreporting-private-key.json
-      ./gradlew :app:firebaseUploadProdReleaseProguardMapping
-    fi
+- |
+  if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
+    echo "CI on master succeded. Executing release tasks..."
+    ./ci/release.sh
+    echo "Uploading mapping to Firebase..."
+    ./gradlew -PFirebaseServiceAccountFilePath=master-slave-clean-store-firebase-crashreporting-private-key.json
+    ./gradlew :app:firebaseUploadProdReleaseProguardMapping
+  fi
 notifications:
   email:
     recipients:
-      - jorge.diazbenitosoriano@gmail.com
+    - jorge.diazbenitosoriano@gmail.com
     on_success: change
     on_failure: always

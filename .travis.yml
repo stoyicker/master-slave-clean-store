@@ -45,7 +45,7 @@ after_success:
     if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
       echo "CI on master succeded. Executing release tasks..."
       ./ci/release.sh
-      echo "Upload mapping to Firebase..."
+      echo "Uploading mapping to Firebase..."
       ./gradlew -PFirebaseServiceAccountFilePath=master-slave-clean-store-firebase-crashreporting-private-key.json
       ./gradlew :app:firebaseUploadProdReleaseProguardMapping
     fi

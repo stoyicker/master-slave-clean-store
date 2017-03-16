@@ -1,6 +1,6 @@
 # Setup for contributions
 
-Once cloned, just setup the scripts:
+Once cloned, just setup the hooks:
 
 ```shell
 $<project-dir>: ./hooks/setup
@@ -8,13 +8,18 @@ $<project-dir>: ./hooks/setup
 
 # Build instructions
 
-Place the key to the API in the root gradle.properties file following
+* Place the key to the API in the root gradle.properties file following
 the format below:
-````
-prop_api_url="https://api-url.com/"
-````
-
-__Make sure to include the quotes.__
+    ````
+    prop_api_url="https://api-url.com/"
+    ````
+    __Make sure to include the quotes.__
+* Place the keystore for the release version, named `alias.keystore`, under the project root.
+* Make sure you're passing a property to gradle (like through `gradle.properties`) keyed 
+FirebaseServiceAccountFilePath. Its value is irrelevant.
+* Place the Firebase service account file, named 
+`master-slave-clean-store-firebase-crashreporting-private-key.json`, under the project root.
+* Put your `google-services.json` files under the `debug` and `release` folders of the `app` module.
 
 # Architecture
 This is a reactive app: it runs by reacting to user interactions. Here

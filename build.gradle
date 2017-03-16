@@ -37,6 +37,7 @@ rootProject.ext {
 	androidApplicationIdBase = "org.jorge.ms.%s"
 	staticAnalysisReportTarget = staticAnalysisReportFolderTarget
     javaVersion = JavaVersion.VERSION_1_7
+    firebaseServiceAccountFileName = "master-slave-clean-store-firebase-crashreporting-private-key.json"
 }
 
 task clean(type: Delete, overwrite: true) {

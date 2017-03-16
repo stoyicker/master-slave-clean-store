@@ -9,8 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
-import app.ext.getDimension
-import app.ext.isPortrait
+import util.android.ext.getDimension
+import util.android.ext.isPortrait
 import domain.entity.Post
 import org.jorge.ms.app.R
 

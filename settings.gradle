@@ -1,1 +1,1 @@
-include ':util', ':domain', ':data', ':app'
+include ':util', ':util-android', ':domain', ':data', ':app'

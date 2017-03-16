@@ -5,6 +5,6 @@
     package="org.jorge.ms.app">
     <application
         android:name="app.DebugApplication"
-        tools:ignore="AllowBackup"/>
+        tools:ignore="AllowBackup" />
         <!-- The main manifest takes care of AllowBackup -->
 </manifest>

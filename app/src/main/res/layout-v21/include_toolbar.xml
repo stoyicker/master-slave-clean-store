@@ -7,4 +7,4 @@
     android:layout_height="wrap_content"
     app:title="@string/app_label"
     app:contentInsetEnd="@dimen/appbar_horizontal_padding"
-    app:contentInsetStart="@dimen/appbar_horizontal_padding"/>
+    app:contentInsetStart="@dimen/appbar_horizontal_padding" />

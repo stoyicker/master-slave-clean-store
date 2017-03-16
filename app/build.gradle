@@ -91,6 +91,7 @@ repositories {
 dependencies {
     compile project(':data')
     compile project(':domain')
+    compile project(':util-android')
     rootProject.ext.androidTestCompilePresentationDependencies.forEach {
         compile(it) {
             exclude group: 'com.google.code.findbugs'

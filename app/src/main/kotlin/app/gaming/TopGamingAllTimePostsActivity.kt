@@ -89,7 +89,7 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
     internal companion object {
         private const val KEY_STARTED_MANUALLY = "KEY_STARTED_MANUALLY"
         /**
-         * Safe way to schedulee an intent to route to this activity. More useful if it were to have
+         * Safe way to schedule an intent to route to this activity. More useful if it were to have
          * parameters for example, but a good idea to have nevertheless.
          * @param context The context to start this activity from.
          */

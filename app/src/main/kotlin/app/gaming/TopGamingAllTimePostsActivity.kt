@@ -70,6 +70,22 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * An interface for the view to communicate with the coordinator.
+     */
+    internal interface BehaviorCallback {
+        /**
+         * To be called when an item click happens.
+         * @param item The item clicked.
+         */
+        fun onItemClicked(item: Post)
+
+        /**
+         * To be called when a page load is requested.
+         */
+        fun onPageLoadRequested()
+    }
+
     internal companion object {
         private const val KEY_STARTED_MANUALLY = "KEY_STARTED_MANUALLY"
         /**
@@ -83,20 +99,4 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
             return intent
         }
     }
-}
-
-/**
- * An interface for the view to communicate with the coordinator.
- */
-internal interface BehaviorCallback {
-    /**
-     * To be called when an item click happens.
-     * @param item The item clicked.
-     */
-    fun onItemClicked(item: Post)
-
-    /**
-     * To be called when a page load is requested.
-     */
-    fun onPageLoadRequested()
 }

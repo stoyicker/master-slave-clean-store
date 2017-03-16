@@ -9,10 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
-import util.android.ext.getDimension
-import util.android.ext.isPortrait
 import domain.entity.Post
 import org.jorge.ms.app.R
+import util.android.ext.getDimension
+import util.android.ext.isPortrait
 
 /**
  * Configures the recycler view holding the post list.
@@ -22,7 +22,7 @@ internal object TopGamingAllTimePostsContentViewConfig {
      * Configures a view.
      * @recyclerView The view to configure.
      */
-    internal fun dumpOnto(view: TopGamingAllTimePostsView, callback: BehaviorCallback) {
+    internal fun dumpOnto(view: TopGamingAllTimePostsView, callback: TopGamingAllTimePostsActivity.BehaviorCallback) {
         view.contentView.let { recyclerView ->
             recyclerView.adapter = provideAdapter(callback)
             recyclerView.layoutManager = provideLayoutManager(recyclerView.context)
@@ -37,7 +37,7 @@ internal object TopGamingAllTimePostsContentViewConfig {
      * Provides an adapter with stable ids.
      * @param callback The callback to feed events back to the coordinator.
      */
-    private fun provideAdapter(callback: BehaviorCallback)
+    private fun provideAdapter(callback: TopGamingAllTimePostsActivity.BehaviorCallback)
             : RecyclerView.Adapter<Adapter.ViewHolder> {
         val adapter = Adapter(object : OnItemClickListener<Post> {
             override fun onItemClicked(item: Post) {
@@ -63,7 +63,7 @@ internal object TopGamingAllTimePostsContentViewConfig {
     }
 
     private fun provideEndlessLoadListener(layoutManager: RecyclerView.LayoutManager,
-                                           callback: BehaviorCallback)
+                                           callback: TopGamingAllTimePostsActivity.BehaviorCallback)
             = object : EndlessLoadListener(layoutManager) {
         override fun onLoadMore() {
             callback.onPageLoadRequested()

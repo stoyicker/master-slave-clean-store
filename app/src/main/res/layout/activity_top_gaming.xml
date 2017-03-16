@@ -14,11 +14,11 @@
         <include layout="@layout/include_toolbar"
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content"
-                 app:layout_scrollFlags="scroll|enterAlways"/>
+                 app:layout_scrollFlags="scroll|enterAlways" />
     </android.support.design.widget.AppBarLayout>
     <include layout="@layout/include_top_posts_view"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:layout_margin="@dimen/content_horizontal_margin"
-             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 </android.support.design.widget.CoordinatorLayout>

@@ -12,14 +12,14 @@
         android:layout_height="wrap_content"
         android:textIsSelectable="false"
         android:clickable="false"
-        style="@style/AppTheme.TextTitle"/>
+        style="@style/AppTheme.TextTitle" />
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/section_separator"
         android:layout_marginBottom="@dimen/section_separator"
         android:clickable="false"
-        android:background="@color/primary"/>
+        android:background="@color/primary" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,12 +32,12 @@
             android:layout_marginRight="@dimen/text_separation"
             android:layout_marginEnd="@dimen/text_separation"
             android:textIsSelectable="false"
-            style="@style/AppTheme.TextSubhead"/>
+            style="@style/AppTheme.TextSubhead" />
         <TextView
             android:id="@+id/text_subreddit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textIsSelectable="false"
-            style="@style/AppTheme.TextSubhead"/>
+            style="@style/AppTheme.TextSubhead" />
     </LinearLayout>
 </app.widget.CompatRippleLinearLayout>

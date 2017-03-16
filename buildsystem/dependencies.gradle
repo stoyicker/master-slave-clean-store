@@ -2,13 +2,13 @@ final def espressoVersion = "2.2.2"
 final def junitPlatformRunnerVersion = "1.0.0-M3"
 final def jUnitVersion = "4.12"
 final def kotlinVersion = rootProject.ext.kotlinVersion
-final def mockitoKotlinVersion = "1.1.0"
+final def mockitoKotlinVersion = "1.3.0"
 final def retrofitVersion = "2.1.0"
 final def rxAndroidVersion = "1.2.1"
 final def rxJavaVersion = "1.2.6"
 final def spekVersion = "1.1.0-beta2"
 final def storeVersion = "2.0.1"
-final def supportVersion = "25.2.0"
+final def supportVersion = "25.3.0"
 
 rootProject.ext.compileDependencies = [
         "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
@@ -35,7 +35,8 @@ rootProject.ext.compileDataDependencies = [
         "com.squareup.retrofit2:retrofit:$retrofitVersion",
         "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion",
         "com.nytimes.android:store:$storeVersion",
-        "com.nytimes.android:middleware:$storeVersion"
+        "com.nytimes.android:middleware:$storeVersion",
+        "com.nytimes.android:filesystem:$storeVersion"
 ]
 
 rootProject.ext.androidTestCompilePresentationDependencies = [
@@ -47,4 +48,8 @@ rootProject.ext.compilePresentationDependencies = [
         "io.reactivex:rxandroid:$rxAndroidVersion",
         "com.android.support:appcompat-v7:$supportVersion",
         "com.android.support:design:$supportVersion"
+]
+
+rootProject.ext.providedUtilAndroidDependencies = [
+        "com.android.support:support-annotations:$supportVersion"
 ]

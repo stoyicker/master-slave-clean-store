@@ -13,7 +13,7 @@ internal interface ApiService {
 
     /**
      * Gets the list of models.
-     * @param subreddit The subreddit to get the tops from.
+     * @param subreddit The subreddit to fetch the tops from.
      * @param time The time range for the query.
      * @param after The 'after' for pagination purposes.
      * @param limit The 'limit' for pagination purposes.

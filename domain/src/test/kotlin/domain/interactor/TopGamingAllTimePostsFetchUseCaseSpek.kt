@@ -23,59 +23,57 @@ import rx.observers.TestSubscriber
 import rx.schedulers.Schedulers
 
 /**
- * Tests for the all-time gaming top posts use case.
+ * Tests for the all-time gaming fetch top posts use case.
  * @see TopGamingAllTimePostsUseCase
  */
 @RunWith(JUnitPlatform::class)
-internal class TopGamingAllTimePostsUseCaseSpek : SubjectSpek<TopGamingAllTimePostsUseCase>({
-    subject { TopGamingAllTimePostsUseCase(PAGE, EXECUTION_THREAD_SCHEDULE_IMMEDIATELY) }
+internal class TopGamingAllTimePostsFetchUseCaseSpek : SubjectSpek<TopGamingAllTimeFetchPostsUseCase>({
+    subject { TopGamingAllTimeFetchPostsUseCase(PAGE, POST_EXECUTION_THREAD_SCHEDULE_IMMEDIATELY) }
 
     beforeEachTest {
         reset(MOCK_FACADE)
-        Domain.inject(MOCK_FACADE)
-        Domain.inject(SCHEDULER_IMMEDIATE)
+        Domain.topPostsFacade(MOCK_FACADE)
     }
 
-    it("should build its implementation as an observable") {
+    it ("should build its implementation as an observable") {
         val testSubscriber = TestSubscriber<Post>()
         // Cannot mock Post as it is a data class
         val values = arrayOf(Post("title", "sr", -8, "permalink"),
                 Post("titfle", "eeesr", 9, ""),
                 Post("titlea", "sr", 0, "pfaefaermalink"))
-        whenever(MOCK_FACADE.getTop(any(), any(), any())) doReturn Observable.from(values)
+        whenever(MOCK_FACADE.fetchTop(any(), any(), any())) doReturn Observable.from(values)
         subject.execute(testSubscriber)
+        testSubscriber.awaitTerminalEvent()
         testSubscriber.assertValues(*values)
         testSubscriber.assertNoErrors()
         testSubscriber.assertCompleted()
     }
 
-    it("should unsubscribe on terminate") {
+    it ("should unsubscribe on terminate") {
         val testSubscriber = TestSubscriber<Post>()
-        whenever(MOCK_FACADE.getTop(any(), any(), any())) doReturn Observable.empty<Post>()
+        whenever(MOCK_FACADE.fetchTop(any(), any(), any())) doReturn Observable.empty<Post>()
         subject.execute(testSubscriber)
         subject.terminate()
         testSubscriber.assertUnsubscribed()
         testSubscriber.assertNoErrors()
-        testSubscriber.assertCompleted()
     }
 
-    it("should delegate to the facade for execution") {
+    it ("should delegate to the facade for execution") {
         val testSubscriber = TestSubscriber<Post>()
         val subreddit = "gaming"
         val timeRange = TimeRange.ALL_TIME
         val page = 0
-        whenever(MOCK_FACADE.getTop(any(), any(), any())) doReturn Observable.empty<Post>()
+        whenever(MOCK_FACADE.fetchTop(any(), any(), any())) doReturn Observable.empty<Post>()
         subject.execute(testSubscriber)
-        verify(MOCK_FACADE).getTop(eq(subreddit), eq(timeRange), eq(page))
+        verify(MOCK_FACADE).fetchTop(eq(subreddit), eq(timeRange), eq(page))
         verifyNoMoreInteractions(MOCK_FACADE)
     }
 }) {
     private companion object {
         private const val PAGE = 0
-        private val EXECUTION_THREAD_SCHEDULE_IMMEDIATELY = object : PostExecutionThread {
+        private val POST_EXECUTION_THREAD_SCHEDULE_IMMEDIATELY = object : PostExecutionThread {
             override fun provideScheduler(): Scheduler = Schedulers.immediate()
         }
-        private val SCHEDULER_IMMEDIATE = Schedulers.immediate()
         private val MOCK_FACADE = mock<DomainTopPostsFacade>()
     }
 }

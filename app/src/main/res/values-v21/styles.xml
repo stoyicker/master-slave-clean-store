@@ -9,7 +9,7 @@
         <item name="android:windowBackground">@color/windowBackground</item>
         <item name="android:progressBarStyleHorizontal">@style/ProgressBarHorizontalMaterial</item>
     </style>
-    <style name="ProgressBarHorizontalMaterial" parent="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+    <style name="ProgressBarHorizontalMaterial" parent="@style/Widget.AppCompat.ProgressBar.Horizontal" />
     <style name="AppTheme.Card">
         <item name="android:background">@drawable/card_background</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>

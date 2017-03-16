@@ -23,7 +23,7 @@ internal interface LoadableContentView<in T : Any?> {
     /**
      * Called to notify the implementation that the content layout should be hidden. Optional.
      */
-    fun hideContentLayout() {}
+    fun hideContentLayout() { }
 
     /**
      * Called to notify the implementation that the error layout should be shown.

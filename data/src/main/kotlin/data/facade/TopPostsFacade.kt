@@ -22,21 +22,34 @@ import rx.Observable
 object TopPostsFacade : DomainTopPostsFacade {
 
     /**
-     * Gets top posts in a given subreddit, first trying the cache and then falling back to
-     * the network. Use when fast response is more important that getting the latest content.
-     * @param subreddit The subreddit to fetch.
+     * Fetches top posts in a given subreddit, first trying the network and then falling back to
+     * the cache. All caches are updated on success. Use when getting the latest content is more
+     * important than a fast and reliable response.
+     * @param subreddit The subreddit to query.
+     * @param timeRange The time range (one of hour, day, week, month, or all).
+     * @param page The page to request.
+     */
+    override fun fetchTop(subreddit: CharSequence, timeRange: TimeRange, page: Int)
+        : Observable<Post> = mapToDomain(
+                TopRequestSource.fetch(TopRequestParameters(subreddit, timeRange, page)))
+
+    /**
+     * Gets top posts in a given subreddit, first trying the network and then falling back to
+     * the cache. Use when a fast and reliable response is more important than obtaining the latest
+     * content.
+     * @param subreddit The subreddit to query.
      * @param timeRange The time range (one of hour, day, week, month, or all).
      * @param page The page to request.
      */
     override fun getTop(subreddit: CharSequence, timeRange: TimeRange, page: Int)
-        : Observable<Post> = sanitizeTopResponse(
-                TopRequestSource.get(TopRequestParameters(subreddit, timeRange, page)))
+            : Observable<Post> = mapToDomain(
+            TopRequestSource.get(TopRequestParameters(subreddit, timeRange, page)))
 
     /**
      * Prepares the data in a top response to be consumed by outer modules.
      * @param parsedDataResponse The response as it is made available to this module after parsing.
      */
-    private fun sanitizeTopResponse(parsedDataResponse: Observable<TopRequestDataContainer>)
+    private fun mapToDomain(parsedDataResponse: Observable<TopRequestDataContainer>)
         = parsedDataResponse.flatMapIterable {
             it.data.children.map {
                 TopRequestEntityMapper.transform(it.data)

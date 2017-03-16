@@ -15,8 +15,8 @@ android {
         versionName rootProject.ext.androidVersionName
         minSdkVersion rootProject.ext.androidMinSdkVersion
         targetSdkVersion rootProject.ext.androidTargetSdkVersion
-        testInstrumentationRunner rootProject.ext.androidTestInstrumentationRunner
-        buildConfigField "String", "API_URL", System.getenv("API_URL") != null ? System.getenv("API_URL") : prop_api_url
+        buildConfigField "String", "API_URL",
+                System.getenv("API_URL") != null ? System.getenv("API_URL") : prop_api_url
     }
 
     dexOptions {
@@ -48,9 +48,7 @@ repositories {
 
 dependencies {
     compile project(':domain')
-    // The public version is bugged. I opened a PR (https://github.com/NYTimes/Store/pull/133) that
-    // fixes it but cannot wait for it to be released so I compiled the project myself with the fix
-    // Because it is not a fat jar, I need to bring GSON manually too.
+    compile project(':util')
     compile rootProject.ext.compileDependencies
     provided rootProject.ext.providedDataDependencies
     rootProject.ext.compileDataDependencies.forEach {

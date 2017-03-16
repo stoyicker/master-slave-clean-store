@@ -43,3 +43,15 @@ task clean(type: Delete, overwrite: true) {
   	    delete Paths.get(it.projectDir.absolutePath, staticAnalysisReportFolderTarget).toAbsolutePath().toString()
   }
 }
+
+subprojects {
+    configurations.all {
+        resolutionStrategy {
+            forcedModules = [
+                    // Enforces the same version of Kotlin for all Kotlin libraries
+                    "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.ext.kotlinVersion",
+                    "org.jetbrains.kotlin:kotlin-reflect:$rootProject.ext.kotlinVersion"
+            ]
+        }
+    }
+}

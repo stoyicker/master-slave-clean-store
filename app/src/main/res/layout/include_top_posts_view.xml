@@ -7,14 +7,14 @@
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:overScrollMode="never"/>
+        android:overScrollMode="never" />
     <android.support.v4.widget.ContentLoadingProgressBar
         android:id="@+id/progress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:indeterminate="true"
         android:layout_gravity="bottom|center_horizontal"
-        style="?android:attr/android:progressBarStyleHorizontal"/>
+        style="?android:attr/android:progressBarStyleHorizontal" />
     <LinearLayout
         android:id="@+id/error"
         android:orientation="vertical"
@@ -27,12 +27,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            android:text="@string/top_posts_error_description"/>
+            android:text="@string/top_posts_error_description" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Button"
             android:textStyle="bold"
-            android:text="@string/top_posts_error_action"/>
+            android:text="@string/top_posts_error_action" />
     </LinearLayout>
 </FrameLayout>

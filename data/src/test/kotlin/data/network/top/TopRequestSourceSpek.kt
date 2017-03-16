@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import domain.interactor.TopGamingAllTimePostsUseCase
+import util.ResettableLazyManager
 import org.jetbrains.spek.api.SubjectSpek
 import org.jetbrains.spek.api.dsl.it
 import org.junit.platform.runner.JUnitPlatform
@@ -13,26 +14,29 @@ import org.junit.runner.RunWith
 import kotlin.test.assertEquals
 
 /**
- * Unit test for cache cleanup.
+ * Unit tests for cache cleanup.
  */
 @RunWith(JUnitPlatform::class)
 internal class TopRequestSourceSpek : SubjectSpek<TopRequestSource>({
-    subject { TopRequestSource } // <- Specify singleton instance as test subject
+    subject {
+        TopRequestSource.Provide.storeGenerator = { mock() }
+        TopRequestSource // <- Specify singleton instance as test subject
+    }
 
     beforeEachTest {
-        TopRequestSource.delegate = mock()
+        ResettableLazyManager.reset(TopRequestSource.store)
         TopRequestSource.pageMap.clear()
     }
 
-    it("should clean up the page dictionary and cache completely when given page 0") {
+    it ("should clean up the page dictionary and cache completely when given page 0") {
         assertCacheClean(subject, 0)
     }
 
-    it("should clean up the page dictionary and cache completely when given a negative page") {
+    it ("should clean up the page dictionary and cache completely when given a negative page") {
         assertCacheClean(subject, -7)
     }
 
-    it("should clean up the page dictionary and cache partially when given a positive page") {
+    it ("should clean up the page dictionary and cache partially when given a positive page") {
         assertCacheClean(subject, 82)
     }
 }) {
@@ -45,12 +49,12 @@ internal class TopRequestSourceSpek : SubjectSpek<TopRequestSource>({
             }
             val size = TopRequestSource.pageMap.size
             subject.clearCacheFromPage(fromPage)
-            verify(TopRequestSource.delegate, times(size - safePage))
+            verify(TopRequestSource.store, times(size - safePage))
                     .clear(eq(TopRequestParameters(
                             TopGamingAllTimePostsUseCase.SUBREDDIT,
                             TopGamingAllTimePostsUseCase.TIME_RANGE,
                             0)))
-            verifyNoMoreInteractions(TopRequestSource.delegate)
+            verifyNoMoreInteractions(TopRequestSource.store)
             assertEquals(safePage, TopRequestSource.pageMap.size)
         }
     }

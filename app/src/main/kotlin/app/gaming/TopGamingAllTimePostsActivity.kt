@@ -15,8 +15,6 @@ import kotlinx.android.synthetic.main.include_top_posts_view.progress
 import org.jorge.ms.app.BuildConfig
 import org.jorge.ms.app.R
 
-
-
 /**
  * An Activity that shows the top posts from /r/gaming.
  */
@@ -31,7 +29,8 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         coordinator = TopGamingAllTimePostsCoordinator(view)
         TopGamingAllTimePostsContentViewConfig.dumpOnto(view, provideCoordinatorBridgeCallback())
-        coordinator.actionLoadNextPage()
+        coordinator.actionLoadNextPage(savedInstanceState
+                ?.getBoolean(TopGamingAllTimePostsActivity.KEY_STARTED_MANUALLY) ?: false)
     }
 
     /**
@@ -71,28 +70,33 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
         }
     }
 
-    internal companion object {
+    /**
+     * An interface for the view to communicate with the coordinator.
+     */
+    internal interface BehaviorCallback {
         /**
-         * Safe way to provide an intent to route to this activity. More useful if it were to have
+         * To be called when an item click happens.
+         * @param item The item clicked.
+         */
+        fun onItemClicked(item: Post)
+
+        /**
+         * To be called when a page load is requested.
+         */
+        fun onPageLoadRequested()
+    }
+
+    internal companion object {
+        private const val KEY_STARTED_MANUALLY = "KEY_STARTED_MANUALLY"
+        /**
+         * Safe way to schedulee an intent to route to this activity. More useful if it were to have
          * parameters for example, but a good idea to have nevertheless.
          * @param context The context to start this activity from.
          */
-        fun getCallingIntent(context: Context) = Intent(context, TopGamingAllTimePostsActivity::class.java)
+        fun getCallingIntent(context: Context): Intent {
+            val intent = Intent(context, TopGamingAllTimePostsActivity::class.java)
+            intent.putExtra(TopGamingAllTimePostsActivity.KEY_STARTED_MANUALLY, true)
+            return intent
+        }
     }
-}
-
-/**
- * An interface for the view to communicate with the coordinator.
- */
-internal interface BehaviorCallback {
-    /**
-     * To be called when an item click happens.
-     * @param item The item clicked.
-     */
-    fun onItemClicked(item: Post)
-
-    /**
-     * To be called when a page load is requested.
-     */
-    fun onPageLoadRequested()
 }

@@ -18,7 +18,10 @@ cache:
   - "$HOME/.gradle/wrapper/"
 before_install:
 - openssl aes-256-cbc -K $encrypted_90d766e4084d_key -iv $encrypted_90d766e4084d_iv
-  -in alias.keystore.enc -out alias.keystore -d
+  -in secrets.tar.enc -out secrets.tar -d
+- tar xvf secrets.tar
+- mv google-services-debug.json app/src/debug/google-services.json
+- mv google-services-release.json app/src/release/google-services.json
 before_script:
 - |
   if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
@@ -37,6 +40,9 @@ after_success:
   if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
     echo "CI on master succeded. Executing release tasks..."
     ./ci/release.sh
+    echo "Uploading mapping to Firebase..."
+    ./gradlew -PFirebaseServiceAccountFilePath=master-slave-clean-store-firebase-crashreporting-private-key.json
+    ./gradlew :app:firebaseUploadProdReleaseProguardMapping
   fi
 notifications:
   email:

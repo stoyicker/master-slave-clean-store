@@ -2,11 +2,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.jetbrains.dokka-android'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.firebase-crash'
 
 android {
     compileSdkVersion rootProject.ext.androidCompileSdkVersion
     buildToolsVersion rootProject.ext.androidBuildToolsVersion
-
     signingConfigs {
         release {
             storeFile new File("alias.keystore")
@@ -15,25 +16,32 @@ android {
             keyPassword("keyPwd")
         }
     }
-
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug" // Do not change as Firebase depends on this
+        }
         release {
             signingConfig signingConfigs.release
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
             shrinkResources true
         }
     }
-
     compileOptions {
         incremental false
     }
-
+    defaultConfig {
+        versionCode rootProject.ext.androidVersionCode
+        versionName rootProject.ext.androidVersionName
+        minSdkVersion rootProject.ext.androidMinSdkVersion
+        targetSdkVersion rootProject.ext.androidTargetSdkVersion
+        testInstrumentationRunner rootProject.ext.androidTestInstrumentationRunner
+    }
     dexOptions {
         preDexLibraries true
         javaMaxHeapSize "8g"
     }
-
     lintOptions {
         abortOnError true
         absolutePaths true
@@ -42,62 +50,26 @@ android {
         quiet false
         warningsAsErrors true
     }
-
     packagingOptions {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
-
-    productFlavors {
-        dev {
-            versionCode rootProject.ext.androidVersionCode
-            versionName rootProject.ext.androidVersionName
-            minSdkVersion rootProject.ext.androidMinSdkVersion
-            targetSdkVersion rootProject.ext.androidTargetSdkVersion
-            testInstrumentationRunner rootProject.ext.androidTestInstrumentationRunner
-        }
-        prod {
-            versionCode rootProject.ext.androidVersionCode
-            versionName rootProject.ext.androidVersionName
-            minSdkVersion rootProject.ext.androidMinSdkVersion
-            targetSdkVersion rootProject.ext.androidTargetSdkVersion
-            testInstrumentationRunner rootProject.ext.androidTestInstrumentationRunner
-        }
-    }
-
     sourceSets.forEach {
         it.java.srcDirs = ["src/$it.name/kotlin"]
     }
-
-    variantFilter {
-        switch (it.buildType.name) {
-            case 'debug':
-                if (it.flavors[0].name.contentEquals("prod")) {
-                    it.setIgnore(true)
-                }
-                break;
-            case 'release':
-                if (it.flavors[0].name.contentEquals("dev")) {
-                    it.setIgnore(true)
-                }
-                break;
-        }
-    }
 }
-
 repositories {
     jcenter()
 }
-
 dependencies {
     compile project(':data')
     compile project(':domain')
     compile project(':util-android')
-    rootProject.ext.androidTestCompilePresentationDependencies.forEach {
+    rootProject.ext.androidTestCompileAppDependencies.forEach {
         compile(it) {
             exclude group: 'com.google.code.findbugs'
             exclude module: 'support-annotations'
         }
     }
     compile rootProject.ext.compileDependencies
-    compile rootProject.ext.compilePresentationDependencies
+    compile rootProject.ext.compileAppDependencies
 }

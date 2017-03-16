@@ -3,6 +3,7 @@ package app.gaming
 import android.support.annotation.VisibleForTesting
 import app.UIPostExecutionThread
 import app.widget.LoadableContentView
+import com.google.firebase.crash.FirebaseCrash
 import domain.entity.Post
 import domain.interactor.TopGamingAllTimeFetchPostsUseCase
 import domain.interactor.TopGamingAllTimeGetPostsUseCase
@@ -20,12 +21,12 @@ internal class TopGamingAllTimePostsCoordinator(private val view: LoadableConten
 
     /**
      * Triggers the load of the next page.
-     * @param startedManually In order to decide whether or not to resort to the cache, a boolean
+     * @param requestedManually In order to decide whether or not to resort to the cache, a boolean
      * indicating if this load was triggered manually. Defaults to <code>false</code>, which
      * resorts to memory and disk cache, checking for data availability in that order.
      */
-    internal fun actionLoadNextPage(startedManually: Boolean = false) {
-        ongoingUseCase = if (startedManually) {
+    internal fun actionLoadNextPage(requestedManually: Boolean = true) {
+        ongoingUseCase = if (requestedManually) {
             TopGamingAllTimeFetchPostsUseCase(page, UIPostExecutionThread)
         } else {
             TopGamingAllTimeGetPostsUseCase(page, UIPostExecutionThread)
@@ -61,6 +62,7 @@ internal class TopGamingAllTimePostsCoordinator(private val view: LoadableConten
         }
 
         override fun onError(throwable: Throwable?) {
+            FirebaseCrash.report(throwable)
             view.showErrorLayout()
             view.hideLoadingLayout()
             view.hideContentLayout()

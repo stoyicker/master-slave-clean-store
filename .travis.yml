@@ -24,6 +24,7 @@ before_install:
 - mv google-services-release.json app/src/release/google-services.json
 before_script:
 - echo FirebaseServiceAccountFilePath= > gradle.properties
+- export ARTIFACT_VERSION=$(git rev-list --count HEAD)
 - |
   if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
     echo "Do not open PRs against master; merge dev into master locally and push instead."
@@ -35,8 +36,8 @@ before_cache:
 - rm -f /home/travis/.gradle/caches/modules-2/modules-2.lock
 - rm -fr /home/travis/.gradle/caches/*/plugin-resolution/
 - rm -f /home/travis/.gradle/caches/*/fileHashes/fileHashes.bin
-- rm -f /home/travis/.gradle/caches/*/fileHashes/fileHashes.bin
-- rm -f /home/travis/.gradle/caches/*/scripts/*
+- rm -f /home/travis/.gradle/caches/*/fileHashes/fileHashes.lock
+- rm -fr /home/travis/.gradle/caches/*/scripts/*
 after_success:
 - |
   if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then

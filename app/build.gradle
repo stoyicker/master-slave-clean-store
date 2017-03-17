@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.jetbrains.dokka-android'
-apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.firebase-crash'
 
 android {
@@ -73,3 +72,8 @@ dependencies {
     compile rootProject.ext.compileDependencies
     compile rootProject.ext.compileAppDependencies
 }
+
+apply plugin: 'com.google.gms.google-services'
+
+setProperty("FirebaseServiceAccountFilePath", rootProject.rootDir.absolutePath + "/" +
+        rootProject.ext.firebaseServiceAccountFileName)

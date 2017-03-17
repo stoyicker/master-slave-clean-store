@@ -23,6 +23,7 @@ before_install:
 - mv google-services-debug.json app/src/debug/google-services.json
 - mv google-services-release.json app/src/release/google-services.json
 before_script:
+- echo FirebaseServiceAccountFilePath= > gradle.properties
 - |
   if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
     echo "Do not open PRs against master; merge dev into master locally and push instead."
@@ -33,16 +34,16 @@ script:
 before_cache:
 - rm -f /home/travis/.gradle/caches/modules-2/modules-2.lock
 - rm -fr /home/travis/.gradle/caches/*/plugin-resolution/
-- rm -f /home/travis/.gradle/caches/3.4/fileHashes/fileHashes.bin
-- rm -f /home/travis/.gradle/caches/3.4/fileHashes/fileHashes.lock
+- rm -f /home/travis/.gradle/caches/*/fileHashes/fileHashes.bin
+- rm -f /home/travis/.gradle/caches/*/fileHashes/fileHashes.bin
+- rm -f /home/travis/.gradle/caches/*/scripts/*
 after_success:
 - |
   if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
     echo "CI on master succeded. Executing release tasks..."
     ./ci/release.sh
     echo "Uploading mapping to Firebase..."
-    ./gradlew -PFirebaseServiceAccountFilePath=master-slave-clean-store-firebase-crashreporting-private-key.json
-    ./gradlew :app:firebaseUploadProdReleaseProguardMapping
+    ./gradlew :app:firebaseUploadReleaseProguardMapping
   fi
 notifications:
   email:

@@ -1,8 +1,6 @@
 package data
 
 import android.os.Environment
-import android.support.annotation.VisibleForTesting
-import data.network.top.TopRequestSource
 
 /**
  * Global configuration holder for the module.
@@ -12,8 +10,7 @@ import data.network.top.TopRequestSource
  */
 object Data {
     internal val cacheDir by lazy { Provide.cacheDirGenerator() }
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    internal var cacheablePagedSources: Array<CacheablePagedSource> = arrayOf(TopRequestSource)
+
     internal object Provide {
         /**
          * Set a cache dir. The way to do it is by providing a generator function that will be

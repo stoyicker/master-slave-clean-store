@@ -12,9 +12,9 @@ import data.Data
 import data.network.common.ApiService
 import data.network.common.RxNetworkClient
 import domain.interactor.TopGamingAllTimePostsUseCase
-import util.resettableLazy
 import okio.BufferedSource
 import rx.Observable
+import util.resettableLazy
 
 /**
  * Contains the data source for top requests.
@@ -49,6 +49,7 @@ internal object TopRequestSource : CacheablePagedSource {
      * Clears cached entries starting from a given page.
      * @param page The page to start from (inclusive).
      */
+    @Synchronized
     override fun clearCacheFromPage(page: Int) {
         val safePage = Math.max(0, page)
         while (pageMap.size > safePage) {

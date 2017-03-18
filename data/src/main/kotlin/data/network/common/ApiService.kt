@@ -18,7 +18,7 @@ internal interface ApiService {
      * @param after The 'after' for pagination purposes.
      * @param limit The 'limit' for pagination purposes.
      */
-    @GET("${ROUTE_SUBREDDIT}/{${PATH_PARAM_SUBREDDIT_NAME}}/${METHOD_TOP}/${FORMAT_JSON}")
+    @GET("$ROUTE_SUBREDDIT/{$PATH_PARAM_SUBREDDIT_NAME}/$METHOD_TOP/$FORMAT_JSON")
     fun top(@Path(PATH_PARAM_SUBREDDIT_NAME) subreddit: CharSequence,
             @Query(QUERY_PARAM_TIME) time: CharSequence,
             @Query(QUERY_PARAM_AFTER) after: CharSequence?,

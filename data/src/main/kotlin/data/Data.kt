@@ -3,8 +3,6 @@ package data
 import android.os.Environment
 import android.support.annotation.VisibleForTesting
 import data.network.top.TopRequestSource
-import domain.callback.MemoryCallbacks
-import domain.callback.Urgency
 
 /**
  * Global configuration holder for the module.
@@ -12,37 +10,19 @@ import domain.callback.Urgency
  * example, but to only provide a single dependency, which is also a singleton, might as well do it
  * myself instead.
  */
-object Data : MemoryCallbacks {
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    internal const val PAGE_KEPT_ON_MEMORY_TRIM_LOW = 5
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    internal const val PAGE_KEPT_ON_MEMORY_TRIM_MEDIUM = 1
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    internal const val PAGE_KEPT_ON_MEMORY_TRIM_HIGH = 0
+object Data {
     internal val cacheDir by lazy { Provide.cacheDirGenerator() }
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal var cacheablePagedSources: Array<CacheablePagedSource> = arrayOf(TopRequestSource)
-
-    override fun onTrimMemory(urgency: Urgency) {
-        val page: Int
-        when (urgency) {
-            Urgency.LOW -> page = PAGE_KEPT_ON_MEMORY_TRIM_LOW
-            Urgency.MEDIUM -> page = PAGE_KEPT_ON_MEMORY_TRIM_MEDIUM
-            Urgency.HIGH -> page = PAGE_KEPT_ON_MEMORY_TRIM_HIGH
+    internal object Provide {
+        /**
+         * Set a cache dir. The way to do it is by providing a generator function that will be
+         * invoked the first time the field is accessed.
+         */
+        var cacheDirGenerator = DEFAULTS.CACHE_DIR_GENERATOR
+        private object DEFAULTS {
+            internal val CACHE_DIR_GENERATOR = { Environment.getExternalStorageDirectory() }
         }
-        cacheablePagedSources.forEach { it.clearCacheFromPage(page) }
-    }
-
-     internal object Provide {
-         /**
-          * Set a cache dir. The way to do it is by providing a generator function that will be
-          * invoked the first time the field is accessed.
-          */
-         var cacheDirGenerator = DEFAULTS.CACHE_DIR_GENERATOR
-
-         private object DEFAULTS {
-             internal val CACHE_DIR_GENERATOR = { Environment.getExternalStorageDirectory() }
-         }
     }
 }
 

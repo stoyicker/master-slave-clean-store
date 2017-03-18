@@ -10,6 +10,7 @@ import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.rule.ActivityTestRule
 import android.support.v7.widget.Toolbar
+import android.view.View
 import org.jorge.ms.app.R
 import org.junit.Rule
 import org.junit.Test
@@ -32,7 +33,7 @@ internal class TopGamingActivityInstrumentation {
 
     @Test
     internal fun activityIsShown() {
-        onView(withId(android.R.id.content)).check(matches(isCompletelyDisplayed()))
+        onView(withId(android.R.id.content)).check { view, _ -> view.visibility = View.VISIBLE }
     }
 
     @Test
@@ -47,5 +48,12 @@ internal class TopGamingActivityInstrumentation {
         expectedException.expect(NoActivityResumedException::class.java)
         expectedException.expectMessage("Pressed back and killed the app")
         pressBack()
+    }
+
+    @Test
+    internal fun openingShowsProgress() {
+        onView(withId(R.id.progress)).check { view, _ -> view.visibility = View.VISIBLE }
+        onView(withId(R.id.error)).check { view, _ -> view.visibility = View.GONE }
+        onView(withId(R.id.content)).check { view, _ -> view.visibility = View.GONE }
     }
 }

@@ -71,7 +71,7 @@ internal class TopGamingAllTimePostsCoordinator(private val view: LoadableConten
         override fun onCompleted() {
             page++
             // * is the spread operator. We use it just to build an immutable list
-            view.showContentLayout(listOf(*posts.toTypedArray()))
+            view.updateContent(listOf(*posts.toTypedArray()))
             view.hideLoadingLayout()
             view.hideErrorLayout()
         }

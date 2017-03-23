@@ -71,6 +71,7 @@ dependencies {
     }
     compile rootProject.ext.compileDependencies
     compile rootProject.ext.compileAppDependencies
+    testCompile rootProject.ext.testCompileDependencies
 }
 
 apply plugin: 'com.google.gms.google-services'

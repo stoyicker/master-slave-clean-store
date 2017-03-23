@@ -74,8 +74,9 @@ internal object TopGamingAllTimePostsContentViewConfig {
  * A very simple adapter backed by a mutable list that exposes a method to add items.
  * An alternative would have been to use the databinding library, but the fact that it does not
  * support `merge` layouts would make diverse screen support more complicated.
+ * Open for testing only
  */
-internal class Adapter(private val listener: OnItemClickListener<Post>)
+internal open class Adapter(private val listener: OnItemClickListener<Post>)
     : RecyclerView.Adapter<Adapter.ViewHolder>() {
     private val items = mutableListOf<Post>()
     private lateinit var recyclerView: RecyclerView
@@ -110,7 +111,7 @@ internal class Adapter(private val listener: OnItemClickListener<Post>)
      * Requests a list of items to be added to this adapter. This call triggers a UI update.
      * @param toAdd The items to add.
      */
-    internal fun addItems(toAdd: List<Post>) {
+    internal open fun addItems(toAdd: List<Post>) {
         val firstInsertedPosition = items.size
         items.addAll(toAdd)
         notifyItemRangeInserted(firstInsertedPosition, toAdd.size)
@@ -154,6 +155,7 @@ internal class Adapter(private val listener: OnItemClickListener<Post>)
 /**
  * An interface to transmit click events.
  */
+@FunctionalInterface
 internal interface OnItemClickListener<in T> {
     /**
      * To be called then the view for an item is clicked.

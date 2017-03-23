@@ -42,14 +42,14 @@ rootProject.ext.compileDataDependencies = [
 
 rootProject.ext.androidTestCompileAppDependencies = [
         "com.android.support.test.espresso:espresso-core:$espressoVersion",
-        "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion",
-        "com.google.firebase:firebase-crash:$firebaseVersion"
+        "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
 ]
 
 rootProject.ext.compileAppDependencies = [
         "io.reactivex:rxandroid:$rxAndroidVersion",
         "com.android.support:appcompat-v7:$supportVersion",
-        "com.android.support:design:$supportVersion"
+        "com.android.support:design:$supportVersion",
+        "com.google.firebase:firebase-crash:$firebaseVersion"
 ]
 
 rootProject.ext.providedUtilAndroidDependencies = [

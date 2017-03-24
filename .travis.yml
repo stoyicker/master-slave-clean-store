@@ -23,7 +23,7 @@ before_install:
 - mv google-services-debug.json app/src/debug/google-services.json
 - mv google-services-release.json app/src/release/google-services.json
 before_script:
-- echo FirebaseServiceAccountFilePath= > gradle.properties
+- printf "org.gradle.daemon=false\nFirebaseServiceAccountFilePath=" > gradle.properties
 - export ARTIFACT_VERSION=$(git rev-list --count HEAD)
 - |
   if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then

@@ -12,6 +12,13 @@ android:
 branches:
   except:
   - "/^[0-9]/"
+env:
+  matrix:
+  # The app tasks are heavy, so we use one per job
+  - TASK="./gradlew :app:clean :app:build :app:check" #:app:dokka" <- https://github.com/Kotlin/dokka/issues/135
+  - TASK="./gradlew :domain:clean :domain:build :domain:check :domain:dokka"
+  - TASK="./gradlew :data:clean :data:build :data:check :data:dokka"
+  - TASK="./gradlew :util:clean :util:build :util:check :util:dokka :util-android:clean :util-android:build :util-android:check :util-android:dokka"
 cache:
   directories:
   - "$HOME/.gradle/caches/"
@@ -31,7 +38,7 @@ before_script:
     exit 1
   fi
 script:
-- "./gradlew clean build check dokka"
+- ${TASK}
 before_cache:
 - rm -f /home/travis/.gradle/caches/modules-2/modules-2.lock
 - rm -fr /home/travis/.gradle/caches/*/plugin-resolution/

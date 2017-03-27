@@ -154,6 +154,7 @@ internal class Adapter(private val listener: OnItemClickListener<Post>)
 /**
  * An interface to transmit click events.
  */
+@FunctionalInterface
 internal interface OnItemClickListener<in T> {
     /**
      * To be called then the view for an item is clicked.

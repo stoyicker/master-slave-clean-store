@@ -8,7 +8,7 @@ import domain.entity.Post
 /**
  * Wraps UI behavior for top all time gaming posts scenario.
  */
-class TopGamingAllTimePostsView(
+internal class TopGamingAllTimePostsView(
        internal val contentView: RecyclerView,
        internal val errorView: View,
        private val progressView: View) : LoadableContentView<Post> {
@@ -20,7 +20,7 @@ class TopGamingAllTimePostsView(
         progressView.visibility = View.GONE
     }
 
-    override fun showContentLayout(actionResult: List<Post>) {
+    override fun updateContent(actionResult: List<Post>) {
         (contentView.adapter as Adapter).addItems(actionResult)
     }
 

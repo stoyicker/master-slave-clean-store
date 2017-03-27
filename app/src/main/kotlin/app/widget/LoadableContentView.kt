@@ -15,10 +15,10 @@ internal interface LoadableContentView<in T : Any?> {
     fun hideLoadingLayout()
 
     /**
-     * Called to notify the implementation that the content layout should be shown.
+     * Called to notify the implementation that the content should be updated.
      * @param actionResult A list of items that turned up as the outcome the executed action.
      */
-    fun showContentLayout(actionResult: List<T>)
+    fun updateContent(actionResult: List<T>)
 
     /**
      * Called to notify the implementation that the content layout should be hidden. Optional.

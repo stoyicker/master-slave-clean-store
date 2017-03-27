@@ -64,13 +64,14 @@ dependencies {
     compile project(':domain')
     compile project(':util-android')
     rootProject.ext.androidTestCompileAppDependencies.forEach {
-        compile(it) {
+        androidTestCompile(it) {
             exclude group: 'com.google.code.findbugs'
             exclude module: 'support-annotations'
         }
     }
     compile rootProject.ext.compileDependencies
     compile rootProject.ext.compileAppDependencies
+    testCompile rootProject.ext.testCompileDependencies
 }
 
 apply plugin: 'com.google.gms.google-services'

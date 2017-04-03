@@ -6,7 +6,7 @@ buildscript {
 	repositories {
         jcenter()
     }
-    final def androidPluginVersion = "2.2.3"
+    final def androidPluginVersion = "2.3.0"
     final def kotlinPluginVersion = rootProject.ext.kotlinVersion = "1.1.0"
     final def dokkaPluginVersion = "0.9.13"
     final def googleServicesPluginVersion = "3.0.0"

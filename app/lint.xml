@@ -4,6 +4,8 @@
     <issue id="InvalidPackage">
         <ignore regexp="junit" />
         <ignore regexp="byte-buddy" />
+        <ignore regexp="okio" />
+        <ignore regexp="retrofit" />
     </issue>
     <!-- This check is broken when using Kotlin -->
     <issue id="UnusedResources" severity="ignore" />

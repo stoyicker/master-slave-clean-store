@@ -44,6 +44,7 @@ repositories {
 dependencies {
     compile project(':domain')
     compile project(':util')
+    compile project(':util-android')
     compile rootProject.ext.compileDependencies
     provided rootProject.ext.providedDataDependencies
     rootProject.ext.compileDataDependencies.forEach {

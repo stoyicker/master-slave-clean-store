@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import domain.entity.Post
 import kotlinx.android.synthetic.main.include_toolbar.toolbar
 import kotlinx.android.synthetic.main.include_top_posts_view.content
@@ -29,8 +30,9 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         coordinator = TopGamingAllTimePostsCoordinator(view)
         TopGamingAllTimePostsContentViewConfig.dumpOnto(view, provideCoordinatorBridgeCallback())
-        coordinator.actionLoadNextPage(savedInstanceState
-                ?.getBoolean(TopGamingAllTimePostsActivity.KEY_STARTED_MANUALLY) ?: false)
+        coordinator.actionLoadNextPage(intent.getBooleanExtra(
+                TopGamingAllTimePostsActivity.KEY_STARTED_MANUALLY, false))
+        intent.putExtra(TopGamingAllTimePostsActivity.KEY_STARTED_MANUALLY, false)
     }
 
     /**
@@ -66,6 +68,7 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
         }
 
         override fun onPageLoadRequested() {
+            Log.d(TopGamingAllTimePostsActivity::class.java.simpleName, cacheDir.list().joinToString(prefix = "{ ", separator = ", ", postfix = "}"))
             coordinator.actionLoadNextPage()
         }
     }

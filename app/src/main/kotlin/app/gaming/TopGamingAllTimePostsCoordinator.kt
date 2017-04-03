@@ -1,6 +1,7 @@
 package app.gaming
 
 import android.support.annotation.VisibleForTesting
+import android.util.Log
 import app.UIPostExecutionThread
 import app.widget.LoadableContentView
 import com.google.firebase.crash.FirebaseCrash

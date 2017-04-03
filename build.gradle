@@ -14,7 +14,7 @@ buildscript {
     final def classpathDependencies = [
         "com.android.tools.build:gradle:$androidPluginVersion",
         "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinPluginVersion",
-        "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokkaPluginVersion",
+        "org.jetbrains.dokka:dokka-gradle-plugin:$dokkaPluginVersion",
         "com.google.gms:google-services:$googleServicesPluginVersion",
         "com.google.firebase:firebase-plugins:$firebasePluginsVersion"
     ]

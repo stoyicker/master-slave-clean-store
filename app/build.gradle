@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'org.jetbrains.dokka-android'
+apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'com.google.firebase.firebase-crash'
 
 android {
@@ -27,9 +27,6 @@ android {
             shrinkResources true
         }
     }
-    compileOptions {
-        incremental false
-    }
     defaultConfig {
         versionCode rootProject.ext.androidVersionCode
         versionName rootProject.ext.androidVersionName
@@ -37,8 +34,12 @@ android {
         targetSdkVersion rootProject.ext.androidTargetSdkVersion
         testInstrumentationRunner rootProject.ext.androidTestInstrumentationRunner
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
     dexOptions {
-        preDexLibraries true
+        preDexLibraries false
         javaMaxHeapSize "8g"
     }
     lintOptions {

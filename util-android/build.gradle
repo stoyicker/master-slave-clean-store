@@ -1,27 +1,24 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'org.jetbrains.dokka-android'
+apply plugin: 'org.jetbrains.dokka'
 
 android {
     compileSdkVersion rootProject.ext.androidCompileSdkVersion
     buildToolsVersion rootProject.ext.androidBuildToolsVersion
-
-    compileOptions {
-        incremental false
-    }
-
     defaultConfig {
         versionCode rootProject.ext.androidVersionCode
         versionName rootProject.ext.androidVersionName
         minSdkVersion rootProject.ext.androidMinSdkVersion
         targetSdkVersion rootProject.ext.androidTargetSdkVersion
     }
-
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
     dexOptions {
-        preDexLibraries true
+        preDexLibraries false
         javaMaxHeapSize "8g"
     }
-
     lintOptions {
         abortOnError true
         absolutePaths true
@@ -30,11 +27,9 @@ android {
         quiet false
         warningsAsErrors true
     }
-
     packagingOptions {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
-
     sourceSets.forEach {
         it.java.srcDirs = ["src/$it.name/kotlin"]
     }

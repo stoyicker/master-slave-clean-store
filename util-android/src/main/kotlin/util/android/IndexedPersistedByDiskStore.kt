@@ -46,10 +46,11 @@ class IndexedPersistedByDiskStore<Value : Any?>(
     }
 
     /**
-     * Persists the store to disk.
+     * Persists the store to disk, creating the source file and its parent folders as necessary.
      */
     @WorkerThread
     private fun persist() {
+        source.parentFile.mkdirs()
         source.writeText(
                 delegate.mapNotNull {
                     "${it.key}=${valueStringifier.toString(it.value)}"

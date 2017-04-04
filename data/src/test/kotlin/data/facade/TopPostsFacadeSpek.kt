@@ -3,7 +3,9 @@ package data.facade
 import com.nhaarman.mockito_kotlin.anyVararg
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
 import com.nytimes.android.external.store.base.impl.Store
+import data.Data
 import data.network.common.DataPost
 import data.network.top.TopDataPostContainer
 import data.network.top.TopRequestData
@@ -13,13 +15,14 @@ import data.network.top.TopRequestParameters
 import data.network.top.TopRequestSource
 import domain.entity.Post
 import domain.entity.TimeRange
-import util.ResettableLazyManager
 import org.jetbrains.spek.api.SubjectSpek
 import org.jetbrains.spek.api.dsl.it
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
 import rx.Observable
 import rx.observers.TestSubscriber
+import util.ResettableLazyManager
+import java.io.File
 import java.net.UnknownHostException
 import kotlin.test.assertEquals
 
@@ -30,6 +33,14 @@ import kotlin.test.assertEquals
 @RunWith(JUnitPlatform::class)
 internal class TopPostsFacadeSpek : SubjectSpek<TopPostsFacade>({
     subject { TopPostsFacade } // <- TopPostsFacade singleton instance as test subject
+
+    beforeEachTest {
+        Data.Provide.cacheDirGenerator = { File("build/test-generated/") }
+    }
+
+    afterEachTest {
+        File("build/test-generated/").deleteRecursively()
+    }
 
     it ("should schedule an observable of domain posts when calling fetch") {
         val expectedAfter = "a random after"
@@ -61,11 +72,12 @@ internal class TopPostsFacadeSpek : SubjectSpek<TopPostsFacade>({
         testSubscriber.assertCompleted()
     }
 
-    it ("should propagate the error on failed fetch") {
+    it ("should try the cache and propagate the error on failed fetch") {
         val expectedError = mock<UnknownHostException>()
         val mockResult = Observable.error<TopRequestDataContainer>(expectedError)
         val mockStore = mock<Store<TopRequestDataContainer, TopRequestParameters>> {
             on { fetch(anyVararg()) } doReturn mockResult
+            on { get(anyVararg()) } doReturn mockResult
         }
         // Now we schedule our mock into the data source. You could do this with Dagger, but it is
         // an overkill from my point of view, or you could also write a testing flavor for the
@@ -76,6 +88,7 @@ internal class TopPostsFacadeSpek : SubjectSpek<TopPostsFacade>({
         // Parameters do not matter because of the mocked method on the provided delegate
         subject.fetchTop("", TimeRange.ALL_TIME, 0)
                 .subscribe(testSubscriber)
+        verify(mockStore).get(anyVararg())
         testSubscriber.assertError(expectedError)
         testSubscriber.assertNoValues()
         testSubscriber.assertNotCompleted()

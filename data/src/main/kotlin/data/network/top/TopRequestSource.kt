@@ -14,6 +14,7 @@ import data.network.common.RxNetworkClient
 import domain.interactor.TopGamingAllTimePostsUseCase
 import okio.BufferedSource
 import rx.Observable
+import util.android.IndexedPersistedByDiskStore
 import util.resettableLazy
 
 /**
@@ -23,19 +24,31 @@ internal object TopRequestSource : CacheablePagedSource {
     private val apiService by lazy { RxNetworkClient.retrofit.create(ApiService::class.java) }
     // This wraps the implementation of pagination in the API
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    internal val pageMap = mutableMapOf(0 to "")
+    internal val pageMap by lazy {
+        val value = IndexedPersistedByDiskStore<String>(Data.cacheDir.resolve("pageMap"),
+                object : IndexedPersistedByDiskStore.ValueStringifier<String>{
+                    override fun fromString(source: String?)
+                            = if (source.isNullOrEmpty()) null else source
+
+                    override fun toString(source: String?)
+                            = if (source.isNullOrEmpty()) "" else source
+                }, mutableMapOf(0 to null))
+        value.restore()
+        value
+    }
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal val store by resettableLazy { Provide.storeGenerator() }
 
     /**
      * Delegates to its internal responsible for the request. Cache is ignored, but updated on
-     * success.
+     * success. On failure, cache is the fallback.
      * @param topRequestParameters The parameters of the request.
      * @see Store
      */
     internal fun fetch(topRequestParameters: TopRequestParameters) =
             updatePageMapAndContinue(topRequestParameters.page,
-                    store.fetch(topRequestParameters))
+                    store.fetch(topRequestParameters)
+                            .onErrorResumeNext(store.get(topRequestParameters)))
 
     /**
      * Delegates to its internal responsible for the request. Cache checks: memory > disk > network.
@@ -99,9 +112,10 @@ internal object TopRequestSource : CacheablePagedSource {
                 // We want to have long-term caching, since it is about all-time tops, which do not
                 // change very frequently. Therefore we are fine using the default memory cache
                 // implementation which expires items in 24h after acquisition.
-                // We will also use disk caching to prepare against connectivity-related problems, but
-                // we will default to checking the network because on app opening it is reasonable to
-                // expected that, if network connectivity available, the data shown should be the latest
+                // We will also use disk caching to prepare against connectivity-related problems,
+                // but we will default to checking the network because on app opening it is
+                // reasonable to expected that, if network connectivity available, the data shown
+                // should be the latest
                 StoreBuilder
                         .parsedWithKey<TopRequestParameters, BufferedSource, TopRequestDataContainer>()
                         .fetcher({ TopRequestSource.topFetcher(it) })
@@ -110,8 +124,8 @@ internal object TopRequestSource : CacheablePagedSource {
                         .persister(FileSystemPersister.create(
                                 FileSystemFactory.create(Data.cacheDir!!),
                                 PathResolver<TopRequestParameters> { key -> key.toString() }))
-                        // Never try to refresh from network on stale since it will very likely not be
-                        // worth and it is not required because we do it on app launch anyway
+                        // Never try to refresh from network on stale since it will very likely not
+                        // be worth and it is not required because we do it on app launch anyway
                         .refreshOnStale()
                         .open()
             }

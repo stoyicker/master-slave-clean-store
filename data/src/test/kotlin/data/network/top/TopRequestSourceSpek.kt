@@ -5,12 +5,14 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
+import data.Data
 import domain.interactor.TopGamingAllTimePostsUseCase
-import util.ResettableLazyManager
 import org.jetbrains.spek.api.SubjectSpek
 import org.jetbrains.spek.api.dsl.it
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
+import util.ResettableLazyManager
+import java.io.File
 import kotlin.test.assertEquals
 
 /**
@@ -24,8 +26,13 @@ internal class TopRequestSourceSpek : SubjectSpek<TopRequestSource>({
     }
 
     beforeEachTest {
+        Data.Provide.cacheDirGenerator = { File("build/test-generated/") }
         ResettableLazyManager.reset(TopRequestSource.store)
         TopRequestSource.pageMap.clear()
+    }
+
+    afterEachTest {
+        File("build/test-generated/").deleteRecursively()
     }
 
     it ("should clean up the page dictionary and cache completely when given page 0") {

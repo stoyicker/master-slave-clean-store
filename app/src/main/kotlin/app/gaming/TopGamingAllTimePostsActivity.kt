@@ -29,8 +29,9 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         coordinator = TopGamingAllTimePostsCoordinator(view)
         TopGamingAllTimePostsContentViewConfig.dumpOnto(view, provideCoordinatorBridgeCallback())
-        coordinator.actionLoadNextPage(savedInstanceState
-                ?.getBoolean(TopGamingAllTimePostsActivity.KEY_STARTED_MANUALLY) ?: false)
+        coordinator.actionLoadNextPage(intent.getBooleanExtra(
+                TopGamingAllTimePostsActivity.KEY_STARTED_MANUALLY, false))
+        intent.putExtra(TopGamingAllTimePostsActivity.KEY_STARTED_MANUALLY, false)
     }
 
     /**

@@ -27,12 +27,10 @@ internal object TopRequestSource : CacheablePagedSource {
     internal val pageMap by lazy {
         val value = IndexedPersistedByDiskStore<String>(Data.cacheDir.resolve("pageMap"),
                 object : IndexedPersistedByDiskStore.ValueStringifier<String>{
-                    override fun fromString(source: String?)
-                            = if (source.isNullOrEmpty()) null else source
+                    override fun fromString(source: String) = source
 
-                    override fun toString(source: String?)
-                            = if (source.isNullOrEmpty()) "" else source
-                }, mutableMapOf(0 to null))
+                    override fun toString(source: String) = source
+                }, mutableMapOf(0 to ""))
         value.restore()
         value
     }

@@ -8,17 +8,17 @@ import java.io.File
  * A key-value store where the keys are integers. This store can be restored from disk and the
  * stored representation is updated on writes.
  */
-class IndexedPersistedByDiskStore<Value : Any?>(
+class IndexedPersistedByDiskStore<Value : Any>(
         private val source: File,
         private val valueStringifier: ValueStringifier<Value>,
-        private val delegate: MutableMap<Int, Value?>)
-    : MutableMap<Int, Value?> by delegate {
+        private val delegate: MutableMap<Int, Value>)
+    : MutableMap<Int, Value> by delegate {
     override fun clear() {
         delegate.clear()
         this.persist()
     }
 
-    override fun put(key: Int, value: Value?): Value? {
+    override fun put(key: Int, value: Value): Value? {
         val ret = delegate.put(key, value)
         this.persist()
         return ret
@@ -38,10 +38,12 @@ class IndexedPersistedByDiskStore<Value : Any?>(
     fun restore() {
         if (source.exists()) {
             source.readLines(CHARSET).forEach {
-                it.substringBefore("=").toInt().let { key ->
-                    if (delegate[key] == null) {
-                        delegate.put(key, valueStringifier.fromString(it.substringAfter("=")))
-                    }
+                it.substringBefore("=").takeIf { it.matches(Regex("\\d+")) }?.toInt()
+                        ?.let { key ->
+                            if (delegate[key] == null) {
+                                delegate.put(key,
+                                        valueStringifier.fromString(it.substringAfter("=")))
+                            }
                 }
             }
         }
@@ -75,12 +77,12 @@ class IndexedPersistedByDiskStore<Value : Any?>(
          * @param source The description to rebuild from.
          * @return The built representation.
          */
-        fun fromString(source: String?): T?
+        fun fromString(source: String): T
 
         /**
          * Implementations should be able to deterministically create a per-object unique String
          * representation of the instance passed as parameter.
          */
-        fun toString(source: T?): String?
+        fun toString(source: T): String
     }
 }

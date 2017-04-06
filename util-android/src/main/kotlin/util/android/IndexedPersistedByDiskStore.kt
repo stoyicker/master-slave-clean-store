@@ -1,5 +1,6 @@
 package util.android
 
+import android.support.annotation.VisibleForTesting
 import android.support.annotation.WorkerThread
 import java.io.File
 
@@ -37,9 +38,10 @@ class IndexedPersistedByDiskStore<Value : Any?>(
     fun restore() {
         if (source.exists()) {
             source.readLines(CHARSET).forEach {
-                if (delegate[it.substringBefore("=").toInt()] == null) {
-                    delegate.put(it.substringBefore("=").toInt(),
-                            valueStringifier.fromString(it.substringAfter("=")))
+                it.substringBefore("=").toInt().let { key ->
+                    if (delegate[key] == null) {
+                        delegate.put(key, valueStringifier.fromString(it.substringAfter("=")))
+                    }
                 }
             }
         }
@@ -59,7 +61,8 @@ class IndexedPersistedByDiskStore<Value : Any?>(
     }
 
     companion object {
-        private val CHARSET = Charsets.UTF_8
+        @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+        internal val CHARSET = Charsets.UTF_8
     }
 
     /**

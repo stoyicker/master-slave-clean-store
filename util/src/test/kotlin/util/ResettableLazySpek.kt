@@ -16,7 +16,7 @@ internal class ResettableLazySpek : SubjectSpek<ResettableLazySpek.Companion.Hel
         val x1 = subject.x
         val y1 = subject.y
         val z1 = subject.z
-        subject.SEED++
+        subject.seed++
         assertTrue(x1 === subject.x)
         assertTrue(y1 === subject.y)
         assertTrue(z1 === subject.z)
@@ -26,7 +26,7 @@ internal class ResettableLazySpek : SubjectSpek<ResettableLazySpek.Companion.Hel
         val x1 = subject.x
         val y1 = subject.y
         val z1 = subject.z
-        subject.SEED++
+        subject.seed++
         arrayOf(subject.x, subject.y, subject.z).forEach { ResettableLazyManager.reset(it) }
         val x2 = subject.x
         val y2 = subject.y
@@ -41,10 +41,10 @@ internal class ResettableLazySpek : SubjectSpek<ResettableLazySpek.Companion.Hel
 }) {
     companion object {
         internal class Helper {
-            val x by resettableLazy { "x $SEED" }
-            val y by resettableLazy { "y $SEED" }
+            val x by resettableLazy { "x $seed" }
+            val y by resettableLazy { "y $seed" }
             val z by resettableLazy { "z $x $y" }
-            var SEED = 1
+            var seed = 1
         }
     }
 }

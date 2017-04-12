@@ -7,13 +7,13 @@ import android.support.annotation.DimenRes
 import android.support.annotation.IntegerRes
 
 /**
- * Extension function to reduce verbosity to getInteger(...).
+ * Extension function to reduce verbosity to resources.getInteger(...).
  * @param resId The id of the resource to get.
  */
 fun Context.getInteger(@IntegerRes resId: Int) = this.resources.getInteger(resId)
 
 /**
- * Extension function to reduce verbosity to getColor(...).
+ * Extension function to reduce verbosity to resources.getColor(...).
  * @param resId The id of the resource to get.
  */
 fun Context.getColorCompat(@ColorRes resId: Int) =
@@ -24,14 +24,7 @@ fun Context.getColorCompat(@ColorRes resId: Int) =
             this.resources.getColor(resId)
 
 /**
- * Extension function to reduce verbosity to getDimension(...).
+ * Extension function to reduce verbosity to resources.getDimension(...).
  * @param resId The id of the resource to get.
  */
 fun Context.getDimension(@DimenRes resId: Int) = this.resources.getDimension(resId)
-
-/**
- * Extension function to check if the device is in portrait mode.
- */
-fun Context.isPortrait() = this.resources.displayMetrics.let {
-    it.heightPixels > it.widthPixels
-}

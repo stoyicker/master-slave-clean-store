@@ -6,4 +6,6 @@
     <dimen name="item_separation">16dp</dimen>
     <dimen name="section_separator">16dp</dimen>
     <dimen name="text_separation">12dp</dimen>
+    <dimen name="default_column_width">150dp</dimen>
+    <dimen name="top_posts_column_width">200dp</dimen>
 </resources>

@@ -1,6 +1,5 @@
 package app.gaming
 
-import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
@@ -12,7 +11,6 @@ import android.widget.TextView
 import domain.entity.Post
 import org.jorge.ms.app.R
 import util.android.ext.getDimension
-import util.android.ext.isPortrait
 
 /**
  * Configures the recycler view holding the post list.
@@ -25,7 +23,6 @@ internal object TopGamingAllTimePostsContentViewConfig {
     internal fun dumpOnto(view: TopGamingAllTimePostsView, callback: TopGamingAllTimePostsActivity.BehaviorCallback) {
         view.contentView.let { recyclerView ->
             recyclerView.adapter = provideAdapter(callback)
-            recyclerView.layoutManager = provideLayoutManager(recyclerView.context)
             recyclerView.addOnScrollListener(provideEndlessLoadListener(
                     recyclerView.layoutManager, callback))
             recyclerView.setHasFixedSize(false)
@@ -48,20 +45,6 @@ internal object TopGamingAllTimePostsContentViewConfig {
         return adapter
     }
 
-    /**
-     * Provides a layout manager based on the size of the screen.
-     * @param context The context
-     */
-    private fun provideLayoutManager(context: Context): RecyclerView.LayoutManager
-        = if (context.isPortrait()) {
-            LinearLayoutManager(context)
-        } else {
-            val ret = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
-            ret.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
-            ret
-        }
-    }
-
     private fun provideEndlessLoadListener(layoutManager: RecyclerView.LayoutManager,
                                            callback: TopGamingAllTimePostsActivity.BehaviorCallback)
             = object : EndlessLoadListener(layoutManager) {
@@ -69,6 +52,7 @@ internal object TopGamingAllTimePostsContentViewConfig {
             callback.onPageLoadRequested()
         }
     }
+}
 
 /**
  * A very simple adapter backed by a mutable list that exposes a method to add items.

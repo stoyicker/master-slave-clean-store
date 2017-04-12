@@ -1,4 +1,4 @@
-package app.widget
+package app.gaming
 
 import android.content.Context
 import android.graphics.Canvas
@@ -9,15 +9,15 @@ import android.view.MotionEvent
 import android.view.animation.Animation
 import android.view.animation.Transformation
 import android.widget.LinearLayout
+import org.jorge.ms.app.R
 import util.android.ext.getColorCompat
 import util.android.ext.getInteger
-import org.jorge.ms.app.R
 
 /**
  * @see <a href="https://androidreclib.wordpress.com/2014/11/18/the-touch-ripple-on-gingerbread/">
  *     The touch ripple on Gingerbread | Android Rec Library</>
  */
-internal class CompatRippleLinearLayout(context: Context, attrs: AttributeSet)
+internal class CompatRippleLinearLayout(context: Context, attrs: AttributeSet?)
     : LinearLayout(context, attrs) {
     private val rippleColor = context.getColorCompat(R.color.default_ripple)
     private val rippleDuration = context.getInteger(android.R.integer.config_shortAnimTime).toLong()

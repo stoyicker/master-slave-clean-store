@@ -2,7 +2,7 @@ package app.gaming
 
 import android.support.annotation.VisibleForTesting
 import app.UIPostExecutionThread
-import app.widget.LoadableContentView
+import app.gaming.LoadableContentView
 import com.google.firebase.crash.FirebaseCrash
 import domain.entity.Post
 import domain.interactor.TopGamingAllTimeFetchPostsUseCase

@@ -38,7 +38,7 @@ before_script:
     exit 1
   fi
 script:
-- travis_wait ${TASK}
+- travis_wait ${TASK} --stacktrace
 before_cache:
 - rm -f /home/travis/.gradle/caches/modules-2/modules-2.lock
 - rm -fr /home/travis/.gradle/caches/*/plugin-resolution/

@@ -6,7 +6,6 @@ import org.jetbrains.spek.api.SubjectSpek
 import org.jetbrains.spek.api.dsl.it
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
-import rx.Scheduler
 import kotlin.test.assertEquals
 
 /**

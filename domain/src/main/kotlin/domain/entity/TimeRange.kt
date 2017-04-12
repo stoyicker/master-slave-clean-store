@@ -1,6 +1,5 @@
 package domain.entity
 
-
 internal const val HOUR = "hour"
 internal const val DAY = "day"
 internal const val WEEK = "week"

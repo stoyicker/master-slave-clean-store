@@ -16,7 +16,7 @@ abstract class TopGamingAllTimePostsUseCase(
         page: Int,
         postExecutionThread: PostExecutionThread) : UseCase<Post>(postExecutionThread) {
     // This makes sure we do not requests negative pages
-    protected var safePage: Int by Delegates.vetoable(0, { _, _, new -> new >= 0})
+    protected var safePage: Int by Delegates.vetoable(0, { _, _, new -> new >= 0 })
 
     init {
         safePage = page

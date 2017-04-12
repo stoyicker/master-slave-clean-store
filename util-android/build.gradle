@@ -45,3 +45,7 @@ dependencies {
     compile rootProject.ext.providedUtilAndroidDependencies
     testCompile rootProject.ext.testCompileDependencies
 }
+
+// See https://github.com/JLLeitschuh/ktlint-gradle/issues/3
+check.dependsOn tasks.getByName("ktlint")
+

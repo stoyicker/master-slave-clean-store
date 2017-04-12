@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'org.jlleitschuh.gradle.ktlint'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'com.google.firebase.firebase-crash'
@@ -74,6 +75,9 @@ dependencies {
     compile rootProject.ext.compileAppDependencies
     testCompile rootProject.ext.testCompileDependencies
 }
+
+// See https://github.com/JLLeitschuh/ktlint-gradle/issues/3
+check.dependsOn tasks.getByName("ktlint")
 
 apply plugin: 'com.google.gms.google-services'
 

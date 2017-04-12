@@ -17,7 +17,7 @@ import util.android.ext.getInteger
  * @see <a href="https://androidreclib.wordpress.com/2014/11/18/the-touch-ripple-on-gingerbread/">
  *     The touch ripple on Gingerbread | Android Rec Library</>
  */
-internal class CompatRippleLinearLayout(context: Context, attrs: AttributeSet)
+internal class CompatRippleLinearLayout(context: Context, attrs: AttributeSet?)
     : LinearLayout(context, attrs) {
     private val rippleColor = context.getColorCompat(R.color.default_ripple)
     private val rippleDuration = context.getInteger(android.R.integer.config_shortAnimTime).toLong()

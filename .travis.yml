@@ -10,6 +10,8 @@ android:
   - extra-android-m2repository
   - extra-google-m2repository
   - platform-tools
+  - sys-img-armeabi-v7a-android-14
+  - sys-img-armeabi-v7a-android-25
 branches:
   except:
   - "/^[0-9]/"

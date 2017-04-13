@@ -18,10 +18,10 @@ branches:
 env:
   matrix:
   # The app tasks are heavy, so we use one per job
-  - TASK="./gradlew :app:clean :app:build :app:check" #:app:dokka" <- https://github.com/Kotlin/dokka/issues/135
-  - TASK="./gradlew :domain:clean :domain:build :domain:check :domain:dokka"
-  - TASK="./gradlew :data:clean :data:build :data:check :data:dokka"
-  - TASK="./gradlew :util:clean :util:build :util:check :util:dokka :util-android:clean :util-android:build :util-android:check :util-android:dokka"
+  - TASK="./gradlew :app:clean :app:build :app:check --stacktrace" #:app:dokka" <- https://github.com/Kotlin/dokka/issues/135
+  - TASK="./gradlew :domain:clean :domain:build :domain:check :domain:dokka --stacktrace"
+  - TASK="./gradlew :data:clean :data:build :data:check :data:dokka --stacktrace"
+  - TASK="./gradlew :util:clean :util:build :util:check :util:dokka :util-android:clean :util-android:build :util-android:check :util-android:dokka --stacktrace"
 before_install:
 - openssl aes-256-cbc -K $encrypted_90d766e4084d_key -iv $encrypted_90d766e4084d_iv
   -in secrets.tar.enc -out secrets.tar -d
@@ -37,7 +37,7 @@ before_script:
     exit 1
   fi
 script:
-- ${TASK} --stacktrace
+- ${TASK}
 after_success:
 - |
   if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then

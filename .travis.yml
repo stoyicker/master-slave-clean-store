@@ -37,7 +37,7 @@ before_script:
     exit 1
   fi
 script:
-- travis_wait ${TASK} --stacktrace
+- ${TASK} --stacktrace
 after_success:
 - |
   if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then

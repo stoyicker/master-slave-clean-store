@@ -45,7 +45,6 @@ repositories {
 
 dependencies {
     compile project(':domain')
-    compile project(':util')
     compile project(':util-android')
     kapt rootProject.ext.annotationProcessorAppDependencies
     compileOnly rootProject.ext.providedDataDependencies

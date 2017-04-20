@@ -1,4 +1,5 @@
 apply plugin: 'kotlin'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 apply plugin: 'org.jetbrains.dokka'
 
@@ -7,6 +8,8 @@ repositories {
 }
 
 dependencies {
+    kapt rootProject.ext.annotationProcessorDomainDependencies
+    compileOnly rootProject.ext.compileOnlyDomainDependencies
     compile rootProject.ext.compileDependencies
     compile rootProject.ext.compileDomainDependencies
     testCompile rootProject.ext.testCompileDependencies
@@ -14,3 +17,5 @@ dependencies {
 
 // See https://github.com/JLLeitschuh/ktlint-gradle/issues/3
 check.dependsOn tasks.getByName("ktlint")
+
+kapt.generateStubs = true

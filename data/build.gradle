@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 apply plugin: 'org.jetbrains.dokka'
 
@@ -46,8 +47,9 @@ dependencies {
     compile project(':domain')
     compile project(':util')
     compile project(':util-android')
+    kapt rootProject.ext.annotationProcessorAppDependencies
+    compileOnly rootProject.ext.providedDataDependencies
     compile rootProject.ext.compileDependencies
-    provided rootProject.ext.providedDataDependencies
     rootProject.ext.compileDataDependencies.forEach {
         compile(it) {
             // RxJava is brought by the domain module
@@ -59,3 +61,5 @@ dependencies {
 
 // See https://github.com/JLLeitschuh/ktlint-gradle/issues/3
 check.dependsOn tasks.getByName("ktlint")
+
+kapt.generateStubs = true

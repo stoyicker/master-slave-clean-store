@@ -1,4 +1,4 @@
-package data.network.common
+package data.common
 
 import com.google.gson.annotations.SerializedName
 

@@ -1,8 +1,6 @@
 package app.gaming
 
-import android.support.annotation.VisibleForTesting
 import app.UIPostExecutionThread
-import app.gaming.LoadableContentView
 import com.google.firebase.crash.FirebaseCrash
 import domain.entity.Post
 import domain.interactor.TopGamingAllTimeFetchPostsUseCase
@@ -45,8 +43,7 @@ internal class TopGamingAllTimePostsCoordinator(private val view: LoadableConten
      * The subscriber that will react to the outcome of the associated use case and request the
      * view to update itself.
      */
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    internal inner class NextPageLoadSubscriber : Subscriber<Post>() {
+    private inner class NextPageLoadSubscriber : Subscriber<Post>() {
         val posts = mutableListOf<Post>()
 
         override fun onStart() {
@@ -70,7 +67,7 @@ internal class TopGamingAllTimePostsCoordinator(private val view: LoadableConten
 
         override fun onCompleted() {
             page++
-            // * is the spread operator. We use it just to build an immutable list
+            // * is the spread operator. We use it to build an immutable list.
             view.updateContent(listOf(*posts.toTypedArray()))
             view.hideLoadingLayout()
             view.hideErrorLayout()

@@ -8,15 +8,13 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import domain.entity.Post
-import kotlinx.android.synthetic.main.include_toolbar.toolbar
-import kotlinx.android.synthetic.main.include_top_posts_view.content
-import kotlinx.android.synthetic.main.include_top_posts_view.error
-import kotlinx.android.synthetic.main.include_top_posts_view.progress
+import kotlinx.android.synthetic.main.include_toolbar.*
+import kotlinx.android.synthetic.main.include_top_posts_view.*
 import org.jorge.ms.app.BuildConfig
 import org.jorge.ms.app.R
 
 /**
- * An Activity that shows the top posts from /r/gaming.
+ * An Activity that shows the top posts from r/gaming.
  */
 class TopGamingAllTimePostsActivity : AppCompatActivity() {
     private lateinit var coordinator: TopGamingAllTimePostsCoordinator

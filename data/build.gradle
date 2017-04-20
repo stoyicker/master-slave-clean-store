@@ -46,12 +46,13 @@ repositories {
 dependencies {
     compile project(':domain')
     compile project(':util-android')
-    kapt rootProject.ext.annotationProcessorAppDependencies
-    compileOnly rootProject.ext.providedDataDependencies
+    kapt rootProject.ext.annotationProcessorDataDependencies
+    kaptTest rootProject.ext.annotationProcessorTestDataDependencies
+    provided rootProject.ext.providedDataDependencies
     compile rootProject.ext.compileDependencies
     rootProject.ext.compileDataDependencies.forEach {
         compile(it) {
-            // RxJava is brought by the domain module
+            // Correct RxJava is brought by the domain module
             exclude group: 'io.reactivex'
         }
     }

@@ -1,7 +1,7 @@
-package data.network.top
+package data.top
 
 import com.google.gson.annotations.SerializedName
-import data.network.common.DataPost
+import data.common.DataPost
 
 /**
  * Models the relevant information about information that comes in a container with a type (kind)

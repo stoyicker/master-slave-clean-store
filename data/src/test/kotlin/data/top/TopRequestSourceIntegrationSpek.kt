@@ -1,7 +1,7 @@
-package data.network.top
+package data.top
 
 import com.google.gson.Gson
-import data.network.common.ApiService
+import data.common.ApiService
 import domain.entity.TimeRange
 import org.jetbrains.spek.api.SubjectSpek
 import org.jetbrains.spek.api.dsl.it
@@ -19,7 +19,7 @@ import kotlin.test.assertTrue
  */
 @RunWith(JUnitPlatform::class)
 internal class TopRequestSourceIntegrationSpek : SubjectSpek<TopRequestSource>({
-    subject { TopRequestSource } // <- Specify singleton instance as test subject
+    subject { TopRequestSource() }
 
     it ("should always fetch models with non-empty values for the attributes kept") {
         val retrofit: ApiService = Retrofit.Builder()

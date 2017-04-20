@@ -1,4 +1,4 @@
-package data.network.common
+package data.common
 
 import okhttp3.ResponseBody
 import retrofit2.http.GET
@@ -10,7 +10,6 @@ import rx.Observable
  * Describes interactions with the API.
  */
 internal interface ApiService {
-
     /**
      * Gets the list of models.
      * @param subreddit The subreddit to fetch the tops from.

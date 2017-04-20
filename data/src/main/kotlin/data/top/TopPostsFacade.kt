@@ -1,25 +1,30 @@
-package data.facade
+package data.top
 
-import data.network.top.TopRequestDataContainer
-import data.network.top.TopRequestEntityMapper
-import data.network.top.TopRequestParameters
-import data.network.top.TopRequestSource
+import data.ComponentHolder
 import domain.entity.Post
 import domain.entity.TimeRange
 import domain.repository.DomainTopPostsFacade
 import rx.Observable
+import javax.inject.Inject
 
 /**
- * Exposes entry points to top data requests. If we were to have more
- * requests, it would probably be a good idea to have more facades, not necessarily on a 1:1
- * facade-request proportion, but just so we don't end up exposing too many requests in the same
- * facade.
- * Having a Facade might seem like "too much decoupling" (if such a thing exists) since we
+ * Exposes entry points to top data requests. If we were to have more requests, it would probably be
+ * a good idea to have more facades, not necessarily on a 1:1 facade-request proportion,
+ * but just so we don't end up exposing too many requests in the same facade.
+ * Having a facade might seem like "too much decoupling" (if such a thing exists) since we
  * already have a dedicated data module, but it eases separating unit from integration tests,
- * since the request sources, like TopRequestSource, just default to already unit-tested third-party
- * delegates, and therefore only really need to have integration tests.
+ * since the request sources, like TopRequestSource, are just a layer of caching that is easily
+ * tested built directly on top of third-party dependencies that are trusted to be tested.
  */
-object TopPostsFacade : DomainTopPostsFacade {
+class TopPostsFacade : DomainTopPostsFacade {
+    @Inject
+    internal lateinit var entityMapper: TopRequestEntityMapper
+    @Inject
+    internal lateinit var source: TopRequestSource
+
+    init {
+        ComponentHolder.topPostsFacadeComponent.inject(this)
+    }
 
     /**
      * Fetches top posts in a given subreddit, first trying the network and then falling back to
@@ -31,7 +36,7 @@ object TopPostsFacade : DomainTopPostsFacade {
      */
     override fun fetchTop(subreddit: CharSequence, timeRange: TimeRange, page: Int)
         : Observable<Post> = mapToDomain(
-                TopRequestSource.fetch(TopRequestParameters(subreddit, timeRange, page)))
+            source.fetch(TopRequestParameters(subreddit, timeRange, page)))
 
     /**
      * Gets top posts in a given subreddit, first trying the network and then falling back to
@@ -43,7 +48,7 @@ object TopPostsFacade : DomainTopPostsFacade {
      */
     override fun getTop(subreddit: CharSequence, timeRange: TimeRange, page: Int)
             : Observable<Post> = mapToDomain(
-            TopRequestSource.get(TopRequestParameters(subreddit, timeRange, page)))
+            source.get(TopRequestParameters(subreddit, timeRange, page)))
 
     /**
      * Prepares the data in a top response to be consumed by outer modules.
@@ -52,7 +57,7 @@ object TopPostsFacade : DomainTopPostsFacade {
     private fun mapToDomain(parsedDataResponse: Observable<TopRequestDataContainer>)
         = parsedDataResponse.flatMapIterable {
             it.data.children.map {
-                TopRequestEntityMapper.transform(it.data)
+                entityMapper.transform(it.data)
             }
         }
 }

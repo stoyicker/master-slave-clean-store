@@ -4,7 +4,7 @@
 # removes such information by default, so configure it to keep all of it.
 -keepattributes Signature
 # Application classes that will be serialized/deserialized over Gson
--keep class data.network.common.DataPost { *; }
+-keep class data.common.DataPost { *; }
 # Prevent proguard from stripping interface information from TypeAdapterFactory,
 # JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)
 -keep class * implements com.google.gson.TypeAdapterFactory

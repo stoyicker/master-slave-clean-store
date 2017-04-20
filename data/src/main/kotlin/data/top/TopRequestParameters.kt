@@ -1,4 +1,4 @@
-package data.network.top
+package data.top
 
 import domain.entity.TimeRange
 

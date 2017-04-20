@@ -1,7 +1,7 @@
 package app
 
 import android.app.Application
-import data.facade.TopPostsFacade
+import data.top.TopPostsFacade
 import domain.Domain
 
 /**
@@ -10,6 +10,6 @@ import domain.Domain
 internal open class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        Domain.topPostsFacade(TopPostsFacade)
+        Domain.topPostsFacade(TopPostsFacade())
     }
 }

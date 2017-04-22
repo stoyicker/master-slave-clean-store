@@ -42,7 +42,7 @@ rootProject.ext.compileDataDependencies = [
 
 rootProject.ext.androidTestCompileAppDependencies = [
         "com.android.support.test.espresso:espresso-core:$espressoVersion",
-        "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
+        "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 ]
 
 rootProject.ext.compileAppDependencies = [

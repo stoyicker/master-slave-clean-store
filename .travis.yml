@@ -9,7 +9,6 @@ android:
   - build-tools-25.0.2
   - extra-android-m2repository
   - extra-google-m2repository
-  - platform-tools
 branches:
   except:
   - "/^[0-9]/"

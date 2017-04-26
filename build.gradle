@@ -4,11 +4,10 @@ apply from: 'buildsystem/dependencies.gradle'
 
 buildscript {
 	repositories {
-        jcenter()
         maven { url "https://plugins.gradle.org/m2/" }
     }
-    final def androidPluginVersion = "2.3.0"
-    final def kotlinPluginVersion = rootProject.ext.kotlinVersion = "1.1.0"
+    final def androidPluginVersion = "2.3.1"
+    final def kotlinPluginVersion = rootProject.ext.kotlinVersion = "1.1.2"
     final def dokkaPluginVersion = "0.9.13"
     final def googleServicesPluginVersion = "3.0.0"
     final def firebasePluginsVersion = "1.0.5"
@@ -16,6 +15,7 @@ buildscript {
     final def classpathDependencies = [
         "com.android.tools.build:gradle:$androidPluginVersion",
         "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinPluginVersion",
+        // TODO Change this to the Android artifact when its problems are fixed
         "org.jetbrains.dokka:dokka-gradle-plugin:$dokkaPluginVersion",
         "com.google.gms:google-services:$googleServicesPluginVersion",
         "com.google.firebase:firebase-plugins:$firebasePluginsVersion",

@@ -15,7 +15,7 @@ branches:
 env:
   matrix:
   # The app tasks are heavy, so we use one per job
-  - TASK="./gradlew :app:clean :app:build :app:check --stacktrace" #:app:dokka" <- https://github.com/Kotlin/dokka/issues/135
+  - TASK="./gradlew :app:clean :app:build :app:check :app:dokka --stacktrace"
   - TASK="./gradlew :domain:clean :domain:build :domain:check :domain:dokka --stacktrace"
   - TASK="./gradlew :data:clean :data:build :data:check :data:dokka --stacktrace"
   - TASK="./gradlew :util:clean :util:build :util:check :util:dokka :util-android:clean :util-android:build :util-android:check :util-android:dokka --stacktrace"

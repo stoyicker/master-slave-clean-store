@@ -4,6 +4,7 @@ apply from: 'buildsystem/dependencies.gradle'
 
 buildscript {
 	repositories {
+        jcenter()
         maven { url "https://plugins.gradle.org/m2/" }
     }
     final def androidPluginVersion = "2.3.1"

@@ -1,1 +1,1 @@
-./gradlew --debug --stacktrace clean check assemble test cAT || { exit 1; }
+./gradlew --refresh-dependencies clean check assemble test cAT || { exit 1; }

@@ -10,7 +10,7 @@ final def retrofitVersion = "2.1.0"
 final def rxAndroidVersion = "1.2.1"
 final def rxJavaVersion = "1.2.6"
 final def spekVersion = "1.1.0-beta2"
-final def storeVersion = "2.0.3"
+final def storeVersion = "2.0.4"
 final def supportVersion = "25.3.1"
 
 ext {

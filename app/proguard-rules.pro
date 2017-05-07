@@ -38,3 +38,4 @@
 -dontwarn com.squareup.javawriter.**
 -dontwarn android.test.**
 -dontwarn kotlin.jvm.internal.Reflection
+-dontwarn com.google.errorprone.annotations.*

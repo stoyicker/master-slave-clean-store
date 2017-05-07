@@ -39,9 +39,9 @@ internal class TopPostsFacadeSpek : SubjectSpek<TopPostsFacade>({
         val postOne = mock<DataPost>()
         val postTwo = mock<DataPost>()
         val postThree = mock<DataPost>()
-        val postContainerOne = mock<TopDataPostContainer> { on { data } doReturn postOne }
-        val postContainerTwo = mock<TopDataPostContainer> { on { data } doReturn postTwo }
-        val postContainerThree = mock<TopDataPostContainer> { on { data } doReturn postThree }
+        val postContainerOne = mock<DataPostContainer> { on { data } doReturn postOne }
+        val postContainerTwo = mock<DataPostContainer> { on { data } doReturn postTwo }
+        val postContainerThree = mock<DataPostContainer> { on { data } doReturn postThree }
         val requestData = mock<TopRequestData> {
             on { children } doReturn listOf(postContainerOne, postContainerTwo, postContainerThree)
         }
@@ -65,9 +65,9 @@ internal class TopPostsFacadeSpek : SubjectSpek<TopPostsFacade>({
         val postOne = mock<DataPost>()
         val postTwo = mock<DataPost>()
         val postThree = mock<DataPost>()
-        val postContainerOne = mock<TopDataPostContainer> { on { data } doReturn postOne }
-        val postContainerTwo = mock<TopDataPostContainer> { on { data } doReturn postTwo }
-        val postContainerThree = mock<TopDataPostContainer> { on { data } doReturn postThree }
+        val postContainerOne = mock<DataPostContainer> { on { data } doReturn postOne }
+        val postContainerTwo = mock<DataPostContainer> { on { data } doReturn postTwo }
+        val postContainerThree = mock<DataPostContainer> { on { data } doReturn postThree }
         val requestData = mock<TopRequestData> {
             on { children } doReturn listOf(postContainerOne, postContainerTwo, postContainerThree)
         }

@@ -1,1 +1,1 @@
-./gradlew --refresh-dependencies clean check assemble test cAT || { exit 1; }
+./gradlew --refresh-dependencies -x :app:validateSigningRelease -x :app:packageRelease clean check assemble test cAT || { exit 1; }

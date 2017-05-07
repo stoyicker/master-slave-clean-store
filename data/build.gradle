@@ -61,5 +61,3 @@ dependencies {
 
 // See https://github.com/JLLeitschuh/ktlint-gradle/issues/3
 check.dependsOn tasks.getByName("ktlint")
-
-kapt.generateStubs = true

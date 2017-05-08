@@ -16,6 +16,7 @@ import domain.exec.PostExecutionThread
 import domain.interactor.TopGamingAllTimePostsUseCase
 import org.jorge.ms.app.BuildConfig
 import rx.Observable
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 /**
@@ -77,6 +78,8 @@ internal class TopGamingAllTimePostsFeatureInstrumentationModule(
                                     Observable.just(Post(
                                             "Post number $page", "asubreddit", page,
                                             "https://www.page$page.com"))
+                                            .delay(1000, TimeUnit.MILLISECONDS)
+
                 }
 
                 override fun newGet(page: Int, postExecutionThread: PostExecutionThread) =

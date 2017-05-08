@@ -17,7 +17,7 @@ import org.jorge.ms.app.R
  * An Activity that shows the top posts from r/gaming.
  */
 class TopGamingAllTimePostsActivity : AppCompatActivity() {
-    private lateinit var coordinator: TopGamingAllTimePostsCoordinator
+    internal lateinit var coordinator: TopGamingAllTimePostsCoordinator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

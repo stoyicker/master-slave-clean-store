@@ -13,8 +13,7 @@ android {
         versionName rootProject.ext.androidVersionName
         minSdkVersion rootProject.ext.androidMinSdkVersion
         targetSdkVersion rootProject.ext.androidTargetSdkVersion
-        buildConfigField "String", "API_URL",
-                System.getenv("API_URL") != null ? System.getenv("API_URL") : prop_api_url
+        buildConfigField "String", "API_URL", '"https://reddit.com/"'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7

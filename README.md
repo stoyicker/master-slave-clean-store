@@ -8,13 +8,6 @@ $<project-dir>: ./hooks/setup
 
 # Build instructions
 
-* Place the key to the API in the root `gradle.properties` file following
-the format below:
-    ````
-    prop_api_url="https://api-url.com/"
-    ````
-    __Make sure to include the quotes.__
-* Place the keystore for the release version, named `alias.keystore`, under the project root.
 * Make sure you're passing a property to gradle (like through `gradle.properties`) keyed 
 `FirebaseServiceAccountFilePath`. Its value is irrelevant.
 * Place the Firebase service account file, named 

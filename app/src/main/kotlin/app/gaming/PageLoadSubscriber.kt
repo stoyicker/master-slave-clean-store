@@ -25,10 +25,10 @@ internal class PageLoadSubscriber(
     }
 
     override fun onError(throwable: Throwable?) {
-        FirebaseCrash.report(throwable)
         coordinator.view.showErrorLayout()
         coordinator.view.hideLoadingLayout()
         coordinator.view.hideContentLayout()
+        FirebaseCrash.report(throwable)
     }
 
     override fun onCompleted() {

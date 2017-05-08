@@ -42,7 +42,8 @@ internal class CompatRippleLinearLayout(context: Context, attrs: AttributeSet?)
 
     override fun dispatchDraw(canvas: Canvas) {
         val animation = animation
-        if (animation != null && animation is BoundedAnimation && !animation.hasEnded()) {
+        if (!isInEditMode && animation != null && animation is BoundedAnimation
+                && !animation.hasEnded()) {
             val size = maxBoundary * animation.lastInterpolation
             ripplePaint.alpha = (127 * (1 - animation.lastInterpolation)).toInt()
             canvas.drawCircle(sourceCoordinates.x, sourceCoordinates.y, size, ripplePaint)

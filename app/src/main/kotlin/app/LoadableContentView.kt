@@ -1,4 +1,4 @@
-package app.gaming
+package app
 
 /**
  * An interface describing the behavior required by views bound to coordinators.

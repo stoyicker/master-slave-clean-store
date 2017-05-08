@@ -2,7 +2,7 @@ package app.gaming
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import app.gaming.LoadableContentView
+import app.LoadableContentView
 import domain.entity.Post
 
 /**

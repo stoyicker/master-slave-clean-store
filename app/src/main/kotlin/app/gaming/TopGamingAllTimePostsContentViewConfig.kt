@@ -13,51 +13,48 @@ import org.jorge.ms.app.R
 import util.android.ext.getDimension
 
 /**
- * Configures the recycler view holding the post list.
+ * Configuration for the recycler view holding the post list.
  */
-internal object TopGamingAllTimePostsContentViewConfig {
+internal class TopGamingAllTimePostsContentViewConfig(
+        private val view: TopGamingAllTimePostsView,
+        private val callback: TopGamingAllTimePostsActivity.BehaviorCallback) {
     /**
-     * Configures a view.
-     * @recyclerView The view to configure.
+     * Dumps itself onto the injected view.
      */
-    internal fun dumpOnto(view: TopGamingAllTimePostsView, callback: TopGamingAllTimePostsActivity.BehaviorCallback) {
+    internal fun apply() {
         view.contentView.let { recyclerView ->
-            recyclerView.adapter = provideAdapter(callback)
-            recyclerView.addOnScrollListener(provideEndlessLoadListener(
-                    recyclerView.layoutManager, callback))
+            recyclerView.adapter = adapter()
+            recyclerView.addOnScrollListener(endlessLoadListener(recyclerView.layoutManager))
             recyclerView.setHasFixedSize(false)
         }
         view.errorView.setOnClickListener { callback.onPageLoadRequested() }
     }
 
     /**
-     * Provides an adapter with stable ids.
-     * @param callback The callback to feed events back to the coordinator.
+     * Returns an adapter with stable ids that reports user interactions to the provided callback.
+     * @return An adapter with stable ids that reports user interactions to the provided callback.
      */
-    private fun provideAdapter(callback: TopGamingAllTimePostsActivity.BehaviorCallback)
-            : RecyclerView.Adapter<Adapter.ViewHolder> {
-        val adapter = Adapter(object : OnItemClickListener<Post> {
-            override fun onItemClicked(item: Post) {
-                callback.onItemClicked(item)
-            }
-        })
-        adapter.setHasStableIds(true)
-        return adapter
-    }
+    private fun adapter() = Adapter(object : OnItemClickListener<Post> {
+        override fun onItemClicked(item: Post) {
+            callback.onItemClicked(item)
+        } }).also { it.setHasStableIds(true) }
 
-    private fun provideEndlessLoadListener(layoutManager: RecyclerView.LayoutManager,
-                                           callback: TopGamingAllTimePostsActivity.BehaviorCallback)
-            = object : EndlessLoadListener(layoutManager) {
-        override fun onLoadMore() {
-            callback.onPageLoadRequested()
-        }
+    /**
+     * Provides support for the user interaction that requests loading additional items.
+     *
+     */
+    private fun endlessLoadListener(layoutManager: RecyclerView.LayoutManager) =
+            object : EndlessLoadListener(layoutManager) {
+                override fun onLoadMore() {
+                    callback.onPageLoadRequested()
+                }
     }
 }
 
 /**
  * A very simple adapter backed by a mutable list that exposes a method to add items.
  * An alternative would have been to use the databinding library, but the fact that it does not
- * support `merge` layouts would make diverse screen support more complicated.
+ * support merge layouts would make diverse screen support more complicated.
  */
 internal class Adapter(private val listener: OnItemClickListener<Post>)
     : RecyclerView.Adapter<Adapter.ViewHolder>() {
@@ -82,11 +79,9 @@ internal class Adapter(private val listener: OnItemClickListener<Post>)
     override fun getItemCount(): Int = items.size
 
     /**
-     * This implementation is a bit flawed in theory because it relies on the backing list having
-     * unique items, and regardless of the condition being met, there is no reason for it to
-     * exist. However, the id returned by the Reddit API is a random string that cannot be safely
-     * hashed into a long because the type is bigger (string is 72 bytes, long is 64) so we cannot
-     * rely on it.
+     * This implementation is a bit meh, but since the id returned by the Reddit API is a random
+     * string that cannot be safely hashed into a long because the type is bigger (String is
+     * 72 bytes, Long is 64), we cannot rely on it.
      */
     override fun getItemId(position: Int): Long = position.toLong()
 

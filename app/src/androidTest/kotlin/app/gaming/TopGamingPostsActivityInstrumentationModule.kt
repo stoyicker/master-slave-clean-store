@@ -78,6 +78,9 @@ internal class TopGamingAllTimePostsFeatureInstrumentationModule(
                                             "Post number $page", "asubreddit", page,
                                             "https://www.page$page.com"))
                 }
+
+                override fun newGet(page: Int, postExecutionThread: PostExecutionThread) =
+                        newFetch(page, postExecutionThread)
             }
 
     @Provides

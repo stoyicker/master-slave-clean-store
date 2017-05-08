@@ -41,6 +41,6 @@ abstract class TopGamingAllTimePostsUseCase(
          * Factory method for the 'get' use case.
          */
         fun newGet(page: Int,
-                     postExecutionThread: PostExecutionThread): TopGamingAllTimePostsUseCase
+                   postExecutionThread: PostExecutionThread): TopGamingAllTimePostsUseCase
     }
 }

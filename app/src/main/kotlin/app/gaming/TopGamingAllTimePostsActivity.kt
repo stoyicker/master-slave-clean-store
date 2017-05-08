@@ -25,16 +25,10 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_top_gaming)
         inject()
         setSupportActionBar(toolbar)
-<<<<<<< HEAD
-        coordinator = TopGamingAllTimePostsCoordinator(view)
-        TopGamingAllTimePostsContentViewConfig.dumpOnto(view, provideCoordinatorBridgeCallback())
+        viewConfig.apply()
         coordinator.actionLoadNextPage(intent.getBooleanExtra(
                 TopGamingAllTimePostsActivity.KEY_STARTED_MANUALLY, false))
         intent.putExtra(TopGamingAllTimePostsActivity.KEY_STARTED_MANUALLY, false)
-=======
-        viewConfig.apply()
-        coordinator.actionLoadNextPage()
->>>>>>> 43580ab... Move app to Dagger
     }
 
     /**

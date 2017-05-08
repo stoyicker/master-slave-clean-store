@@ -73,6 +73,7 @@ dependencies {
         }
     }
     kapt rootProject.ext.annotationProcessorAppDependencies
+    kaptAndroidTest rootProject.ext.annotationProcessorAndroidTestAppDependencies
     compile rootProject.ext.compileDependencies
     compile rootProject.ext.compileAppDependencies
     testCompile rootProject.ext.testCompileDependencies

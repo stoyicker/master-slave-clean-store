@@ -51,7 +51,7 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
      * Injects this instance with the corresponding feature component.
      */
     private fun inject() {
-        (application as MainApplication).buildTopGamingPostsActivityComponent(
+        (application as MainApplication).buildTopGamingAllTimePostsFeatureComponent(
                 // https://kotlinlang.org/docs/tutorials/android-plugin.html#using-kotlin-android-extensions
                 content, error, progress, this).inject(this)
     }

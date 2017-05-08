@@ -6,6 +6,7 @@ final def junitPlatformRunnerVersion = "1.0.0-M3"
 final def jUnitVersion = "4.12"
 final def kotlinVersion = rootProject.ext.kotlinVersion
 final def mockitoKotlinVersion = "1.4.0"
+final def mockitoAndroidVersion = "2.7.22"
 final def retrofitVersion = "2.1.0"
 final def rxAndroidVersion = "1.2.1"
 final def rxJavaVersion = "1.2.6"
@@ -25,15 +26,11 @@ ext {
             "org.jetbrains.spek:spek-junit-platform-engine:$spekVersion",
             "org.junit.platform:junit-platform-runner:$junitPlatformRunnerVersion"
     ]
-    annotationProcessorDomainDependencies = [
-            "com.google.dagger:dagger-compiler:$daggerVersion"
-    ]
     compileOnlyDomainDependencies = [
             "javax.annotation:jsr250-api:$jsr250Version"
     ]
     compileDomainDependencies = [
-            "io.reactivex:rxjava:$rxJavaVersion",
-            "com.google.dagger:dagger:$daggerVersion",
+            "io.reactivex:rxjava:$rxJavaVersion"
     ]
     annotationProcessorDataDependencies = [
             "com.google.dagger:dagger-compiler:$daggerVersion"
@@ -54,9 +51,13 @@ ext {
     ]
     androidTestCompileAppDependencies = [
             "com.android.support.test.espresso:espresso-core:$espressoVersion",
-            "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
+            "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion",
+            "org.mockito:mockito-android:$mockitoAndroidVersion"
     ]
     annotationProcessorAppDependencies = [
+            "com.google.dagger:dagger-compiler:$daggerVersion"
+    ]
+    annotationProcessorAndroidTestAppDependencies = [
             "com.google.dagger:dagger-compiler:$daggerVersion"
     ]
     compileAppDependencies = [

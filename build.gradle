@@ -37,7 +37,7 @@ rootProject.ext {
     androidBuildToolsVersion = '25.0.3'
 	androidVersionCode = inducedVersion != null ? Integer.parseInt(inducedVersion) : 1 // Depending on the git method locally causes IDE issues
 	androidVersionName = String.valueOf(androidVersionCode)
-	androidTestInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
+	androidTestInstrumentationRunner = "app.AndroidTestApplicationAndroidJUnitRunner"
 	androidApplicationIdBase = "org.jorge.ms.%s"
 	staticAnalysisReportTarget = staticAnalysisReportFolderTarget
     javaVersion = JavaVersion.VERSION_1_7

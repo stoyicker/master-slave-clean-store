@@ -4,24 +4,22 @@ import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.Espresso.pressBack
 import android.support.test.espresso.NoActivityResumedException
 import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed
-import android.support.test.espresso.matcher.ViewMatchers.withId
-import android.support.test.espresso.matcher.ViewMatchers.withText
+import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
 import android.support.v7.widget.Toolbar
 import android.view.View
+import domain.entity.Post
 import org.jorge.ms.app.R
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
+import rx.Subscriber
+import rx.observers.TestSubscriber
 
 /**
  * Instrumentation for TopGamingActivityInstrumentation. Here we could tests other things like
  * the error and progress views being shown when they are supposed to or the toolbar hiding on
- * scroll. However this would require using mockito, which breaks the dex limit, so we would
- * need a new flavor and some additional setup to ensure that the main flavor does not get
- * multidexed so I am leaving it aside.
+ * scroll. However this would require using mockito, which breaks the dex limit, so we
  */
 internal class TopGamingActivityInstrumentation {
     @JvmField
@@ -55,5 +53,31 @@ internal class TopGamingActivityInstrumentation {
         onView(withId(R.id.progress)).check { view, _ -> view.visibility = View.VISIBLE }
         onView(withId(R.id.error)).check { view, _ -> view.visibility = View.GONE }
         onView(withId(R.id.content)).check { view, _ -> view.visibility = View.GONE }
+    }
+}
+
+internal val SUBSCRIBER_GENERATOR: (TopGamingAllTimePostsCoordinator) -> Subscriber<Post> = {
+    object : TestSubscriber<Post>() {
+        private val realSubscriberDelegate = PageLoadSubscriber(it)
+
+        override fun onStart() {
+            super.onStart()
+            realSubscriberDelegate.onStart()
+        }
+
+        override fun onNext(post: Post?) {
+            super.onNext(post)
+            realSubscriberDelegate.onNext(post)
+        }
+
+        override fun onError(throwable: Throwable?) {
+            super.onError(throwable)
+            realSubscriberDelegate.onError(throwable)
+        }
+
+        override fun onCompleted() {
+            super.onCompleted()
+            realSubscriberDelegate.onCompleted()
+        }
     }
 }

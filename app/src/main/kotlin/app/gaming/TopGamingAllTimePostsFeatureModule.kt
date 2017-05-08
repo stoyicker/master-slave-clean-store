@@ -20,27 +20,26 @@ import javax.inject.Singleton
 
 /**
  * A component to inject instances that require access to dependencies provided by
- * TopGamingPostsActivityModule.
- * @see TopGamingPostsActivityModule
+ * TopGamingAllTimePostsFeatureModule.
+ * @see TopGamingAllTimePostsFeatureModule
  */
-@Component(modules = arrayOf(TopGamingPostsActivityModule::class))
+@Component(modules = arrayOf(TopGamingAllTimePostsFeatureModule::class))
 @Singleton
-internal interface TopGamingPostsActivityComponent {
+internal interface TopGamingAllTimePostsFeatureComponent {
     fun inject(target: TopGamingAllTimePostsActivity)
     fun inject(target: TopGamingAllTimePostsContentViewConfig)
 }
 
 /**
- * Module used to provide stuff required by TopGamingPostsActivity.
+ * Module used to provide stuff required by TopGamingAllTimePostsActivity.
  * @see TopGamingAllTimePostsActivity
  */
 @Module
-internal class TopGamingPostsActivityModule(
+internal class TopGamingAllTimePostsFeatureModule(
         private val contentView: RecyclerView,
         private val errorView: View,
         private val progressView: View,
         private val activity: Activity) {
-
     @Provides
     @Singleton
     fun coordinatorBehaviorCallback(coordinator: TopGamingAllTimePostsCoordinator) =

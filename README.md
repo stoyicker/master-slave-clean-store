@@ -21,11 +21,11 @@ is how:
 
 # Language choice
 I chose Kotlin over Java because:
-* It compiles to Java bytecode.
 * It is less verbose than Java.
 * It is more natural both to read and write, which makes
 writing code easier and faster while still allowing Java developers
 who have never seen it to understand it.
+* It compiles to Java bytecode.
 
 # Documentation
 Documentation is generated using [Dokka](https://github.com/Kotlin/dokka), which is the

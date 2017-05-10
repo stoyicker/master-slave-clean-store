@@ -4,7 +4,7 @@ import com.nytimes.android.external.fs.FileSystemPersister
 import com.nytimes.android.external.fs.PathResolver
 import com.nytimes.android.external.fs.filesystem.FileSystemFactory
 import com.nytimes.android.external.store.base.impl.StoreBuilder
-import com.nytimes.android.external.store.middleware.GsonParserFactory
+import com.nytimes.android.external.store.middleware.moshi.MoshiParserFactory
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -66,7 +66,7 @@ internal class TopRequestSourceModule(private val cacheDir: File) {
             StoreBuilder
                     .parsedWithKey<TopRequestParameters, BufferedSource, TopRequestDataContainer>()
                     .fetcher({ topFetcher(it, apiService, pageMap) })
-                    .parser(GsonParserFactory.createSourceParser<TopRequestDataContainer>(
+                    .parser(MoshiParserFactory.createSourceParser<TopRequestDataContainer>(
                             TopRequestDataContainer::class.java))
                     .persister(FileSystemPersister.create(
                             FileSystemFactory.create(cacheDir),

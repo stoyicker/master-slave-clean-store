@@ -1,6 +1,6 @@
 package data.top
 
-import com.google.gson.Gson
+import com.squareup.moshi.Moshi
 import data.common.ApiService
 import domain.entity.TimeRange
 import org.jetbrains.spek.api.SubjectSpek
@@ -31,9 +31,9 @@ internal class TopRequestSourceIntegrationSpek : SubjectSpek<TopRequestSource>({
         val expectedSubreddit = "gaming"
         val expectedSize = 25
         val testSubscriber = TestSubscriber<TopRequestDataContainer>()
-        val gson = Gson()
+        val moshi = Moshi.Builder().build()
         retrofit.top(expectedSubreddit, TimeRange.ALL_TIME.value, null, expectedSize)
-                .map { gson.fromJson(it.string(), TopRequestDataContainer::class.java) }
+                .map { moshi.adapter(TopRequestDataContainer::class.java).fromJson(it.string()) }
                 .subscribe(testSubscriber)
         testSubscriber.assertNoErrors()
         testSubscriber.onNextEvents.forEach {

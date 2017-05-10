@@ -1,57 +1,76 @@
+final def daggerVersion = "2.10"
 final def firebaseVersion = "10.2.0"
 final def espressoVersion = "2.2.2"
+final def jsr250Version = "1.0"
 final def junitPlatformRunnerVersion = "1.0.0-M3"
 final def jUnitVersion = "4.12"
 final def kotlinVersion = rootProject.ext.kotlinVersion
-final def mockitoKotlinVersion = "1.3.0"
+final def mockitoKotlinVersion = "1.4.0"
+final def mockitoAndroidVersion = "2.7.22"
 final def retrofitVersion = "2.1.0"
 final def rxAndroidVersion = "1.2.1"
 final def rxJavaVersion = "1.2.6"
 final def spekVersion = "1.1.0-beta2"
-final def storeVersion = "2.0.3"
+final def storeVersion = "2.0.4"
 final def supportVersion = "25.3.1"
 
-rootProject.ext.compileDependencies = [
-        "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-]
-
-rootProject.ext.testCompileDependencies = [
-        "com.nhaarman:mockito-kotlin:$mockitoKotlinVersion",
-        "junit:junit:$jUnitVersion",
-        "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion",
-        "org.jetbrains.spek:spek-api:$spekVersion",
-        "org.jetbrains.spek:spek-junit-platform-engine:$spekVersion",
-        "org.junit.platform:junit-platform-runner:$junitPlatformRunnerVersion"
-]
-
-rootProject.ext.compileDomainDependencies = [
-        "io.reactivex:rxjava:$rxJavaVersion"
-]
-
-rootProject.ext.providedDataDependencies = [
-        "com.android.support:support-annotations:$supportVersion"
-]
-
-rootProject.ext.compileDataDependencies = [
-        "com.squareup.retrofit2:retrofit:$retrofitVersion",
-        "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion",
-        "com.nytimes.android:store:$storeVersion",
-        "com.nytimes.android:middleware:$storeVersion",
-        "com.nytimes.android:filesystem:$storeVersion"
-]
-
-rootProject.ext.androidTestCompileAppDependencies = [
-        "com.android.support.test.espresso:espresso-core:$espressoVersion",
-        "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-]
-
-rootProject.ext.compileAppDependencies = [
-        "io.reactivex:rxandroid:$rxAndroidVersion",
-        "com.android.support:appcompat-v7:$supportVersion",
-        "com.android.support:design:$supportVersion",
-        "com.google.firebase:firebase-crash:$firebaseVersion"
-]
-
-rootProject.ext.providedUtilAndroidDependencies = [
-        "com.android.support:support-annotations:$supportVersion"
-]
+ext {
+    compileDependencies = [
+            "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    ]
+    testCompileDependencies = [
+            "com.nhaarman:mockito-kotlin:$mockitoKotlinVersion",
+            "junit:junit:$jUnitVersion",
+            "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion",
+            "org.jetbrains.spek:spek-api:$spekVersion",
+            "org.jetbrains.spek:spek-junit-platform-engine:$spekVersion",
+            "org.junit.platform:junit-platform-runner:$junitPlatformRunnerVersion"
+    ]
+    compileOnlyDomainDependencies = [
+            "javax.annotation:jsr250-api:$jsr250Version"
+    ]
+    compileDomainDependencies = [
+            "io.reactivex:rxjava:$rxJavaVersion"
+    ]
+    annotationProcessorDataDependencies = [
+            "com.google.dagger:dagger-compiler:$daggerVersion"
+    ]
+    annotationProcessorTestDataDependencies = [
+            "com.google.dagger:dagger-compiler:$daggerVersion"
+    ]
+    providedDataDependencies = [
+            "com.android.support:support-annotations:$supportVersion"
+    ]
+    compileDataDependencies = [
+            "com.squareup.retrofit2:retrofit:$retrofitVersion",
+            "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion",
+            "com.nytimes.android:store:$storeVersion",
+            "com.nytimes.android:middleware:$storeVersion",
+            "com.nytimes.android:filesystem:$storeVersion",
+            "com.google.dagger:dagger-android:$daggerVersion"
+    ]
+    androidTestCompileAppDependencies = [
+            "com.android.support.test.espresso:espresso-core:$espressoVersion",
+            "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion",
+            "org.mockito:mockito-android:$mockitoAndroidVersion"
+    ]
+    annotationProcessorAppDependencies = [
+            "com.google.dagger:dagger-compiler:$daggerVersion"
+    ]
+    annotationProcessorAndroidTestAppDependencies = [
+            "com.google.dagger:dagger-compiler:$daggerVersion"
+    ]
+    compileAppDependencies = [
+            "io.reactivex:rxandroid:$rxAndroidVersion",
+            "com.android.support:appcompat-v7:$supportVersion",
+            "com.android.support:design:$supportVersion",
+            "com.google.firebase:firebase-crash:$firebaseVersion",
+            "com.google.dagger:dagger-android:$daggerVersion"
+    ]
+    providedUtilAndroidDependencies = [
+            "com.android.support:support-annotations:$supportVersion"
+    ]
+    compileUtilAndroidTestDependencies = [
+            "com.android.support.test.espresso:espresso-idling-resource:$espressoVersion"
+    ]
+}

@@ -26,4 +26,21 @@ abstract class TopGamingAllTimePostsUseCase(
         const val SUBREDDIT = "gaming"
         val TIME_RANGE = TimeRange.ALL_TIME
     }
+
+    /**
+     * Description of a factory that creates instances of implementations of this use case.
+     */
+    interface Factory {
+        /**
+         * Factory method for the 'fetch' use case.
+         */
+        fun newFetch(page: Int,
+                     postExecutionThread: PostExecutionThread): TopGamingAllTimePostsUseCase
+
+        /**
+         * Factory method for the 'get' use case.
+         */
+        fun newGet(page: Int,
+                   postExecutionThread: PostExecutionThread): TopGamingAllTimePostsUseCase
+    }
 }

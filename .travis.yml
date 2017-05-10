@@ -6,7 +6,7 @@ android:
   - tools
   - platform-tools
   - android-25
-  - build-tools-25.0.2
+  - build-tools-25.0.3
   - extra-android-m2repository
   - extra-google-m2repository
 branches:
@@ -17,7 +17,7 @@ env:
   - TASK="./gradlew :app:clean :app:build :app:check :app:dokka --stacktrace"
   - TASK="./gradlew :domain:clean :domain:build :domain:check :domain:dokka --stacktrace"
   - TASK="./gradlew :data:clean :data:build :data:check :data:dokka --stacktrace"
-  - TASK="./gradlew :util:clean :util:build :util:check :util:dokka :util-android:clean :util-android:build :util-android:check :util-android:dokka --stacktrace"
+  - TASK="./gradlew :util-android:build :util-android:check :util-android:dokka  :util-android-test:build :util-android-test:check :util-android-test:dokka --stacktrace"
 before_install:
 - openssl aes-256-cbc -K $encrypted_90d766e4084d_key -iv $encrypted_90d766e4084d_iv
   -in secrets.tar.enc -out secrets.tar -d

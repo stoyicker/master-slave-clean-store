@@ -11,7 +11,7 @@ import rx.subscriptions.Subscriptions
  * Abstraction used to represent domain needs.
  */
 abstract class UseCase<T>(private val postExecutionThread: PostExecutionThread) {
-    private lateinit var subscription: Subscription
+    internal lateinit var subscription: Subscription
 
     /**
      * Defines the observable that represents this use case.
@@ -23,10 +23,14 @@ abstract class UseCase<T>(private val postExecutionThread: PostExecutionThread) 
      * @param subscriber The subscriber to notify of the results.
      */
     fun execute(subscriber: Subscriber<T>?) {
-        val observable = buildUseCaseObservable()
-                .subscribeOn(Domain.useCaseScheduler)
-                .observeOn(postExecutionThread.provideScheduler())
-        subscription = observable.subscribe(subscriber) ?: Subscriptions.empty()
+        subscription = if (subscriber == null) {
+            Subscriptions.empty()
+        } else {
+            buildUseCaseObservable()
+                    .subscribeOn(Domain.useCaseScheduler)
+                    .observeOn(postExecutionThread.provideScheduler())
+                    .subscribe(subscriber)
+        }
     }
 
     /**

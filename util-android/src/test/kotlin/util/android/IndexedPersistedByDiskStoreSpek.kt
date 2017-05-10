@@ -19,7 +19,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 @RunWith(JUnitPlatform::class)
-internal class ResettableLazySpek : SubjectSpek<IndexedPersistedByDiskStore<Any>>({
+internal class IndexedPersistedByDiskStoreSpek : SubjectSpek<IndexedPersistedByDiskStore<Any>>({
     subject {
         IndexedPersistedByDiskStore(SOURCE_FILE, MOCK_VALUE_STRINGIFIER, INITIAL_MAP)
     }
@@ -66,7 +66,7 @@ internal class ResettableLazySpek : SubjectSpek<IndexedPersistedByDiskStore<Any>
                 indexes.mapIndexed { index, value ->
                   "$value=${values[index]}"
                 }.joinToString(separator = "\n"))
-        whenever(MOCK_VALUE_STRINGIFIER.fromString(any())) doAnswer { it.arguments[0] }
+        whenever(MOCK_VALUE_STRINGIFIER.fromString(any<String>())) doAnswer { it.arguments[0] }
         subject.restore()
         values.forEachIndexed { index, value ->
             verify(MOCK_VALUE_STRINGIFIER).fromString(eq(values[index]))

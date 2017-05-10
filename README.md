@@ -8,13 +8,6 @@ $<project-dir>: ./hooks/setup
 
 # Build instructions
 
-* Place the key to the API in the root `gradle.properties` file following
-the format below:
-    ````
-    prop_api_url="https://api-url.com/"
-    ````
-    __Make sure to include the quotes.__
-* Place the keystore for the release version, named `alias.keystore`, under the project root.
 * Make sure you're passing a property to gradle (like through `gradle.properties`) keyed 
 `FirebaseServiceAccountFilePath`. Its value is irrelevant.
 * Place the Firebase service account file, named 
@@ -28,11 +21,11 @@ is how:
 
 # Language choice
 I chose Kotlin over Java because:
-* It compiles to Java bytecode.
 * It is less verbose than Java.
 * It is more natural both to read and write, which makes
 writing code easier and faster while still allowing Java developers
 who have never seen it to understand it.
+* It compiles to Java bytecode.
 
 # Documentation
 Documentation is generated using [Dokka](https://github.com/Kotlin/dokka), which is the

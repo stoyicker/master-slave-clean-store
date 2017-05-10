@@ -1,7 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 apply plugin: 'kotlin-android-extensions'
+// TODO Change to org.jetbrains.dokka-android
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'com.google.firebase.firebase-crash'
 
@@ -65,12 +67,15 @@ dependencies {
     compile project(':data')
     compile project(':domain')
     compile project(':util-android')
+    androidTestCompile project(':util-android-test')
     rootProject.ext.androidTestCompileAppDependencies.forEach {
         androidTestCompile(it) {
             exclude group: 'com.google.code.findbugs'
             exclude module: 'support-annotations'
         }
     }
+    kapt rootProject.ext.annotationProcessorAppDependencies
+    kaptAndroidTest rootProject.ext.annotationProcessorAndroidTestAppDependencies
     compile rootProject.ext.compileDependencies
     compile rootProject.ext.compileAppDependencies
     testCompile rootProject.ext.testCompileDependencies

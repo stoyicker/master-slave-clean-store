@@ -1,34 +1,33 @@
 package app.gaming
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import app.MainApplication
 import domain.entity.Post
 import kotlinx.android.synthetic.main.include_toolbar.toolbar
-import kotlinx.android.synthetic.main.include_top_posts_view.content
-import kotlinx.android.synthetic.main.include_top_posts_view.error
 import kotlinx.android.synthetic.main.include_top_posts_view.progress
-import org.jorge.ms.app.BuildConfig
+import kotlinx.android.synthetic.main.include_top_posts_view.error
+import kotlinx.android.synthetic.main.include_top_posts_view.content
 import org.jorge.ms.app.R
+import javax.inject.Inject
 
 /**
- * An Activity that shows the top posts from /r/gaming.
+ * An Activity that shows the top posts from r/gaming.
  */
 class TopGamingAllTimePostsActivity : AppCompatActivity() {
-    private lateinit var coordinator: TopGamingAllTimePostsCoordinator
+    @Inject
+    internal lateinit var viewConfig: TopGamingAllTimePostsContentViewConfig
+    @Inject
+    internal lateinit var coordinator: TopGamingAllTimePostsCoordinator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_top_gaming)
-        // https://kotlinlang.org/docs/tutorials/android-plugin.html#using-kotlin-android-extensions
-        val view = TopGamingAllTimePostsView(content, error, progress)
+        inject()
         setSupportActionBar(toolbar)
-        coordinator = TopGamingAllTimePostsCoordinator(view)
-        TopGamingAllTimePostsContentViewConfig.dumpOnto(view, provideCoordinatorBridgeCallback())
+        viewConfig.apply()
         coordinator.actionLoadNextPage(intent.getBooleanExtra(
                 TopGamingAllTimePostsActivity.KEY_STARTED_MANUALLY, false))
         intent.putExtra(TopGamingAllTimePostsActivity.KEY_STARTED_MANUALLY, false)
@@ -45,30 +44,12 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
     }
 
     /**
-     * Provides a callback to define the responses to certain user interactions.
+     * Injects this instance with the corresponding feature component.
      */
-    private fun provideCoordinatorBridgeCallback()
-        = object : BehaviorCallback {
-        @SuppressLint("InlinedApi")
-        override fun onItemClicked(item: Post) {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.detailLink))
-            // https://developer.android.com/training/implementing-navigation/descendant.html#external-activities
-            if (BuildConfig.VERSION_CODE > Build.VERSION_CODES.LOLLIPOP) {
-                @Suppress("DEPRECATION")
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
-            } else {
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
-            }
-            val candidates = this@TopGamingAllTimePostsActivity.packageManager
-                    .queryIntentActivities(intent, 0)
-            if (candidates.size > 0) {
-                startActivity(intent)
-            }
-        }
-
-        override fun onPageLoadRequested() {
-            coordinator.actionLoadNextPage()
-        }
+    private fun inject() {
+        (application as MainApplication).buildTopGamingAllTimePostsFeatureComponent(
+                // https://kotlinlang.org/docs/tutorials/android-plugin.html#using-kotlin-android-extensions
+                content, error, progress, this).inject(this)
     }
 
     /**

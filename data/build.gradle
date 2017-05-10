@@ -1,6 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
+// TODO Change to org.jetbrains.dokka-android
 apply plugin: 'org.jetbrains.dokka'
 
 android {
@@ -11,8 +13,7 @@ android {
         versionName rootProject.ext.androidVersionName
         minSdkVersion rootProject.ext.androidMinSdkVersion
         targetSdkVersion rootProject.ext.androidTargetSdkVersion
-        buildConfigField "String", "API_URL",
-                System.getenv("API_URL") != null ? System.getenv("API_URL") : prop_api_url
+        buildConfigField "String", "API_URL", '"https://reddit.com/"'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -44,13 +45,14 @@ repositories {
 
 dependencies {
     compile project(':domain')
-    compile project(':util')
     compile project(':util-android')
-    compile rootProject.ext.compileDependencies
+    kapt rootProject.ext.annotationProcessorDataDependencies
+    kaptTest rootProject.ext.annotationProcessorTestDataDependencies
     provided rootProject.ext.providedDataDependencies
+    compile rootProject.ext.compileDependencies
     rootProject.ext.compileDataDependencies.forEach {
         compile(it) {
-            // RxJava is brought by the domain module
+            // Correct RxJava is brought by the domain module
             exclude group: 'io.reactivex'
         }
     }

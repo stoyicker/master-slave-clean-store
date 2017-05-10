@@ -19,7 +19,7 @@
         android:layout_marginTop="@dimen/section_separator"
         android:layout_marginBottom="@dimen/section_separator"
         android:clickable="false"
-        android:background="@color/primary" />
+        android:background="@color/windowBackground" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

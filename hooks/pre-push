@@ -1,1 +1,5 @@
-./gradlew --debug --stacktrace clean check assemble test cAT || { exit 1; }
+./gradlew --refresh-dependencies -x :app:validateSigningRelease -x :app:packageRelease clean check assemble test cAT || { exit 1; }
+adb uninstall org.jorge.ms.app.debug
+adb install app/build/outputs/apk/app-debug.apk
+adb shell monkey -p org.jorge.ms.app.debug -v 500
+adb uninstall org.jorge.ms.app.debug

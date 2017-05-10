@@ -6,8 +6,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import app.UIPostExecutionThread
+import app.gaming.TopGamingActivityInstrumentation.Companion.PUBLISH_SUBJECT
+import app.gaming.TopGamingActivityInstrumentation.Companion.SUBSCRIBER_GENERATOR
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -15,8 +18,7 @@ import domain.entity.Post
 import domain.exec.PostExecutionThread
 import domain.interactor.TopGamingAllTimePostsUseCase
 import org.jorge.ms.app.BuildConfig
-import rx.Observable
-import java.util.concurrent.TimeUnit
+import rx.subjects.PublishSubject
 import javax.inject.Singleton
 
 /**
@@ -57,8 +59,8 @@ internal class TopGamingAllTimePostsFeatureInstrumentationModule(
     @Provides
     @Singleton
     fun pageLoadSubscriberFactory() = object : PageLoadSubscriber.Factory {
-        override fun newSubscriber(coordinator: TopGamingAllTimePostsCoordinator)
-                = SUBSCRIBER_GENERATOR(coordinator)
+        override fun newSubscriber(coordinator: TopGamingAllTimePostsCoordinator) =
+                SUBSCRIBER_GENERATOR(coordinator)
     }
 
     @Provides
@@ -70,20 +72,18 @@ internal class TopGamingAllTimePostsFeatureInstrumentationModule(
 
     @Provides
     @Singleton
-    fun topGamingAllTimePostsUseCaseFactory(): TopGamingAllTimePostsUseCase.Factory =
-            object : TopGamingAllTimePostsUseCase.Factory {
-                override fun newFetch(page: Int, postExecutionThread: PostExecutionThread) =
-                        object : TopGamingAllTimePostsUseCase(page, UIPostExecutionThread) {
-                            override fun buildUseCaseObservable() = Observable.just(Post(
-                                        "Page $page", "asubreddit", page,
-                                        "https://www.page$page.com"))
-                                        .delay(125, TimeUnit.MILLISECONDS)
-                                        .repeat(8)
-                }
+    fun topGamingAllTimePostsUseCaseFactory(): TopGamingAllTimePostsUseCase.Factory {
+        PUBLISH_SUBJECT = PublishSubject.create<Post>()
+        return object : TopGamingAllTimePostsUseCase.Factory {
+            override fun newFetch(page: Int, postExecutionThread: PostExecutionThread) =
+                    object : TopGamingAllTimePostsUseCase(page, UIPostExecutionThread) {
+                        override fun buildUseCaseObservable() = PUBLISH_SUBJECT
+                    }
 
-                override fun newGet(page: Int, postExecutionThread: PostExecutionThread) =
-                        newFetch(page, postExecutionThread)
-            }
+            override fun newGet(page: Int, postExecutionThread: PostExecutionThread) =
+                    newFetch(page, postExecutionThread)
+        }
+    }
 
     @Provides
     @Singleton

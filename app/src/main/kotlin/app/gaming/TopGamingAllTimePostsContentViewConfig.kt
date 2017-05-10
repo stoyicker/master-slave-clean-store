@@ -56,7 +56,7 @@ internal class TopGamingAllTimePostsContentViewConfig(
  * An alternative would have been to use the databinding library, but the fact that it does not
  * support merge layouts would make diverse screen support more complicated.
  */
-internal class Adapter(private val listener: OnItemClickListener<Post>)
+internal class  Adapter(private val listener: OnItemClickListener<Post>)
     : RecyclerView.Adapter<Adapter.ViewHolder>() {
     private val items = mutableListOf<Post>()
     private lateinit var recyclerView: RecyclerView

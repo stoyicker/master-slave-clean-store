@@ -1,6 +1,15 @@
 package util.android
 
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.doAnswer
+import com.nhaarman.mockito_kotlin.doReturn
+import com.nhaarman.mockito_kotlin.eq
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.reset
+import com.nhaarman.mockito_kotlin.spy
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
+import com.nhaarman.mockito_kotlin.whenever
 import org.jetbrains.spek.api.SubjectSpek
 import org.jetbrains.spek.api.dsl.it
 import org.junit.platform.runner.JUnitPlatform
@@ -57,7 +66,7 @@ internal class IndexedPersistedByDiskStoreSpek : SubjectSpek<IndexedPersistedByD
                 indexes.mapIndexed { index, value ->
                   "$value=${values[index]}"
                 }.joinToString(separator = "\n"))
-        whenever(MOCK_VALUE_STRINGIFIER.fromString(any())) doAnswer { it.arguments[0] }
+        whenever(MOCK_VALUE_STRINGIFIER.fromString(any<String>())) doAnswer { it.arguments[0] }
         subject.restore()
         values.forEachIndexed { index, value ->
             verify(MOCK_VALUE_STRINGIFIER).fromString(eq(values[index]))

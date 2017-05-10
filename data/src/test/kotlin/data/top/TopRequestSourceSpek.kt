@@ -1,6 +1,14 @@
 package data.top
 
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockito_kotlin.anyVararg
+import com.nhaarman.mockito_kotlin.doReturn
+import com.nhaarman.mockito_kotlin.eq
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.reset
+import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
+import com.nhaarman.mockito_kotlin.whenever
 import com.nytimes.android.external.store.base.impl.Store
 import dagger.Component
 import dagger.Module
@@ -10,6 +18,7 @@ import domain.entity.TimeRange
 import domain.interactor.TopGamingAllTimePostsUseCase
 import org.jetbrains.spek.api.SubjectSpek
 import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.api.dsl.on
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
 import retrofit2.Retrofit

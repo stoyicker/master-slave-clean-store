@@ -23,7 +23,6 @@ class BinaryIdlingResource(private val name: String) : IdlingResource {
      * @param isIdleNow The new idle state for the resource.
      */
     fun setIdleState(isIdleNow: Boolean) {
-        if (isIdle.get() == isIdleNow) return
         isIdle.set(isIdleNow)
         if (isIdleNow) {
             resourceCallback?.onTransitionToIdle()

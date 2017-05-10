@@ -74,12 +74,11 @@ internal class TopGamingAllTimePostsFeatureInstrumentationModule(
             object : TopGamingAllTimePostsUseCase.Factory {
                 override fun newFetch(page: Int, postExecutionThread: PostExecutionThread) =
                         object : TopGamingAllTimePostsUseCase(page, UIPostExecutionThread) {
-                            override fun buildUseCaseObservable() =
-                                    Observable.just(Post(
-                                            "Post number $page", "asubreddit", page,
-                                            "https://www.page$page.com"))
-                                            .delay(1000, TimeUnit.MILLISECONDS)
-
+                            override fun buildUseCaseObservable() = Observable.just(Post(
+                                        "Page $page", "asubreddit", page,
+                                        "https://www.page$page.com"))
+                                        .delay(125, TimeUnit.MILLISECONDS)
+                                        .repeat(8)
                 }
 
                 override fun newGet(page: Int, postExecutionThread: PostExecutionThread) =

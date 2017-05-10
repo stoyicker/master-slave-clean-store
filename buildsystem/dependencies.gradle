@@ -70,4 +70,7 @@ ext {
     providedUtilAndroidDependencies = [
             "com.android.support:support-annotations:$supportVersion"
     ]
+    compileUtilAndroidTestDependencies = [
+            "com.android.support.test.espresso:espresso-idling-resource:$espressoVersion"
+    ]
 }

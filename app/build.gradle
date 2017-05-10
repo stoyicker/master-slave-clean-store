@@ -67,6 +67,7 @@ dependencies {
     compile project(':data')
     compile project(':domain')
     compile project(':util-android')
+    androidTestCompile project(':util-android-test')
     rootProject.ext.androidTestCompileAppDependencies.forEach {
         androidTestCompile(it) {
             exclude group: 'com.google.code.findbugs'

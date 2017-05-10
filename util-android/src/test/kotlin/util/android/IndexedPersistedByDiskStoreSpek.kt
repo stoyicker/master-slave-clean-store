@@ -1,15 +1,6 @@
 package util.android
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.doAnswer
-import com.nhaarman.mockito_kotlin.doReturn
-import com.nhaarman.mockito_kotlin.eq
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.reset
-import com.nhaarman.mockito_kotlin.spy
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyZeroInteractions
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockito_kotlin.*
 import org.jetbrains.spek.api.SubjectSpek
 import org.jetbrains.spek.api.dsl.it
 import org.junit.platform.runner.JUnitPlatform
@@ -19,7 +10,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 @RunWith(JUnitPlatform::class)
-internal class ResettableLazySpek : SubjectSpek<IndexedPersistedByDiskStore<Any>>({
+internal class IndexedPersistedByDiskStoreSpek : SubjectSpek<IndexedPersistedByDiskStore<Any>>({
     subject {
         IndexedPersistedByDiskStore(SOURCE_FILE, MOCK_VALUE_STRINGIFIER, INITIAL_MAP)
     }

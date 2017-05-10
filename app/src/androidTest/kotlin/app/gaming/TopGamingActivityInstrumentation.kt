@@ -1,5 +1,6 @@
 package app.gaming
 
+import android.support.test.espresso.Espresso
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.Espresso.pressBack
 import android.support.test.espresso.NoActivityResumedException
@@ -14,7 +15,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 import rx.Subscriber
-import rx.observers.TestSubscriber
+import util.android.test.BinaryIdlingResource
+import kotlin.test.assertEquals
 
 /**
  * Instrumentation for TopGamingActivityInstrumentation. Here we could tests other things like
@@ -30,54 +32,84 @@ internal class TopGamingActivityInstrumentation {
     val expectedException: ExpectedException = ExpectedException.none()
 
     @Test
-    internal fun activityIsShown() {
-        onView(withId(android.R.id.content)).check { view, _ -> view.visibility = View.VISIBLE }
+    fun activityIsShown() {
+        onView(withId(android.R.id.content)).check { view, _ ->
+            assertEquals(View.VISIBLE, view.visibility, "Window visibility was not VISIBLE")  }
     }
 
     @Test
-    internal fun toolbarIsCompletelyShownOnOpening() {
+    fun toolbarIsCompletelyShownOnOpening() {
         val completelyDisplayedMatcher = matches(isCompletelyDisplayed())
         onView(isAssignableFrom(Toolbar::class.java)).check(completelyDisplayedMatcher)
         onView(withText(R.string.app_label)).check(completelyDisplayedMatcher)
     }
 
     @Test
-    internal fun goingBackPausesApp() {
+    fun goingBackPausesApp() {
         expectedException.expect(NoActivityResumedException::class.java)
         expectedException.expectMessage("Pressed back and killed the app")
         pressBack()
     }
 
     @Test
-    internal fun openingShowsProgress() {
-        onView(withId(R.id.progress)).check { view, _ -> view.visibility = View.VISIBLE }
-        onView(withId(R.id.error)).check { view, _ -> view.visibility = View.GONE }
-        onView(withId(R.id.content)).check { view, _ -> view.visibility = View.GONE }
+    fun openingShowsProgress() {
+        onView(withId(R.id.progress)).check { view, _ ->
+            assertEquals(View.VISIBLE, view.visibility, "Progress visibility was not VISIBLE") }
+        onView(withId(R.id.error)).check { view, _ ->
+            assertEquals(View.GONE, view.visibility, "Error visibility was not GONE") }
+        onView(withId(R.id.content)).check { view, _ ->
+            assertEquals(View.VISIBLE, view.visibility, "Content visibility was not VISIBLE") }
     }
+
+    @Test
+    fun onLoadItemsAreShown() {
+        Espresso.registerIdlingResources(IDLING_RESOURCE)
+        onView(withId(R.id.progress)).check { view, _ ->
+            assertEquals(View.GONE, view.visibility, "Progress visibility was not GONE") }
+        onView(withId(R.id.error)).check { view, _ ->
+            assertEquals(View.GONE, view.visibility, "Error visibility was not GONE") }
+        onView(withId(R.id.content)).check { view, _ ->
+            assertEquals(View.VISIBLE, view.visibility, "Content visibility was not VISIBLE") }
+        // TODO Check for data content
+        Espresso.unregisterIdlingResources(IDLING_RESOURCE)
+    }
+
+//    @Test
+//    fun onFailureErrorIsShown() {
+//        TEST_OBSERVABLE_FACTORY_METHOD = { _ -> Observable.error(UnknownHostException())}
+//        Espresso.registerIdlingResources(IDLING_RESOURCE)
+//        onView(withId(R.id.progress)).check { view, _ ->
+//            assertEquals(View.GONE, view.visibility, "Progress visibility was not GONE") }
+//        onView(withId(R.id.error)).check { view, _ ->
+//            assertEquals(View.VISIBLE, view.visibility, "Error visibility was not VISIBLE") }
+//        onView(withId(R.id.content)).check { view, _ ->
+//            assertEquals(View.VISIBLE, view.visibility, "Content visibility was not VISIBLE") }
+//        Espresso.unregisterIdlingResources(IDLING_RESOURCE)
+//    }
 }
 
+private val IDLING_RESOURCE = BinaryIdlingResource("load")
 internal val SUBSCRIBER_GENERATOR: (TopGamingAllTimePostsCoordinator) -> Subscriber<Post> = {
-    object : TestSubscriber<Post>() {
+    object : Subscriber<Post>() {
         private val realSubscriberDelegate = PageLoadSubscriber(it)
 
         override fun onStart() {
-            super.onStart()
             realSubscriberDelegate.onStart()
+            IDLING_RESOURCE.setIdleState(false)
         }
 
         override fun onNext(post: Post?) {
-            super.onNext(post)
             realSubscriberDelegate.onNext(post)
         }
 
         override fun onError(throwable: Throwable?) {
-            super.onError(throwable)
             realSubscriberDelegate.onError(throwable)
+            IDLING_RESOURCE.setIdleState(true)
         }
 
         override fun onCompleted() {
-            super.onCompleted()
             realSubscriberDelegate.onCompleted()
+            IDLING_RESOURCE.setIdleState(true)
         }
     }
 }

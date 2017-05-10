@@ -5,6 +5,7 @@ import domain.entity.Post
 import domain.interactor.TopGamingAllTimePostsUseCase
 import domain.interactor.UseCase
 
+
 /**
  * Takes care of binding the logic of the top gaming posts request to the view that handles its
  * outcome.

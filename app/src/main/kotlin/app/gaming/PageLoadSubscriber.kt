@@ -13,9 +13,11 @@ internal class PageLoadSubscriber(
     val posts = mutableListOf<Post>()
 
     override fun onStart() {
-        coordinator.view.showLoadingLayout()
-        coordinator.view.hideContentLayout()
-        coordinator.view.hideErrorLayout()
+        coordinator.view.apply {
+            showLoadingLayout()
+            hideContentLayout()
+            hideErrorLayout()
+        }
     }
 
     override fun onNext(post: Post?) {
@@ -25,18 +27,22 @@ internal class PageLoadSubscriber(
     }
 
     override fun onError(throwable: Throwable?) {
-        coordinator.view.showErrorLayout()
-        coordinator.view.hideLoadingLayout()
-        coordinator.view.hideContentLayout()
-        FirebaseCrash.report(throwable)
+        coordinator.view.apply {
+            showErrorLayout()
+            hideLoadingLayout()
+            hideContentLayout()
+            FirebaseCrash.report(throwable)
+        }
     }
 
     override fun onCompleted() {
         coordinator.page++
         // * is the spread operator. We use it to build an immutable list.
-        coordinator.view.updateContent(listOf(*posts.toTypedArray()))
-        coordinator.view.hideLoadingLayout()
-        coordinator.view.hideErrorLayout()
+        coordinator.view.apply {
+            updateContent(listOf(*posts.toTypedArray()))
+            hideLoadingLayout()
+            hideErrorLayout()
+        }
     }
 
     /**

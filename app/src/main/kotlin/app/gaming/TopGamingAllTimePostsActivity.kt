@@ -2,14 +2,19 @@ package app.gaming
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.View
+import android.view.ViewAnimationUtils
 import app.MainApplication
 import domain.entity.Post
+import kotlinx.android.synthetic.main.activity_top_gaming.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 import kotlinx.android.synthetic.main.include_top_posts_view.*
 import org.jorge.ms.app.R
 import javax.inject.Inject
+
 
 /**
  * An Activity that shows the top posts from r/gaming.
@@ -24,6 +29,7 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
         overridePendingTransition(0, 0)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_top_gaming)
+        revealLayout()
         inject()
         setSupportActionBar(toolbar)
         viewConfig.apply()
@@ -40,6 +46,23 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         coordinator.abortActionLoadNextPage()
+    }
+
+    /**
+     * Reveals the layout using a circular reveal (if API level allows).
+     */
+    private fun revealLayout() {
+        root.visibility = View.VISIBLE
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            root.apply {
+                post {
+                    val cx = width / 2
+                    val cy = 0
+                    val finalRadius = Math.hypot(cx.toDouble(), cy.toDouble()).toFloat()
+                    ViewAnimationUtils.createCircularReveal(this , cx, cy, 0f, finalRadius).start()
+                }
+            }
+        }
     }
 
     /**

@@ -6,10 +6,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import app.MainApplication
 import domain.entity.Post
-import kotlinx.android.synthetic.main.include_toolbar.toolbar
-import kotlinx.android.synthetic.main.include_top_posts_view.progress
-import kotlinx.android.synthetic.main.include_top_posts_view.error
-import kotlinx.android.synthetic.main.include_top_posts_view.content
+import kotlinx.android.synthetic.main.include_toolbar.*
+import kotlinx.android.synthetic.main.include_top_posts_view.*
 import org.jorge.ms.app.R
 import javax.inject.Inject
 
@@ -23,6 +21,7 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
     internal lateinit var coordinator: TopGamingAllTimePostsCoordinator
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        overridePendingTransition(0, 0)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_top_gaming)
         inject()

@@ -74,7 +74,6 @@ internal class TopGamingAllTimePostsGetUseCaseSpek : SubjectSpek<TopGamingAllTim
         private val POST_EXECUTION_THREAD_SCHEDULE_IMMEDIATELY = object : PostExecutionThread {
             override fun provideScheduler(): Scheduler = Schedulers.immediate()
         }
-        private val SCHEDULER_IMMEDIATE = Schedulers.immediate()
         private val MOCK_FACADE = mock<DomainTopPostsFacade>()
     }
 }

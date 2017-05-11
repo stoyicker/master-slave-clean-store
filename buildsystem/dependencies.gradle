@@ -50,9 +50,9 @@ ext {
             "com.google.dagger:dagger-android:$daggerVersion"
     ]
     androidTestCompileAppDependencies = [
-            "com.android.support.test.espresso:espresso-core:$espressoVersion",
             "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion",
-            "org.mockito:mockito-android:$mockitoAndroidVersion"
+            "org.mockito:mockito-android:$mockitoAndroidVersion",
+            "com.android.support.test.espresso:espresso-intents:$espressoVersion"
     ]
     annotationProcessorAppDependencies = [
             "com.google.dagger:dagger-compiler:$daggerVersion"
@@ -71,6 +71,7 @@ ext {
             "com.android.support:support-annotations:$supportVersion"
     ]
     compileUtilAndroidTestDependencies = [
+            "com.android.support.test.espresso:espresso-core:$espressoVersion",
             "com.android.support.test.espresso:espresso-idling-resource:$espressoVersion"
     ]
 }

@@ -18,6 +18,7 @@
         <ignore regexp="content" />
         <ignore regexp="progress" />
         <ignore regexp="error" />
+        <ignore regexp="root" />
     </issue>
     <issue id="MergeRootFrame">
         <ignore regexp="include_top_posts_view" />

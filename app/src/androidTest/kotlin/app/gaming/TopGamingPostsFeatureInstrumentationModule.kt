@@ -6,10 +6,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
 import app.UIPostExecutionThread
-import app.gaming.TopGamingActivityInstrumentation.Companion.PUBLISH_SUBJECT
+import app.gaming.TopGamingActivityInstrumentation.Companion.SUBJECT
 import app.gaming.TopGamingActivityInstrumentation.Companion.SUBSCRIBER_GENERATOR
 import dagger.Component
 import dagger.Module
@@ -18,7 +17,6 @@ import domain.entity.Post
 import domain.exec.PostExecutionThread
 import domain.interactor.TopGamingAllTimePostsUseCase
 import org.jorge.ms.app.BuildConfig
-import rx.subjects.PublishSubject
 import javax.inject.Singleton
 
 /**
@@ -76,7 +74,7 @@ internal class TopGamingAllTimePostsFeatureInstrumentationModule(
         object : TopGamingAllTimePostsUseCase.Factory {
             override fun newFetch(page: Int, postExecutionThread: PostExecutionThread) =
                 object : TopGamingAllTimePostsUseCase(page, UIPostExecutionThread) {
-                    override fun buildUseCaseObservable() = PUBLISH_SUBJECT
+                    override fun buildUseCaseObservable() = SUBJECT
                 }
 
             override fun newGet(page: Int, postExecutionThread: PostExecutionThread) =

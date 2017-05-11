@@ -1,5 +1,6 @@
 package app.gaming
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -51,6 +52,7 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
     /**
      * Reveals the layout using a circular reveal (if API level allows).
      */
+    @SuppressLint("NewApi") // False positive
     private fun revealLayout() {
         root.visibility = View.VISIBLE
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

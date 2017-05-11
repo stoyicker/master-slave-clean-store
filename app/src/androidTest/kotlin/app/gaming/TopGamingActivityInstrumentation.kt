@@ -15,8 +15,8 @@ import android.support.v7.widget.Toolbar
 import android.view.View
 import domain.entity.Post
 import org.jorge.ms.app.R
-import org.junit.After
 import org.junit.Rule
+import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.junit.rules.Timeout
 import rx.Subscriber
@@ -35,18 +35,23 @@ import kotlin.test.assertEquals
 internal class TopGamingActivityInstrumentation {
     @JvmField
     @Rule
-    val activityTestRule = ActivityTestRule(TopGamingAllTimePostsActivity::class.java)
+    val activityTestRule = object : ActivityTestRule<TopGamingAllTimePostsActivity>(
+            TopGamingAllTimePostsActivity::class.java) {
+        override fun beforeActivityLaunched() {
+            IDLING_RESOURCE = BinaryIdlingResource("load")
+            PUBLISH_SUBJECT = PublishSubject.create<Post>()
+        }
+
+        override fun afterActivityFinished() {
+            Espresso.unregisterIdlingResources(IDLING_RESOURCE)
+        }
+    }
     @JvmField
     @Rule
     val expectedException: ExpectedException = ExpectedException.none()
     @JvmField
     @Rule
     val globalTimeout: Timeout = Timeout.seconds(5)
-
-    @After
-    fun afterTest() {
-        Espresso.unregisterIdlingResources(IDLING_RESOURCE)
-    }
 
     @FlakyTest
 //    @Test
@@ -117,7 +122,7 @@ internal class TopGamingActivityInstrumentation {
     }
 
     companion object {
-        private val IDLING_RESOURCE = BinaryIdlingResource("load")
+        private lateinit var IDLING_RESOURCE: BinaryIdlingResource
         internal lateinit var PUBLISH_SUBJECT: PublishSubject<Post>
         internal val SUBSCRIBER_GENERATOR: (TopGamingAllTimePostsCoordinator) -> Subscriber<Post> = {
             object : Subscriber<Post>() {

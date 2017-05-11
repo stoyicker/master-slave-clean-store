@@ -72,17 +72,15 @@ internal class TopGamingAllTimePostsFeatureInstrumentationModule(
 
     @Provides
     @Singleton
-    fun topGamingAllTimePostsUseCaseFactory(): TopGamingAllTimePostsUseCase.Factory {
-        PUBLISH_SUBJECT = PublishSubject.create<Post>()
-        return object : TopGamingAllTimePostsUseCase.Factory {
+    fun topGamingAllTimePostsUseCaseFactory(): TopGamingAllTimePostsUseCase.Factory =
+        object : TopGamingAllTimePostsUseCase.Factory {
             override fun newFetch(page: Int, postExecutionThread: PostExecutionThread) =
-                    object : TopGamingAllTimePostsUseCase(page, UIPostExecutionThread) {
-                        override fun buildUseCaseObservable() = PUBLISH_SUBJECT
-                    }
+                object : TopGamingAllTimePostsUseCase(page, UIPostExecutionThread) {
+                    override fun buildUseCaseObservable() = PUBLISH_SUBJECT
+                }
 
             override fun newGet(page: Int, postExecutionThread: PostExecutionThread) =
-                    newFetch(page, postExecutionThread)
-        }
+                newFetch(page, postExecutionThread)
     }
 
     @Provides

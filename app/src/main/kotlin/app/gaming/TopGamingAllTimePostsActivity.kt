@@ -15,6 +15,9 @@ import kotlinx.android.synthetic.main.include_toolbar.*
 import kotlinx.android.synthetic.main.include_top_posts_view.*
 import org.jorge.ms.app.R
 import javax.inject.Inject
+import android.app.SearchManager
+
+
 
 
 /**
@@ -34,9 +37,8 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
         inject()
         setSupportActionBar(toolbar)
         viewConfig.apply()
-        coordinator.actionLoadNextPage(intent.getBooleanExtra(
-                TopGamingAllTimePostsActivity.KEY_STARTED_MANUALLY, false))
-        intent.putExtra(TopGamingAllTimePostsActivity.KEY_STARTED_MANUALLY, false)
+        applyQuery()
+        requestLoad()
     }
 
     /**
@@ -47,6 +49,24 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         coordinator.abortActionLoadNextPage()
+    }
+
+    /**
+     * Delegates a query, if any, to the query handler in order to filter the list.
+     */
+    private fun applyQuery() {
+        if (Intent.ACTION_SEARCH == intent.action) {
+            viewConfig.filterView(intent.getStringExtra(SearchManager.QUERY))
+        }
+    }
+
+    /**
+     * Requests the next item batch to load.
+     */
+    private fun requestLoad() {
+        coordinator.actionLoadNextPage(intent.getBooleanExtra(
+                TopGamingAllTimePostsActivity.KEY_STARTED_MANUALLY, false))
+        intent.putExtra(TopGamingAllTimePostsActivity.KEY_STARTED_MANUALLY, false)
     }
 
     /**

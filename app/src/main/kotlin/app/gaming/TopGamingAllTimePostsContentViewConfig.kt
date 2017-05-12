@@ -1,11 +1,15 @@
 package app.gaming
 
+import android.os.Bundle
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.FrameLayout
 import android.widget.TextView
 import domain.entity.Post
@@ -18,16 +22,26 @@ import util.android.ext.getDimension
 internal class TopGamingAllTimePostsContentViewConfig(
         private val view: TopGamingAllTimePostsView,
         private val callback: TopGamingAllTimePostsActivity.BehaviorCallback) {
+    private val adapter = adapter()
+
     /**
      * Dumps itself onto the injected view.
      */
     internal fun apply() {
         view.contentView.let { recyclerView ->
-            recyclerView.adapter = adapter()
+            recyclerView.adapter = adapter
             recyclerView.addOnScrollListener(endlessLoadListener(recyclerView.layoutManager))
             recyclerView.setHasFixedSize(false)
         }
         view.errorView.setOnClickListener { callback.onPageLoadRequested() }
+    }
+
+    /**
+     * Requests a filtering command to be performed.
+     * @param constraint The constraint for the filtering action.
+     */
+    internal fun filterView(constraint: CharSequence?) {
+        adapter.filter.filter(constraint, null)
     }
 
     /**
@@ -56,10 +70,12 @@ internal class TopGamingAllTimePostsContentViewConfig(
  * An alternative would have been to use the databinding library, but the fact that it does not
  * support merge layouts would make diverse screen support more complicated.
  */
-internal class  Adapter(private val listener: OnItemClickListener<Post>)
-    : RecyclerView.Adapter<Adapter.ViewHolder>() {
-    private val items = mutableListOf<Post>()
+internal class Adapter(private val listener: OnItemClickListener<Post>)
+    : RecyclerView.Adapter<Adapter.ViewHolder>(), Filterable {
+    private var items = listOf<Post>()
+    private var shownItems = emptyList<Post>()
     private lateinit var recyclerView: RecyclerView
+    private val filter = RepeatableFilter()
 
     override fun onAttachedToRecyclerView(target: RecyclerView) {
         recyclerView = target
@@ -70,30 +86,133 @@ internal class  Adapter(private val listener: OnItemClickListener<Post>)
                 R.layout.item_post, parent, false), recyclerView, listener)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.render(items[position])
-        if (position == items.size - 1) {
+        holder.render(shownItems[position])
+        onViewHolderBound(holder, position)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: List<Any>) {
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position)
+            return
+        }
+        // This is used to take the latest valid value in the given payload list
+        val combinator: (Bundle, String) -> Unit = { bundle, key ->
+            @Suppress("UNCHECKED_CAST")
+            bundle.putString(key, (payloads as List<Bundle>).fold(Bundle(), { old, new ->
+                val oldTitle = old.getString(key)
+                bundle.putString(key, new.getString(key) ?: oldTitle)
+                new
+            }).getString(key))
+        }
+        val combinedBundle = Bundle().also { bundle ->
+            arrayOf(KEY_TITLE, KEY_SUBREDDIT, KEY_SCORE).forEach {
+                combinator(bundle, it)
+            }
+        }
+        // Now combinedBundle contains the latest version of each of the fields that can be updated
+        // individually
+        holder.renderPartial(combinedBundle, shownItems[position])
+        onViewHolderBound(holder, position)
+    }
+
+    /**
+     * A method to wrap operations that need to happen regardless of how a holder is being bound
+     * (as in partial vs full update).
+     */
+    private fun onViewHolderBound(holder: ViewHolder, position: Int) {
+        if (position == shownItems.size - 1) {
             holder.addBottomMargin()
         }
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int = shownItems.size
 
     /**
-     * This implementation is a bit meh, but since the id returned by the Reddit API is a random
-     * string that cannot be safely hashed into a long because the type is bigger (String is
-     * 72 bytes, Long is 64), we cannot rely on it.
+     * This implementation is a bit 'meh'.
      */
-    override fun getItemId(position: Int): Long = position.toLong()
+    override fun getItemId(position: Int): Long = shownItems[position].hashCode().toLong()
 
     /**
-     * Requests a list of items to be added to this adapter. This call triggers a UI update.
+     * Requests a list of items to be added to this adapter. This call re-applies the current
+     * filter, which means some of the items passed in to be added will not be shown they don't meet
+     * the current filter.
      * @param toAdd The items to add.
      */
     internal fun addItems(toAdd: List<Post>) {
-        val firstInsertedPosition = items.size
-        items.addAll(toAdd)
-        notifyItemRangeInserted(firstInsertedPosition, toAdd.size)
-        (recyclerView.layoutParams as FrameLayout.LayoutParams).bottomMargin = 0
+        items = items.plus(toAdd).distinct()
+        filter.refresh()
+    }
+
+    override fun getFilter() = filter
+
+    /**
+     * A filter that keeps track of its last query for repetition.
+     */
+    internal inner class RepeatableFilter : Filter() {
+        private var currentQuery: CharSequence? = null
+        private lateinit var diff: DiffUtil.DiffResult
+
+        override fun performFiltering(constraint: CharSequence?): FilterResults? {
+            currentQuery = constraint
+            val filteredItems = if (constraint.isNullOrBlank()) {
+                items
+            } else {
+                items.filter { it.title.contains(constraint!!, true) }
+            }
+            diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+                override fun getOldListSize() = shownItems.size
+
+                override fun getNewListSize() = filteredItems.size
+
+                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+                        shownItems[oldItemPosition].let { (oldId) ->
+                            filteredItems[newItemPosition].let { (newId) ->
+                                oldId.contentEquals(newId)
+                            }
+                        }
+
+                override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+                        shownItems[oldItemPosition].let { oldItem ->
+                            filteredItems[newItemPosition].let { newItem ->
+                                oldItem == newItem
+                            }
+                        }
+
+                override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int) =
+                        shownItems[oldItemPosition].let { (_, oldTitle, oldSubreddit, oldScore) ->
+                            filteredItems[newItemPosition].let {
+                                (_, newTitle, newSubreddit, newScore) ->
+                                Bundle().apply {
+                                    putString(KEY_TITLE, newTitle.takeIf {
+                                        !it.contentEquals(oldTitle)
+                                    })
+                                    putString(KEY_SUBREDDIT, newSubreddit.takeIf {
+                                        !it.contentEquals(oldSubreddit)
+                                    })
+                                    putString(KEY_SCORE, "${newScore.takeIf {
+                                        it != oldScore
+                                    }}")
+                                }
+                            }
+                        }
+            })
+            return FilterResults().also {
+                it.values = filteredItems
+                it.count = filteredItems.size
+            }
+        }
+
+        override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+            @Suppress("UNCHECKED_CAST")
+            shownItems = results?.values as List<Post>? ?: items
+            diff.dispatchUpdatesTo(this@Adapter)
+            (recyclerView.layoutParams as FrameLayout.LayoutParams).bottomMargin = 0
+        }
+
+        /**
+         * Queues a new filtering action with the last query.
+         */
+        fun refresh() = filter(currentQuery)
     }
 
     /**
@@ -114,9 +233,22 @@ internal class  Adapter(private val listener: OnItemClickListener<Post>)
          */
         internal fun render(item: Post) {
             titleView.text = item.title
-            scoreView.text = item.score.toString()
             subredditView.text = itemView.context.getString(R.string.subreddit_template,
                     item.subreddit)
+            scoreView.text = item.score.toString()
+            itemView.setOnClickListener { listener.onItemClicked(item) }
+        }
+
+        /**
+         * Performs partial re-drawing of an item.
+         * @param bundle The updates that need to be drawn.
+         * @param item The item these updates correspond to.
+         */
+        internal fun renderPartial(bundle: Bundle, item: Post) {
+            bundle.getString(KEY_TITLE).takeIf { it != null }.let { titleView.text = it }
+            bundle.getString(KEY_SUBREDDIT).takeIf { it != null }.let {
+                subredditView.text = itemView.context.getString(R.string.subreddit_template, it) }
+            bundle.getString(KEY_SCORE).takeIf { it != null }.let { scoreView.text = it }
             itemView.setOnClickListener { listener.onItemClicked(item) }
         }
 
@@ -128,12 +260,17 @@ internal class  Adapter(private val listener: OnItemClickListener<Post>)
                 itemView.context.getDimension(R.dimen.footer_padding).toInt()
         }
     }
+
+    private companion object {
+        private val KEY_TITLE = "KEY_TITLE"
+        private val KEY_SUBREDDIT = "KEY_SUBREDDIT"
+        private val KEY_SCORE = "KEY_SCORE"
+    }
 }
 
 /**
  * An interface to transmit click events.
  */
-@FunctionalInterface
 internal interface OnItemClickListener<in T> {
     /**
      * To be called then the view for an item is clicked.
@@ -145,7 +282,7 @@ internal interface OnItemClickListener<in T> {
 /**
  * @see <a href="https://gist.githubusercontent.com/nesquena/d09dc68ff07e845cc622/raw/e2429b173f75afb408b420ad4088fed68240334c/EndlessRecyclerViewScrollListener.java">Adapted from CodePath</a>
  */
-abstract class EndlessLoadListener(
+internal abstract class EndlessLoadListener(
         private val layoutManager: RecyclerView.LayoutManager) : RecyclerView.OnScrollListener() {
     private var loading = true
     private var previousTotalItemCount = 0

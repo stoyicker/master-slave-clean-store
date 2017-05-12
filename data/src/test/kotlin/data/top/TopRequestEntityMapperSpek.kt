@@ -18,27 +18,28 @@ internal class TopRequestEntityMapperSpek : SubjectSpek<TopRequestEntityMapper>(
     subject { TopRequestEntityMapper() } // <- Specify the test subject (the singleton instance, in this case)
 
     it ("should transform a happy case") {
-        val source = DataPost("random title", "random subreddit", 23, "some permalink")
+        val source = DataPost("r54553", "random title", "random subreddit", 23, "some permalink")
         assertEquivalent(source, subject.transform(source))
     }
 
     it ("should transform an all empty/0s case") {
-        val source = DataPost("", "", 0, "")
+        val source = DataPost("", "", "", 0, "")
         assertEquivalent(source, subject.transform(source))
     }
 
     it ("should transform a mixed case") {
-        val source = DataPost("", "another subreddit", 0, "another permalink")
+        val source = DataPost("aa", "", "another subreddit", 0, "another permalink")
         assertEquivalent(source, subject.transform(source))
     }
 
     it ("should transform when score is negative") {
-        val source = DataPost("a title", "yet another subreddit", -7, "one more permalink")
+        val source = DataPost("87", "a title", "yet another subreddit", -7, "one more permalink")
         assertEquivalent(source, subject.transform(source))
     }
 }) {
     private companion object {
         private fun assertEquivalent(dataPost: DataPost, post: Post) {
+            assertEquals(dataPost.id, post.id)
             assertEquals(dataPost.title, post.title)
             assertEquals(dataPost.subreddit, post.subreddit)
             assertEquals(dataPost.score, post.score)

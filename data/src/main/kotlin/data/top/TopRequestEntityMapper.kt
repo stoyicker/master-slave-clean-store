@@ -13,6 +13,7 @@ internal class TopRequestEntityMapper {
      * Maps a data post to a domain post.
      */
     fun transform(dataPost: DataPost) = Post(
+            dataPost.id,
             dataPost.title,
             dataPost.subreddit,
             dataPost.score,

@@ -35,7 +35,7 @@ internal class AutoFitStaggeredGridRecyclerView(context: Context, attrs: Attribu
 
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
         super.onMeasure(widthSpec, heightSpec)
-        if (columnWidth > 0) {
+        if (!isInEditMode && columnWidth > 0) {
             val spanCount = Math.max(1, measuredWidth / columnWidth)
             (layoutManager as StaggeredGridLayoutManager).spanCount = spanCount
         }

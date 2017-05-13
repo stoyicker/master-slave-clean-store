@@ -42,7 +42,8 @@ internal class TopRequestSourceIntegrationSpek : SubjectSpek<TopRequestSource>({
                 children ->
                     assertEquals(expectedSize, children.size, "Amount of posts not as expected")
                     children.forEach {
-                        it.data.let { (title, subreddit, score, permalink) ->
+                        it.data.let { (id, title, subreddit, score, permalink) ->
+                            assertTrue { id.isNotEmpty() }
                             assertTrue { title.isNotEmpty() }
                             assertEquals(expectedSubreddit, subreddit, "Subreddit not as expected")
                             assertTrue { score > 0 }

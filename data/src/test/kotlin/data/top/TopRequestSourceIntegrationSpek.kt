@@ -28,11 +28,11 @@ internal class TopRequestSourceIntegrationSpek : SubjectSpek<TopRequestSource>({
                 .validateEagerly(true)
                 .build()
                 .create(ApiService::class.java)
-        val expectedSubreddit = "gaming"
+        val expectedSubreddit = "r/gaming"
         val expectedSize = 25
         val testSubscriber = TestSubscriber<TopRequestDataContainer>()
         val moshi = Moshi.Builder().build()
-        retrofit.top(expectedSubreddit, TimeRange.ALL_TIME.value, null, expectedSize)
+        retrofit.top("gaming", TimeRange.ALL_TIME.value, null, expectedSize)
                 .map { moshi.adapter(TopRequestDataContainer::class.java).fromJson(it.string()) }
                 .subscribe(testSubscriber)
         testSubscriber.assertNoErrors()

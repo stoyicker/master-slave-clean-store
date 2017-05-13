@@ -21,7 +21,7 @@ import kotlin.test.assertTrue
 @RunWith(JUnitPlatform::class)
 internal class IndexedPersistedByDiskStoreSpek : SubjectSpek<IndexedPersistedByDiskStore<Any>>({
     subject {
-        IndexedPersistedByDiskStore(SOURCE_FILE, MOCK_VALUE_STRINGIFIER, INITIAL_MAP)
+        IndexedPersistedByDiskStore<Any>(SOURCE_FILE, MOCK_VALUE_STRINGIFIER, INITIAL_MAP)
     }
 
     beforeEachTest {
@@ -95,12 +95,12 @@ internal class IndexedPersistedByDiskStoreSpek : SubjectSpek<IndexedPersistedByD
                 }.joinToString(separator = "\n"))
         whenever(MOCK_VALUE_STRINGIFIER.toString(eq(newValue))) doReturn newValue
         subject.put(newIndex, newValue)
-        assertEquals("$newIndex=$newValue",
-                SOURCE_FILE.readText(IndexedPersistedByDiskStore.CHARSET))
+        assertEquals("$newIndex=$newValue", SOURCE_FILE.readText(
+                IndexedPersistedByDiskStore.CHARSET))
     }
 }) {
     companion object {
-        private val INITIAL_MAP = mutableMapOf<Int, Any>()
+        private val INITIAL_MAP = mutableMapOf<Int, Any?>()
         private val SOURCE_FILE
                 = File("build/test-generated/${IndexedPersistedByDiskStore::class.java.simpleName}")
         private val MOCK_VALUE_STRINGIFIER

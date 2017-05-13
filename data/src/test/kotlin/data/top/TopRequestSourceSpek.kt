@@ -2,12 +2,9 @@ package data.top
 
 import com.nhaarman.mockito_kotlin.anyVararg
 import com.nhaarman.mockito_kotlin.doReturn
-import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.reset
-import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import com.nytimes.android.external.store.base.impl.Store
 import dagger.Component
@@ -15,10 +12,8 @@ import dagger.Module
 import dagger.Provides
 import data.ComponentHolder
 import domain.entity.TimeRange
-import domain.interactor.TopGamingAllTimePostsUseCase
 import org.jetbrains.spek.api.SubjectSpek
 import org.jetbrains.spek.api.dsl.it
-import org.jetbrains.spek.api.dsl.on
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
 import retrofit2.Retrofit
@@ -27,7 +22,6 @@ import rx.observers.TestSubscriber
 import util.android.IndexedPersistedByDiskStore
 import java.io.File
 import javax.inject.Singleton
-import kotlin.test.assertEquals
 
 /**
  * Unit tests for cache cleanup.
@@ -84,38 +78,10 @@ internal class TopRequestSourceSpek : SubjectSpek<TopRequestSource>({
         testSubscriber.assertValue(cachedValue)
         testSubscriber.assertCompleted()
     }
-
-    it ("should clean up the page dictionary and cache completely when given page 0") {
-        assertCacheClean(subject, 0)
-    }
-
-    it ("should clean up the page dictionary and cache completely when given a negative page") {
-        assertCacheClean(subject, -7)
-    }
-
-    it ("should clean up the page dictionary and cache partially when given a positive page") {
-        assertCacheClean(subject, 82)
-    }
 }) {
     private companion object {
         val CACHE_DIR = File("build/test-generated/")
         val MOCK_STORE = mock<Store<TopRequestDataContainer, TopRequestParameters>>()
-        fun assertCacheClean(subject: TopRequestSource, fromPage: Int) {
-            val safePage = Math.max(0, fromPage)
-            (0..100).forEach {
-                // Just filling up the page map in order to check that it empties when requested
-                subject.pageMap.put(it, "$it")
-            }
-            val size = subject.pageMap.size
-            subject.clearCacheFromPage(fromPage)
-            verify(subject.store, times(size - safePage))
-                    .clear(eq(TopRequestParameters(
-                            TopGamingAllTimePostsUseCase.Companion.SUBREDDIT,
-                            TopGamingAllTimePostsUseCase.Companion.TIME_RANGE,
-                            0)))
-            verifyNoMoreInteractions(subject.store)
-            assertEquals(safePage, subject.pageMap.size)
-        }
     }
 }
 
@@ -134,16 +100,13 @@ internal class TopRequestSourceSpekModule(
 
     @Provides
     @Singleton
-    fun pageMapAccessor(cacheDir: File): IndexedPersistedByDiskStore<String> {
-        val value = IndexedPersistedByDiskStore(cacheDir.resolve("pageMap"),
-                object : IndexedPersistedByDiskStore.ValueStringifier<String> {
-                    override fun fromString(source: String) = source
+    fun pageMap(cacheDir: File) = IndexedPersistedByDiskStore(
+            cacheDir.resolve("pageMap"),
+            object : IndexedPersistedByDiskStore.ValueStringifier<String> {
+                override fun fromString(source: String) = if (source == "null") null else source
 
-                    override fun toString(source: String) = source
-                }, mutableMapOf(0 to ""))
-        value.restore()
-        return value
-    }
+                override fun toString(source: String?) = source ?: "null"
+            }, mutableMapOf(0 to null as String?)).also { it.restore() }
 
     @Provides
     @Singleton

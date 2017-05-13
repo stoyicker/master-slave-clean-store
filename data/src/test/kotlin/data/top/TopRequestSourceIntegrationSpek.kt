@@ -37,7 +37,7 @@ internal class TopRequestSourceIntegrationSpek : SubjectSpek<TopRequestSource>({
                 .subscribe(testSubscriber)
         testSubscriber.assertNoErrors()
         testSubscriber.onNextEvents.forEach {
-            assertTrue { it.data.after.isNotEmpty() }
+            assertTrue { it.data.after?.isNotEmpty() ?: false }
             it.data.children.let {
                 children ->
                     assertEquals(expectedSize, children.size, "Amount of posts not as expected")

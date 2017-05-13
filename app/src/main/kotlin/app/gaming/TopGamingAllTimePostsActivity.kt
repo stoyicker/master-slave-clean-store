@@ -6,18 +6,19 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.SearchView
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewAnimationUtils
 import app.MainApplication
+import app.filter.FilterFeature
 import domain.entity.Post
 import kotlinx.android.synthetic.main.activity_top_gaming.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 import kotlinx.android.synthetic.main.include_top_posts_view.*
 import org.jorge.ms.app.R
 import javax.inject.Inject
-import android.app.SearchManager
-
-
 
 
 /**
@@ -25,9 +26,10 @@ import android.app.SearchManager
  */
 class TopGamingAllTimePostsActivity : AppCompatActivity() {
     @Inject
-    internal lateinit var viewConfig: TopGamingAllTimePostsContentViewConfig
+    internal lateinit var view: TopGamingAllTimePostsFeatureView
     @Inject
     internal lateinit var coordinator: TopGamingAllTimePostsCoordinator
+    private lateinit var filterFeatureDelegate: FilterFeature
 
     override fun onCreate(savedInstanceState: Bundle?) {
         overridePendingTransition(0, 0)
@@ -36,8 +38,6 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
         revealLayout()
         inject()
         setSupportActionBar(toolbar)
-        viewConfig.apply()
-        applyQuery()
         requestLoad()
     }
 
@@ -51,13 +51,26 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
         coordinator.abortActionLoadNextPage()
     }
 
-    /**
-     * Delegates a query, if any, to the query handler in order to filter the list.
-     */
-    private fun applyQuery() {
-        if (Intent.ACTION_SEARCH == intent.action) {
-            viewConfig.filterView(intent.getStringExtra(SearchManager.QUERY))
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.top_gaming, menu)
+        filterFeatureDelegate = FilterFeature(this,
+                menu.findItem(R.id.search).actionView as SearchView, view)
+        filterFeatureDelegate.applyQuery(intent.getStringExtra(KEY_QUERY))
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.search) onSearchRequested()
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onStop() {
+        if (isChangingConfigurations) {
+            intent.putExtra(KEY_ENABLE_ENTER_ANIMATION, false)
+            intent.putExtra(KEY_QUERY, filterFeatureDelegate.query)
         }
+        super.onStop()
     }
 
     /**
@@ -75,7 +88,8 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
     @SuppressLint("NewApi") // False positive
     private fun revealLayout() {
         root.visibility = View.VISIBLE
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                && intent.getBooleanExtra(KEY_ENABLE_ENTER_ANIMATION, true)) {
             root.apply {
                 post {
                     val cx = width / 2
@@ -113,6 +127,8 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
     }
 
     internal companion object {
+        private const val KEY_ENABLE_ENTER_ANIMATION = "KEY_ENABLE_ENTER_ANIMATION"
+        private const val KEY_QUERY = "KEY_QUERY"
         private const val KEY_STARTED_MANUALLY = "KEY_STARTED_MANUALLY"
         /**
          * Safe way to schedule an intent to route to this activity. More useful if it were to have

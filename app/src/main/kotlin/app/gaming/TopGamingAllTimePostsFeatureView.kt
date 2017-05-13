@@ -14,20 +14,21 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import domain.entity.Post
 import org.jorge.ms.app.R
+import util.android.HtmlCompat
 import util.android.ext.getDimension
 
 /**
  * Configuration for the recycler view holding the post list.
  */
-internal class TopGamingAllTimePostsContentViewConfig(
-        private val view: TopGamingAllTimePostsView,
+internal class TopGamingAllTimePostsFeatureView(
+        view: TopGamingAllTimePostsView,
         private val callback: TopGamingAllTimePostsActivity.BehaviorCallback) {
-    private val adapter = adapter()
+    private val adapter: Adapter = adapter(callback)
 
     /**
      * Dumps itself onto the injected view.
      */
-    internal fun apply() {
+    init {
         view.contentView.let { recyclerView ->
             recyclerView.adapter = adapter
             recyclerView.addOnScrollListener(endlessLoadListener(recyclerView.layoutManager))
@@ -48,10 +49,8 @@ internal class TopGamingAllTimePostsContentViewConfig(
      * Returns an adapter with stable ids that reports user interactions to the provided callback.
      * @return An adapter with stable ids that reports user interactions to the provided callback.
      */
-    private fun adapter() = Adapter(object : OnItemClickListener<Post> {
-        override fun onItemClicked(item: Post) {
-            callback.onItemClicked(item)
-        } }).also { it.setHasStableIds(true) }
+    private fun adapter(callback: TopGamingAllTimePostsActivity.BehaviorCallback) =
+            Adapter(callback).also { it.setHasStableIds(true) }
 
     /**
      * Provides support for the user interaction that requests loading additional items.
@@ -70,7 +69,7 @@ internal class TopGamingAllTimePostsContentViewConfig(
  * An alternative would have been to use the databinding library, but the fact that it does not
  * support merge layouts would make diverse screen support more complicated.
  */
-internal class Adapter(private val listener: OnItemClickListener<Post>)
+internal class Adapter(private val callback: TopGamingAllTimePostsActivity.BehaviorCallback)
     : RecyclerView.Adapter<Adapter.ViewHolder>(), Filterable {
     private var items = listOf<Post>()
     private var shownItems = emptyList<Post>()
@@ -83,7 +82,7 @@ internal class Adapter(private val listener: OnItemClickListener<Post>)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
             = ViewHolder(LayoutInflater.from(parent.context).inflate(
-                R.layout.item_post, parent, false), recyclerView, listener)
+                R.layout.item_post, parent, false), recyclerView, { callback.onItemClicked(it) })
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.render(shownItems[position])
@@ -120,7 +119,7 @@ internal class Adapter(private val listener: OnItemClickListener<Post>)
      * (as in partial vs full update).
      */
     private fun onViewHolderBound(holder: ViewHolder, position: Int) {
-        if (position == shownItems.size - 1) {
+        if (position <= shownItems.size - 1) {
             holder.addBottomMargin()
         }
     }
@@ -128,7 +127,8 @@ internal class Adapter(private val listener: OnItemClickListener<Post>)
     override fun getItemCount(): Int = shownItems.size
 
     /**
-     * This implementation is a bit 'meh'.
+     * This implementation is a bit 'meh' because of String (the type of the item id, which is
+     * what we use to calculate the item hash code) being a bigger type than Long, the required one.
      */
     override fun getItemId(position: Int): Long = shownItems[position].hashCode().toLong()
 
@@ -139,8 +139,12 @@ internal class Adapter(private val listener: OnItemClickListener<Post>)
      * @param toAdd The items to add.
      */
     internal fun addItems(toAdd: List<Post>) {
-        items = items.plus(toAdd).distinct()
-        filter.refresh()
+        // If the list is empty we have tried to load a non-existent page, which means we already
+        // have all pages. Also there is nothing to add.
+        if (toAdd.isNotEmpty()) {
+            items = items.plus(toAdd).distinct()
+            filter.refresh()
+        }
     }
 
     override fun getFilter() = filter
@@ -149,15 +153,15 @@ internal class Adapter(private val listener: OnItemClickListener<Post>)
      * A filter that keeps track of its last query for repetition.
      */
     internal inner class RepeatableFilter : Filter() {
-        private var currentQuery: CharSequence? = null
+        private var currentQuery: CharSequence = ""
         private lateinit var diff: DiffUtil.DiffResult
 
         override fun performFiltering(constraint: CharSequence?): FilterResults? {
-            currentQuery = constraint
-            val filteredItems = if (constraint.isNullOrBlank()) {
+            currentQuery = constraint?.trim() ?: ""
+            val filteredItems = if (currentQuery.isBlank()) {
                 items
             } else {
-                items.filter { it.title.contains(constraint!!, true) }
+                items.filter { it.title.contains(currentQuery, true) }
             }
             diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
                 override fun getOldListSize() = shownItems.size
@@ -205,8 +209,8 @@ internal class Adapter(private val listener: OnItemClickListener<Post>)
         override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
             @Suppress("UNCHECKED_CAST")
             shownItems = results?.values as List<Post>? ?: items
-            diff.dispatchUpdatesTo(this@Adapter)
             (recyclerView.layoutParams as FrameLayout.LayoutParams).bottomMargin = 0
+            diff.dispatchUpdatesTo(this@Adapter)
         }
 
         /**
@@ -222,7 +226,7 @@ internal class Adapter(private val listener: OnItemClickListener<Post>)
     internal class ViewHolder internal constructor(
             itemView: View,
             private val recyclerView: RecyclerView,
-            private val listener: OnItemClickListener<Post>): RecyclerView.ViewHolder(itemView) {
+            private val onItemClicked: (Post) -> Unit): RecyclerView.ViewHolder(itemView) {
         private val titleView: TextView = itemView.findViewById(R.id.text_title) as TextView
         private val scoreView: TextView = itemView.findViewById(R.id.text_score) as TextView
         private val subredditView: TextView = itemView.findViewById(R.id.text_subreddit) as TextView
@@ -232,11 +236,10 @@ internal class Adapter(private val listener: OnItemClickListener<Post>)
          * @title The item to draw.
          */
         internal fun render(item: Post) {
-            titleView.text = item.title
-            subredditView.text = itemView.context.getString(R.string.subreddit_template,
-                    item.subreddit)
+            titleView.text = HtmlCompat.fromHtml(item.title)
+            subredditView.text = item.subreddit
             scoreView.text = item.score.toString()
-            itemView.setOnClickListener { listener.onItemClicked(item) }
+            itemView.setOnClickListener { onItemClicked(item) }
         }
 
         /**
@@ -245,11 +248,11 @@ internal class Adapter(private val listener: OnItemClickListener<Post>)
          * @param item The item these updates correspond to.
          */
         internal fun renderPartial(bundle: Bundle, item: Post) {
-            bundle.getString(KEY_TITLE).takeIf { it != null }.let { titleView.text = it }
-            bundle.getString(KEY_SUBREDDIT).takeIf { it != null }.let {
-                subredditView.text = itemView.context.getString(R.string.subreddit_template, it) }
+            bundle.getString(KEY_TITLE).takeIf { it != null }.let { titleView.text =
+                    HtmlCompat.fromHtml(it!!) }
+            bundle.getString(KEY_SUBREDDIT).takeIf { it != null }.let { subredditView.text = it }
             bundle.getString(KEY_SCORE).takeIf { it != null }.let { scoreView.text = it }
-            itemView.setOnClickListener { listener.onItemClicked(item) }
+            itemView.setOnClickListener { onItemClicked(item) }
         }
 
         /**
@@ -266,17 +269,6 @@ internal class Adapter(private val listener: OnItemClickListener<Post>)
         private val KEY_SUBREDDIT = "KEY_SUBREDDIT"
         private val KEY_SCORE = "KEY_SCORE"
     }
-}
-
-/**
- * An interface to transmit click events.
- */
-internal interface OnItemClickListener<in T> {
-    /**
-     * To be called then the view for an item is clicked.
-     * @param item The item corresponding to the view clicked.
-     */
-    fun onItemClicked(item: T)
 }
 
 /**

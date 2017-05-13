@@ -152,11 +152,11 @@ internal class TopGamingActivityInstrumentation {
                             IDLING_RESOURCE.setIdleState(false)
                         }
 
-                        override fun onNext(post: Post?) {
+                        override fun onNext(post: Post) {
                             realSubscriberDelegate.onNext(post)
                         }
 
-                        override fun onError(throwable: Throwable?) {
+                        override fun onError(throwable: Throwable) {
                             realSubscriberDelegate.onError(throwable)
                             IDLING_RESOURCE.setIdleState(true)
                         }

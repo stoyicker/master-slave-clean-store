@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:title="@string/app_label"
-        app:titleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+        app:titleTextAppearance="@style/AppTheme.AppTitle"
         app:contentInsetEnd="@dimen/appbar_horizontal_padding"
         app:contentInsetStart="@dimen/appbar_horizontal_padding" />
     <!-- Pre-lollipop trick for shadow -->

@@ -1,5 +1,5 @@
 final def daggerVersion = "2.10"
-final def firebaseVersion = "10.2.0"
+final def firebaseVersion = "10.2.4"
 final def espressoVersion = "2.2.2"
 final def jsr250Version = "1.0"
 final def junitPlatformRunnerVersion = "1.0.0-M3"

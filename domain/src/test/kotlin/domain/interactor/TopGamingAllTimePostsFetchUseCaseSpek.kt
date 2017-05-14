@@ -56,7 +56,6 @@ internal class TopGamingAllTimePostsFetchUseCaseSpek : SubjectSpek<TopGamingAllT
         subject.terminate()
         testSubscriber.assertUnsubscribed()
         testSubscriber.assertNoErrors()
-        testSubscriber.assertCompleted()
     }
 
     it ("should delegate to the facade for execution") {

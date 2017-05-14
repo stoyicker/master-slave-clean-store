@@ -17,7 +17,14 @@
         </activity>
         <activity
             android:name="app.gaming.TopGamingAllTimePostsActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                       android:resource="@xml/searchable"/>
+        </activity>
         <meta-data
             android:name="android.max_aspect"
             android:value="2.1" />

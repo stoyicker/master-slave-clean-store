@@ -2,11 +2,8 @@ package data.top
 
 import com.nytimes.android.external.store.base.impl.Store
 import data.ComponentHolder
-import domain.interactor.TopGamingAllTimePostsUseCase
-import retrofit2.Retrofit
 import rx.Observable
 import util.android.IndexedPersistedByDiskStore
-import java.io.File
 import javax.inject.Inject
 import dagger.Lazy as DaggerLazy
 
@@ -14,12 +11,8 @@ import dagger.Lazy as DaggerLazy
  * Contains the data source for top requests.
  */
 internal class TopRequestSource {
-    @Inject
-    lateinit var cacheDir: File
-    @Inject
-    lateinit var retrofit: Retrofit
-    // Dagger does not play well with providing Kotlin's Lazy instances, so we do a dirty workaround
-    // by targeting a holder from Dagger's Lazy and then converting it to Kotlin's.
+    // Dagger does not play well with providing Kotlin's Lazy instances, so we do a workaround by
+    // targeting a holder from Dagger's Lazy and then converting it to Kotlin's.
     // Copying the actual value to a different reference holder instead of requesting it through the
     // accessor every time trades off a slightly higher on-paper peak RAM consumption to minimize
     // virtual method usage.
@@ -43,11 +36,15 @@ internal class TopRequestSource {
      * @see Store
      */
     internal fun fetch(topRequestParameters: TopRequestParameters) =
-            updatePageMapAndContinue(topRequestParameters.page, store.fetch(topRequestParameters)
-                    .onErrorResumeNext {
-                        error -> store.get(topRequestParameters)
-                            .switchIfEmpty(Observable.error(error))
-                    })
+            if (pageMap[topRequestParameters.page] != NO_MORE_PAGES) {
+                updatePageMapAndContinue(topRequestParameters.page, store.fetch(
+                        topRequestParameters)
+                        .onErrorResumeNext { error ->
+                            store.get(topRequestParameters).switchIfEmpty(Observable.error(error))
+                        })
+            } else {
+                Observable.empty()
+            }
 
     /**
      * Delegates to its internal responsible for the request. Cache checks: memory > disk > network.
@@ -55,23 +52,11 @@ internal class TopRequestSource {
      * @see Store
      */
     internal fun get(topRequestParameters: TopRequestParameters) =
-            updatePageMapAndContinue(topRequestParameters.page, store.get(topRequestParameters))
-
-    /**
-     * Clears cached entries starting from a given page.
-     * @param page The page to start from (inclusive).
-     */
-    @Synchronized
-    fun clearCacheFromPage(page: Int) {
-        val safePage = Math.max(0, page)
-        while (pageMap.size > safePage) {
-            pageMap.remove(pageMap.size - 1)
-            store.clear(TopRequestParameters(
-                    TopGamingAllTimePostsUseCase.Companion.SUBREDDIT,
-                    TopGamingAllTimePostsUseCase.Companion.TIME_RANGE,
-                    0))
-        }
-    }
+            if (pageMap[topRequestParameters.page] != NO_MORE_PAGES) {
+                updatePageMapAndContinue(topRequestParameters.page, store.get(topRequestParameters))
+            } else {
+                Observable.empty()
+            }
 
     /**
      * Update the pagination representation: The doOnNext allows us to intercept the interpretation
@@ -81,6 +66,13 @@ internal class TopRequestSource {
      * @param from An observable of the desired data.
      */
     private fun updatePageMapAndContinue(requestPage: Int,
-                                         from: Observable<TopRequestDataContainer>)
-            = from.doOnNext { pageMap.put(requestPage + 1, it.data.after) }
+                                         from: Observable<TopRequestDataContainer>) =
+            from.doOnNext { it.data.after.let {
+                pageMap.put(requestPage + 1, it ?: NO_MORE_PAGES)
+            }
+    }
+
+    private companion object {
+        private const val NO_MORE_PAGES = "NO_MORE_PAGES"
+    }
 }

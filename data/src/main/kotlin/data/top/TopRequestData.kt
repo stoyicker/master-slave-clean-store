@@ -13,7 +13,7 @@ internal data class TopRequestDataContainer(@Json(name = "data") val data: TopRe
  * Models the relevant information about a top request data.
  */
 internal data class TopRequestData(@Json(name = "children") val children: List<DataPostContainer>,
-                                   @Json(name = "after") val after: String)
+                                   @Json(name = "after") val after: String?)
 
 /**
  * Wraps posts.

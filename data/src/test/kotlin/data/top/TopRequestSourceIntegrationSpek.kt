@@ -28,21 +28,22 @@ internal class TopRequestSourceIntegrationSpek : SubjectSpek<TopRequestSource>({
                 .validateEagerly(true)
                 .build()
                 .create(ApiService::class.java)
-        val expectedSubreddit = "gaming"
+        val expectedSubreddit = "r/gaming"
         val expectedSize = 25
         val testSubscriber = TestSubscriber<TopRequestDataContainer>()
         val moshi = Moshi.Builder().build()
-        retrofit.top(expectedSubreddit, TimeRange.ALL_TIME.value, null, expectedSize)
+        retrofit.top("gaming", TimeRange.ALL_TIME.value, null, expectedSize)
                 .map { moshi.adapter(TopRequestDataContainer::class.java).fromJson(it.string()) }
                 .subscribe(testSubscriber)
         testSubscriber.assertNoErrors()
         testSubscriber.onNextEvents.forEach {
-            assertTrue { it.data.after.isNotEmpty() }
+            assertTrue { it.data.after?.isNotEmpty() ?: false }
             it.data.children.let {
                 children ->
                     assertEquals(expectedSize, children.size, "Amount of posts not as expected")
                     children.forEach {
-                        it.data.let { (title, subreddit, score, permalink) ->
+                        it.data.let { (id, title, subreddit, score, permalink) ->
+                            assertTrue { id.isNotEmpty() }
                             assertTrue { title.isNotEmpty() }
                             assertEquals(expectedSubreddit, subreddit, "Subreddit not as expected")
                             assertTrue { score > 0 }

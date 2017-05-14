@@ -27,7 +27,7 @@ import javax.inject.Singleton
 @Singleton
 internal interface TopGamingAllTimePostsFeatureComponent {
     fun inject(target: TopGamingAllTimePostsActivity)
-    fun inject(target: TopGamingAllTimePostsContentViewConfig)
+    fun inject(target: TopGamingAllTimePostsFeatureView)
 }
 
 /**
@@ -100,5 +100,5 @@ internal class TopGamingAllTimePostsFeatureModule(
     fun viewConfig(
             view: TopGamingAllTimePostsView,
             callback: TopGamingAllTimePostsActivity.BehaviorCallback) =
-            TopGamingAllTimePostsContentViewConfig(view, callback)
+            TopGamingAllTimePostsFeatureView(view, callback)
 }

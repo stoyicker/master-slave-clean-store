@@ -95,7 +95,7 @@ internal class TopGamingActivityInstrumentation {
     @Test
     fun onLoadItemsAreShown() {
         SUBJECT = ReplaySubject.create()
-        SUBJECT.onNext(Post("Bananas title", "r/bananas", 879, "bananaLink"))
+        SUBJECT.onNext(Post("0", "Bananas title", "r/bananas", 879, "bananaLink"))
         SUBJECT.onCompleted()
         launchActivity()
         onView(withId(R.id.progress)).check { view, _ ->
@@ -123,7 +123,7 @@ internal class TopGamingActivityInstrumentation {
     @Test
     fun onItemClickIntentIsFired() {
         SUBJECT = ReplaySubject.create()
-        SUBJECT.onNext(Post("Bananas title", "r/bananas", 879, "http://www.banan.as"))
+        SUBJECT.onNext(Post("0", "Bananas title", "r/bananas", 879, "http://www.banan.as"))
         SUBJECT.onCompleted()
         launchActivity()
         Intents.init()
@@ -152,11 +152,11 @@ internal class TopGamingActivityInstrumentation {
                             IDLING_RESOURCE.setIdleState(false)
                         }
 
-                        override fun onNext(post: Post?) {
+                        override fun onNext(post: Post) {
                             realSubscriberDelegate.onNext(post)
                         }
 
-                        override fun onError(throwable: Throwable?) {
+                        override fun onError(throwable: Throwable) {
                             realSubscriberDelegate.onError(throwable)
                             IDLING_RESOURCE.setIdleState(true)
                         }

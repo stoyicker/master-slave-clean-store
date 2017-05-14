@@ -20,13 +20,11 @@ internal class PageLoadSubscriber(
         }
     }
 
-    override fun onNext(post: Post?) {
-        if (post != null) {
-            posts.add(post)
-        }
+    override fun onNext(post: Post) {
+        posts.add(post)
     }
 
-    override fun onError(throwable: Throwable?) {
+    override fun onError(throwable: Throwable) {
         coordinator.view.apply {
             showErrorLayout()
             hideLoadingLayout()

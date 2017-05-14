@@ -91,7 +91,7 @@ internal class TopGamingAllTimePostsFeatureInstrumentationModule(
     fun viewConfig(
             view: TopGamingAllTimePostsView,
             callback: TopGamingAllTimePostsActivity.BehaviorCallback) =
-            TopGamingAllTimePostsContentViewConfig(view, callback)
+            TopGamingAllTimePostsFeatureView(view, callback)
 }
 
 /**

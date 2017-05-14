@@ -42,16 +42,12 @@ internal class TopRequestSourceModule(private val cacheDir: File) {
 
     @Provides
     @Singleton
-    fun pageMap(): IndexedPersistedByDiskStore<String> {
-        val value = IndexedPersistedByDiskStore(cacheDir.resolve("pageMap"),
-                object : IndexedPersistedByDiskStore.ValueStringifier<String> {
-                    override fun fromString(source: String) = source
+    fun pageMap() = IndexedPersistedByDiskStore(cacheDir.resolve("pageMap"),
+            object : IndexedPersistedByDiskStore.ValueStringifier<String> {
+                override fun fromString(source: String) = if (source == "null") null else source
 
-                    override fun toString(source: String) = source
-                }, mutableMapOf(0 to ""))
-        value.restore()
-        return value
-    }
+                override fun toString(source: String?) = source ?: "null"
+            }, mutableMapOf(0 to null as String?)).also { it.restore() }
 
     @Provides
     @Singleton

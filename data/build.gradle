@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'org.jlleitschuh.gradle.ktlint'
+apply plugin: 'org.jmailen.kotlinter'
 // TODO Change to org.jetbrains.dokka-android
 apply plugin: 'org.jetbrains.dokka'
 
@@ -58,6 +58,3 @@ dependencies {
     }
     testCompile rootProject.ext.testCompileDependencies
 }
-
-// See https://github.com/JLLeitschuh/ktlint-gradle/issues/3
-check.dependsOn tasks.getByName("ktlint")

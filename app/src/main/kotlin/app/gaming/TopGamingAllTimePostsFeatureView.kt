@@ -10,12 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
-import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
 import domain.entity.Post
 import org.jorge.ms.app.R
 import util.android.HtmlCompat
-import util.android.ext.getDimension
 
 /**
  * Configuration for the recycler view holding the post list.
@@ -82,7 +83,7 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
             = ViewHolder(LayoutInflater.from(parent.context).inflate(
-                R.layout.item_post, parent, false), recyclerView, { callback.onItemClicked(it) })
+                R.layout.item_post, parent, false), { callback.onItemClicked(it) })
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.render(shownItems[position])
@@ -95,7 +96,7 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
             return
         }
         // This is used to take the latest valid value in the given payload list
-        val combinator: (Bundle, String) -> Unit = { bundle, key ->
+        val folder: (Bundle, String) -> Unit = { bundle, key ->
             @Suppress("UNCHECKED_CAST")
             bundle.putString(key, (payloads as List<Bundle>).fold(Bundle(), { old, new ->
                 val oldTitle = old.getString(key)
@@ -104,8 +105,8 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
             }).getString(key))
         }
         val combinedBundle = Bundle().also { bundle ->
-            arrayOf(KEY_TITLE, KEY_SUBREDDIT, KEY_SCORE).forEach {
-                combinator(bundle, it)
+            arrayOf(KEY_TITLE, KEY_SUBREDDIT, KEY_SCORE, KEY_THUMBNAIL).forEach {
+                folder(bundle, it)
             }
         }
         // Now combinedBundle contains the latest version of each of the fields that can be updated
@@ -183,9 +184,10 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
                         }
 
                 override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int) =
-                        shownItems[oldItemPosition].let { (_, oldTitle, oldSubreddit, oldScore) ->
+                        shownItems[oldItemPosition].let {
+                            (_, oldTitle, oldSubreddit, oldScore, oldThumbnail) ->
                             filteredItems[newItemPosition].let {
-                                (_, newTitle, newSubreddit, newScore) ->
+                                (_, newTitle, newSubreddit, newScore, newThumbnail) ->
                                 Bundle().apply {
                                     putString(KEY_TITLE, newTitle.takeIf {
                                         !it.contentEquals(oldTitle)
@@ -196,6 +198,9 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
                                     putString(KEY_SCORE, "${newScore.takeIf {
                                         it != oldScore
                                     }}")
+                                    putString(KEY_THUMBNAIL, newThumbnail.takeIf {
+                                        it != oldThumbnail
+                                    })
                                 }
                             }
                         }
@@ -209,7 +214,6 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
         override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
             @Suppress("UNCHECKED_CAST")
             shownItems = results?.values as List<Post>? ?: items
-            (recyclerView.layoutParams as FrameLayout.LayoutParams).bottomMargin = 0
             diff.dispatchUpdatesTo(this@Adapter)
         }
 
@@ -222,23 +226,25 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
     /**
      * Very simple viewholder that sets text and click event handling.
      * @param itemView The view to dump the held data.
+     * @param onItemClicked What to run when a click happens.
      */
     internal class ViewHolder internal constructor(
             itemView: View,
-            private val recyclerView: RecyclerView,
             private val onItemClicked: (Post) -> Unit): RecyclerView.ViewHolder(itemView) {
         private val titleView: TextView = itemView.findViewById(R.id.text_title) as TextView
         private val scoreView: TextView = itemView.findViewById(R.id.text_score) as TextView
         private val subredditView: TextView = itemView.findViewById(R.id.text_subreddit) as TextView
+        private val thumbnailView: ImageView = itemView.findViewById(R.id.thumbnail) as ImageView
 
         /**
          * Draw an item.
          * @title The item to draw.
          */
         internal fun render(item: Post) {
-            titleView.text = HtmlCompat.fromHtml(item.title)
-            subredditView.text = item.subreddit
-            scoreView.text = item.score.toString()
+            setTitle(item.title)
+            setSubreddit(item.subreddit)
+            setScore(item.score)
+            setThumbnail(item.thumbnailLink)
             itemView.setOnClickListener { onItemClicked(item) }
         }
 
@@ -248,10 +254,12 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
          * @param item The item these updates correspond to.
          */
         internal fun renderPartial(bundle: Bundle, item: Post) {
-            bundle.getString(KEY_TITLE).takeIf { it != null }.let { titleView.text =
-                    HtmlCompat.fromHtml(it!!) }
-            bundle.getString(KEY_SUBREDDIT).takeIf { it != null }.let { subredditView.text = it }
-            bundle.getString(KEY_SCORE).takeIf { it != null }.let { scoreView.text = it }
+            bundle.getString(KEY_TITLE).takeIf { it != null }.let { setTitle(it!!) }
+            bundle.getString(KEY_SUBREDDIT).takeIf { it != null }.let { setSubreddit(it!!) }
+            bundle.getString(KEY_SCORE).takeIf { it != null }.let {
+                setScore(Integer.valueOf(it!!))
+            }
+            setThumbnail(bundle.getString(KEY_THUMBNAIL))
             itemView.setOnClickListener { onItemClicked(item) }
         }
 
@@ -259,8 +267,56 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
          * Adds a margin under the recycler view for the progress and error views to show.
          */
         internal fun addBottomMargin() {
-            (recyclerView.layoutParams as FrameLayout.LayoutParams).bottomMargin =
-                itemView.context.getDimension(R.dimen.footer_padding).toInt()
+        }
+
+        /**
+         * Updates the layout according to the changes required by a new title.
+         * @param title The new title.
+         */
+        private fun setTitle(title: String) {
+            val formattedTitle = HtmlCompat.fromHtml(title)
+            titleView.text = formattedTitle
+            thumbnailView.contentDescription = formattedTitle.toString()
+        }
+
+        /**
+         * Updates the layout according to the changes required by a new subreddit.
+         * @param name The new subreddit name.
+         */
+        private fun setSubreddit(name: String) {
+            subredditView.text = name
+        }
+
+        /**
+         * Updates the layout according to the changes required by a new score.
+         * @param score The new score.
+         */
+        private fun setScore(score: Int) {
+            scoreView.text = score.toString()
+        }
+
+        /**
+         * Updates the layout according to the changes required by a new thumbnail link.
+         * @param thumbnailLink The new thumbnail link, or <code>null</code> if none is applicable.
+         */
+        private fun setThumbnail(thumbnailLink: String?) {
+            if (thumbnailLink != null) {
+                Picasso.with(thumbnailView.context)
+                        .load(thumbnailLink)
+                        .into(thumbnailView, object : Callback {
+                            override fun onError() {
+                                thumbnailView.visibility = View.GONE
+                                thumbnailView.setImageDrawable(null)
+                            }
+
+                            override fun onSuccess() {
+                                thumbnailView.visibility = View.VISIBLE
+                            }
+                        })
+            } else {
+                thumbnailView.visibility = View.GONE
+                thumbnailView.setImageDrawable(null)
+            }
         }
     }
 
@@ -268,6 +324,7 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
         private val KEY_TITLE = "KEY_TITLE"
         private val KEY_SUBREDDIT = "KEY_SUBREDDIT"
         private val KEY_SCORE = "KEY_SCORE"
+        private val KEY_THUMBNAIL = "KEY_THUMBNAIL"
     }
 }
 

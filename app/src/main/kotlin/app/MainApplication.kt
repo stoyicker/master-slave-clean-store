@@ -24,10 +24,11 @@ internal open class MainApplication : Application() {
      * @see app.gaming.TopGamingAllTimePostsActivity
      */
     internal open fun buildTopGamingAllTimePostsFeatureComponent(
-            contentView: RecyclerView, errorView: View, progressView: View, activity: Activity) =
+            contentView: RecyclerView, errorView: View, progressView: View, guideView: View,
+            activity: Activity) =
             DaggerTopGamingAllTimePostsFeatureComponent.builder()
                     .topGamingAllTimePostsFeatureModule(
                             TopGamingAllTimePostsFeatureModule(
-                                    contentView, errorView, progressView, activity))
+                                    contentView, errorView, progressView, guideView, activity))
                     .build()
 }

@@ -1,12 +1,13 @@
 final def daggerVersion = "2.10"
-final def firebaseVersion = "10.2.4"
 final def espressoVersion = "2.2.2"
+final def firebaseVersion = "10.2.4"
 final def jsr250Version = "1.0"
 final def junitPlatformRunnerVersion = "1.0.0-M3"
 final def jUnitVersion = "4.12"
 final def kotlinVersion = rootProject.ext.kotlinVersion
 final def mockitoKotlinVersion = "1.4.0"
 final def mockitoAndroidVersion = "2.7.22"
+final def picassoVersion = "2.5.2"
 final def retrofitVersion = "2.1.0"
 final def rxAndroidVersion = "1.2.1"
 final def rxJavaVersion = "1.2.6"
@@ -65,7 +66,8 @@ ext {
             "com.android.support:appcompat-v7:$supportVersion",
             "com.android.support:design:$supportVersion",
             "com.google.firebase:firebase-crash:$firebaseVersion",
-            "com.google.dagger:dagger-android:$daggerVersion"
+            "com.google.dagger:dagger-android:$daggerVersion",
+            "com.squareup.picasso:picasso:$picassoVersion"
     ]
     providedUtilAndroidDependencies = [
             "com.android.support:support-annotations:$supportVersion"

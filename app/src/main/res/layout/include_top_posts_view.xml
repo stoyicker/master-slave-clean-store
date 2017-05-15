@@ -36,4 +36,14 @@
             android:textStyle="bold"
             android:text="@string/top_posts_error_action" />
     </LinearLayout>
+    <TextView
+        android:id="@+id/scroll_guide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:text="@string/top_posts_scroll_guide"
+        android:visibility="invisible" />
 </FrameLayout>

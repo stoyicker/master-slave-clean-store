@@ -95,7 +95,7 @@ internal class TopGamingActivityInstrumentation {
     @Test
     fun onLoadItemsAreShown() {
         SUBJECT = ReplaySubject.create()
-        SUBJECT.onNext(Post("0", "Bananas title", "r/bananas", 879, "bananaLink"))
+        SUBJECT.onNext(Post("0", "Bananas title", "r/bananas", 879, "bananaLink", "tb"))
         SUBJECT.onCompleted()
         launchActivity()
         onView(withId(R.id.progress)).check { view, _ ->
@@ -123,7 +123,7 @@ internal class TopGamingActivityInstrumentation {
     @Test
     fun onItemClickIntentIsFired() {
         SUBJECT = ReplaySubject.create()
-        SUBJECT.onNext(Post("0", "Bananas title", "r/bananas", 879, "http://www.banan.as"))
+        SUBJECT.onNext(Post("0", "Bananas title", "r/bananas", 879, "http://www.banan.as", "tb"))
         SUBJECT.onCompleted()
         launchActivity()
         Intents.init()

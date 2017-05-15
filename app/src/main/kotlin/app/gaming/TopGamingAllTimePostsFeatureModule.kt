@@ -39,6 +39,7 @@ internal class TopGamingAllTimePostsFeatureModule(
         private val contentView: RecyclerView,
         private val errorView: View,
         private val progressView: View,
+        private val guideView: View,
         private val activity: Activity) {
     @Provides
     @Singleton
@@ -93,7 +94,7 @@ internal class TopGamingAllTimePostsFeatureModule(
     @Provides
     @Singleton
     fun topGamingAllTimePostsView() = TopGamingAllTimePostsView(
-            contentView, errorView, progressView)
+            contentView, errorView, progressView, guideView)
 
     @Provides
     @Singleton

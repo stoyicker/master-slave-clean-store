@@ -17,5 +17,6 @@ internal class TopRequestEntityMapper {
             dataPost.title,
             dataPost.subreddit,
             dataPost.score,
-            "${BuildConfig.API_URL}${dataPost.permalink.drop(1)}")
+            "${BuildConfig.API_URL}${dataPost.permalink.drop(1)}",
+            dataPost.thumbnailLink)
 }

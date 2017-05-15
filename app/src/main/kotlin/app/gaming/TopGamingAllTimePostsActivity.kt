@@ -107,7 +107,7 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
     private fun inject() {
         (application as MainApplication).buildTopGamingAllTimePostsFeatureComponent(
                 // https://kotlinlang.org/docs/tutorials/android-plugin.html#using-kotlin-android-extensions
-                content, error, progress, this).inject(this)
+                content, error, progress, scroll_guide, this).inject(this)
     }
 
     /**

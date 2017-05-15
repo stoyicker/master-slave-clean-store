@@ -20,6 +20,8 @@
         <ignore regexp="error" />
         <ignore regexp="root" />
         <ignore regexp="search" />
+        <ignore regexp="scroll_guide" />
+        <ignore regexp="thumbnail" />
     </issue>
     <issue id="MergeRootFrame">
         <ignore regexp="include_top_posts_view" />

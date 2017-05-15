@@ -16,10 +16,11 @@ internal open class AndroidTestApplication : MainApplication() {
      * @see app.gaming.TopGamingAllTimePostsActivity
      */
     override fun buildTopGamingAllTimePostsFeatureComponent(
-            contentView: RecyclerView, errorView: View, progressView: View, activity: Activity) =
+            contentView: RecyclerView, errorView: View, progressView: View, guideView: View,
+            activity: Activity) =
             DaggerTopGamingAllTimePostsFeatureInstrumentationComponent.builder()
                     .topGamingAllTimePostsFeatureInstrumentationModule(
                             TopGamingAllTimePostsFeatureInstrumentationModule(
-                                    contentView, errorView, progressView, activity))
+                                    contentView, errorView, progressView, guideView, activity))
                     .build()
 }

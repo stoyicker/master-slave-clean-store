@@ -1,6 +1,5 @@
-package data.top
+package data.common
 
-import data.common.DataPost
 import domain.entity.Post
 import org.jetbrains.spek.api.SubjectSpek
 import org.jetbrains.spek.api.dsl.it
@@ -11,11 +10,11 @@ import kotlin.test.assertEquals
 
 /**
  * Unit tests for the top request entity mapper.
- * @see TopRequestEntityMapper
+ * @see DomainEntityMapper
  */
 @RunWith(JUnitPlatform::class)
-internal class TopRequestEntityMapperSpek : SubjectSpek<TopRequestEntityMapper>({
-    subject { TopRequestEntityMapper() } // <- Specify the test subject (the singleton instance, in this case)
+internal class DomainEntityMapperSpek : SubjectSpek<DomainEntityMapper>({
+    subject { DomainEntityMapper() } // <- Specify the test subject
 
     it ("should transform a happy case") {
         val source = DataPost("r54553", "random title", "random subreddit", 23, "some permalink", "https://media.giphy.com/media/3o6ZtdtckQKDQWAet2/giphy.gif")

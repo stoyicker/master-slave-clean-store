@@ -1,5 +1,7 @@
 package app.gaming
 
+import app.common.PresentationEntityMapper
+import app.common.PresentationPost
 import com.google.firebase.crash.FirebaseCrash
 import domain.entity.Post
 import rx.Subscriber
@@ -10,7 +12,8 @@ import rx.Subscriber
  */
 internal class PageLoadSubscriber(
         private val coordinator: TopGamingAllTimePostsCoordinator) : Subscriber<Post>() {
-    val posts = mutableListOf<Post>()
+    private val entityMapper = PresentationEntityMapper()
+    private val posts = mutableListOf<PresentationPost>()
 
     override fun onStart() {
         coordinator.view.apply {
@@ -21,7 +24,7 @@ internal class PageLoadSubscriber(
     }
 
     override fun onNext(post: Post) {
-        posts.add(post)
+        posts.add(entityMapper.transform(post))
     }
 
     override fun onError(throwable: Throwable) {

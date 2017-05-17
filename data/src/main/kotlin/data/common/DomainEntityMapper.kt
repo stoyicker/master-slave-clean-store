@@ -1,14 +1,12 @@
-package data.top
+package data.common
 
-import data.common.DataPost
 import domain.entity.Post
 import org.jorge.ms.data.BuildConfig
 
 /**
  * Entity mapper between domain and data.
  */
-internal class TopRequestEntityMapper {
-
+internal class DomainEntityMapper {
     /**
      * Maps a data post to a domain post.
      */

@@ -12,9 +12,9 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
+import app.common.PresentationPost
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import domain.entity.Post
 import org.jorge.ms.app.R
 import util.android.HtmlCompat
 
@@ -72,8 +72,8 @@ internal class TopGamingAllTimePostsFeatureView(
  */
 internal class Adapter(private val callback: TopGamingAllTimePostsActivity.BehaviorCallback)
     : RecyclerView.Adapter<Adapter.ViewHolder>(), Filterable {
-    private var items = listOf<Post>()
-    private var shownItems = emptyList<Post>()
+    private var items = listOf<PresentationPost>()
+    private var shownItems = emptyList<PresentationPost>()
     private lateinit var recyclerView: RecyclerView
     private val filter = RepeatableFilter()
 
@@ -96,7 +96,7 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
             return
         }
         // This is used to take the latest valid value in the given payload list
-        val folder: (Bundle, String) -> Unit = { bundle, key ->
+        val fold: (Bundle, String) -> Unit = { bundle, key ->
             @Suppress("UNCHECKED_CAST")
             bundle.putString(key, (payloads as List<Bundle>).fold(Bundle(), { old, new ->
                 val oldTitle = old.getString(key)
@@ -106,7 +106,7 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
         }
         val combinedBundle = Bundle().also { bundle ->
             arrayOf(KEY_TITLE, KEY_SUBREDDIT, KEY_SCORE, KEY_THUMBNAIL).forEach {
-                folder(bundle, it)
+                fold(bundle, it)
             }
         }
         // Now combinedBundle contains the latest version of each of the fields that can be updated
@@ -139,7 +139,7 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
      * the current filter.
      * @param toAdd The items to add.
      */
-    internal fun addItems(toAdd: List<Post>) {
+    internal fun addItems(toAdd: List<PresentationPost>) {
         // If the list is empty we have tried to load a non-existent page, which means we already
         // have all pages. Also there is nothing to add.
         if (toAdd.isNotEmpty()) {
@@ -213,7 +213,7 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
 
         override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
             @Suppress("UNCHECKED_CAST")
-            shownItems = results?.values as List<Post>? ?: items
+            shownItems = results?.values as List<PresentationPost>? ?: items
             diff.dispatchUpdatesTo(this@Adapter)
         }
 
@@ -230,7 +230,7 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
      */
     internal class ViewHolder internal constructor(
             itemView: View,
-            private val onItemClicked: (Post) -> Unit): RecyclerView.ViewHolder(itemView) {
+            private val onItemClicked: (PresentationPost) -> Unit): RecyclerView.ViewHolder(itemView) {
         private val titleView: TextView = itemView.findViewById(R.id.text_title) as TextView
         private val scoreView: TextView = itemView.findViewById(R.id.text_score) as TextView
         private val subredditView: TextView = itemView.findViewById(R.id.text_subreddit) as TextView
@@ -240,7 +240,7 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
          * Draw an item.
          * @title The item to draw.
          */
-        internal fun render(item: Post) {
+        internal fun render(item: PresentationPost) {
             setTitle(item.title)
             setSubreddit(item.subreddit)
             setScore(item.score)
@@ -253,12 +253,10 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
          * @param bundle The updates that need to be drawn.
          * @param item The item these updates correspond to.
          */
-        internal fun renderPartial(bundle: Bundle, item: Post) {
-            bundle.getString(KEY_TITLE).takeIf { it != null }.let { setTitle(it!!) }
-            bundle.getString(KEY_SUBREDDIT).takeIf { it != null }.let { setSubreddit(it!!) }
-            bundle.getString(KEY_SCORE).takeIf { it != null }.let {
-                setScore(Integer.valueOf(it!!))
-            }
+        internal fun renderPartial(bundle: Bundle, item: PresentationPost) {
+            bundle.getString(KEY_TITLE)?.let { setTitle(it) }
+            bundle.getString(KEY_SUBREDDIT)?.let { setSubreddit(it) }
+            bundle.getString(KEY_SCORE)?.let { setScore(Integer.valueOf(it)) }
             setThumbnail(bundle.getString(KEY_THUMBNAIL))
             itemView.setOnClickListener { onItemClicked(item) }
         }

@@ -1,4 +1,4 @@
-package app
+package app.common
 
 /**
  * An interface describing the behavior required by views bound to coordinators.

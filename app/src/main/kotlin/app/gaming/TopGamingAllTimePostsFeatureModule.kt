@@ -7,10 +7,10 @@ import android.net.Uri
 import android.os.Build
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import app.common.PresentationPost
 import dagger.Component
 import dagger.Module
 import dagger.Provides
-import domain.entity.Post
 import domain.exec.PostExecutionThread
 import domain.interactor.TopGamingAllTimeFetchPostsUseCase
 import domain.interactor.TopGamingAllTimeGetPostsUseCase
@@ -46,7 +46,7 @@ internal class TopGamingAllTimePostsFeatureModule(
     fun coordinatorBehaviorCallback(coordinator: TopGamingAllTimePostsCoordinator) =
             object : TopGamingAllTimePostsActivity.BehaviorCallback {
                 @SuppressLint("InlinedApi")
-                override fun onItemClicked(item: Post) {
+                override fun onItemClicked(item: PresentationPost) {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.detailLink))
                     // https://developer.android.com/training/implementing-navigation/descendant.html#external-activities
                     if (BuildConfig.VERSION_CODE > Build.VERSION_CODES.LOLLIPOP) {

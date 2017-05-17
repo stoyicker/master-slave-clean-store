@@ -3,6 +3,7 @@ package data.top
 import dagger.Component
 import dagger.Module
 import dagger.Provides
+import data.common.DomainEntityMapper
 import javax.inject.Singleton
 
 /**
@@ -22,7 +23,7 @@ internal interface TopPostsFacadeComponent {
 internal class TopPostsFacadeModule {
     @Provides
     @Singleton
-    fun entityMapper() = TopRequestEntityMapper()
+    fun entityMapper() = DomainEntityMapper()
 
     @Provides
     @Singleton

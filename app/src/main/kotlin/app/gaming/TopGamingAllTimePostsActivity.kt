@@ -12,8 +12,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewAnimationUtils
 import app.MainApplication
+import app.common.PresentationPost
 import app.filter.FilterFeature
-import domain.entity.Post
 import kotlinx.android.synthetic.main.activity_top_gaming.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 import kotlinx.android.synthetic.main.include_top_posts_view.*
@@ -118,7 +118,7 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
          * To be called when an item click happens.
          * @param item The item clicked.
          */
-        fun onItemClicked(item: Post)
+        fun onItemClicked(item: PresentationPost)
 
         /**
          * To be called when a page load is requested.

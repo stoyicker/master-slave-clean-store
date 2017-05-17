@@ -55,7 +55,6 @@ uploadReleaseToGitHub() {
 
 case ${BRANCH_NAME} in
     "master")
-        ARTIFACT_VERSION=$(git rev-list --count HEAD)
         uploadReleaseToGitHub
         ;;
     *)

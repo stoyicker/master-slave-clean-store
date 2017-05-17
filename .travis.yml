@@ -1,6 +1,8 @@
 language: android
 jdk: oraclejdk8
 sudo: required
+git:
+  depth: 9999
 android:
   components:
   - tools
@@ -36,7 +38,7 @@ script:
 - ${TASK}
 after_success:
 - |
-  if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
+  if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ] && [[ "$TRAVIS_JOB_NUMBER" == *.1 ]]; then
     echo "CI on master succeded. Executing release tasks..."
     ./ci/release.sh
     echo "Uploading mapping to Firebase..."

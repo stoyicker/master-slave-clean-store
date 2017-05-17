@@ -30,4 +30,4 @@
 -dontwarn kotlin.jvm.internal.Reflection
 -dontwarn com.google.errorprone.annotations.*
 -dontwarn com.squareup.okhttp.**
-
+-keep class android.support.v7.widget.SearchView { *; }

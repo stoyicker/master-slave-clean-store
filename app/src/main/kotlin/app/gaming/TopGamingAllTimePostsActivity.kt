@@ -24,11 +24,11 @@ import javax.inject.Inject
 /**
  * An Activity that shows the top posts from r/gaming.
  */
-class TopGamingAllTimePostsActivity : AppCompatActivity() {
+internal class TopGamingAllTimePostsActivity : AppCompatActivity() {
     @Inject
-    internal lateinit var view: TopGamingAllTimePostsFeatureView
+    lateinit var view: TopGamingAllTimePostsFeatureView
     @Inject
-    internal lateinit var coordinator: TopGamingAllTimePostsCoordinator
+    lateinit var coordinator: TopGamingAllTimePostsCoordinator
     private lateinit var filterFeatureDelegate: FilterFeature
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,8 +52,7 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.top_gaming, menu)
+        menuInflater.inflate(R.menu.top_gaming, menu)
         filterFeatureDelegate = FilterFeature(this,
                 menu.findItem(R.id.search).actionView as SearchView, view)
         filterFeatureDelegate.applyQuery(intent.getStringExtra(KEY_QUERY))
@@ -131,7 +130,7 @@ class TopGamingAllTimePostsActivity : AppCompatActivity() {
         private const val KEY_QUERY = "KEY_QUERY"
         private const val KEY_STARTED_MANUALLY = "KEY_STARTED_MANUALLY"
         /**
-         * Safe way to schedule an intent to route to this activity. More useful if it were to have
+         * Safe way to obtain an intent to route to this activity. More useful if it were to have
          * parameters for example, but a good idea to have nevertheless.
          * @param context The context to start this activity from.
          */

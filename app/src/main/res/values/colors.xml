@@ -3,7 +3,7 @@
     <color name="primary">#8e0000</color>
     <color name="accent">#ff2f36</color>
     <color name="textColorPrimary">@android:color/white</color>
-    <color name="textColorSecondary">#f71818</color>
+    <color name="textColorSecondary">#ffffff</color>
     <color name="windowBackground">#e3e3e3</color>
-    <color name="default_ripple">#42ffffff</color>
+    <color name="defaultRipple">#42ffffff</color>
 </resources>

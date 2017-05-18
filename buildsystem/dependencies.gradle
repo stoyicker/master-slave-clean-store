@@ -53,8 +53,7 @@ ext {
     ]
     androidTestCompileAppDependencies = [
             "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion",
-            "org.mockito:mockito-android:$mockitoAndroidVersion",
-            "com.android.support.test.espresso:espresso-intents:$espressoVersion"
+            "org.mockito:mockito-android:$mockitoAndroidVersion"
     ]
     annotationProcessorAppDependencies = [
             "com.google.dagger:dagger-compiler:$daggerVersion",
@@ -77,6 +76,7 @@ ext {
     ]
     compileUtilAndroidTestDependencies = [
             "com.android.support.test.espresso:espresso-core:$espressoVersion",
-            "com.android.support.test.espresso:espresso-idling-resource:$espressoVersion"
+            "com.android.support.test.espresso:espresso-idling-resource:$espressoVersion",
+            "com.android.support.test.espresso:espresso-intents:$espressoVersion"
     ]
 }

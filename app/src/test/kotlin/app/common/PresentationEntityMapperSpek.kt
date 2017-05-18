@@ -16,7 +16,9 @@ internal class PresentationEntityMapperSpek : SubjectSpek<PresentationEntityMapp
     subject { PresentationEntityMapper() } // <- Specify the test subject
 
     it ("should transform a happy case") {
-        val source = Post("r54553", "random title", "r/abc", 23, "some permalink", "https://media.giphy.com/media/3o6ZtdtckQKDQWAet2/giphy.gif")
+        val source = Post("r54553", "random title", "r/abc", 23,
+                "https://media.giphy.com/media/3o6ZtdtckQKDQWAet2/giphy.gif",
+                "http://www.google.com/")
         assertEquivalent(source, subject.transform(source))
     }
 
@@ -26,12 +28,12 @@ internal class PresentationEntityMapperSpek : SubjectSpek<PresentationEntityMapp
     }
 
     it ("should transform a mixed case") {
-        val source = Post("aa", "", "another subreddit", 0, "another permalink", "self")
+        val source = Post("aa", "", "another subreddit", 0, "self", "aefaefaf")
         assertEquivalent(source, subject.transform(source))
     }
 
     it ("should transform when score is negative") {
-        val source = Post("87", "a title", "yet another subreddit", -7, "one more permalink", "feafea")
+        val source = Post("87", "a title", "yet another subreddit", -7, "feafea", "feafeafe")
         assertEquivalent(source, subject.transform(source))
     }
 }) {
@@ -41,7 +43,6 @@ internal class PresentationEntityMapperSpek : SubjectSpek<PresentationEntityMapp
             assertEquals(expected.title, actual.title)
             assertEquals(expected.subreddit, actual.subreddit)
             assertEquals(expected.score, actual.score)
-            assertEquals(expected.detailLink, actual.detailLink)
             assertEquals(expected.thumbnailLink, actual.thumbnailLink)
         }
     }

@@ -38,9 +38,9 @@ internal class TopGamingAllTimePostsFetchUseCaseSpek : SubjectSpek<TopGamingAllT
     it ("should build its implementation as an observable") {
         val testSubscriber = TestSubscriber<Post>()
         // Cannot mock Post as it is a data class
-        val values = arrayOf(Post("", "title", "sr", -8, "permalink", "a"),
+        val values = arrayOf(Post("", "title", "sr", -8, "a", "a"),
                 Post("rafe", "titfle", "eeesr", 9, "", "a"),
-                Post("123", "titlea", "sr", 0, "pfaefaermalink", "a"))
+                Post("123", "titlea", "sr", 0, "a", "a"))
         whenever(MOCK_FACADE.fetchTop(any(), any(), any())) doReturn Observable.from(values)
         subject.execute(testSubscriber)
         testSubscriber.awaitTerminalEvent()

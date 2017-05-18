@@ -2,22 +2,31 @@ package app.gaming
 
 import android.app.Activity
 import android.app.Instrumentation
-import android.content.Intent
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso
 import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.NoActivityResumedException
 import android.support.test.espresso.action.ViewActions.click
+import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.intent.Intents
 import android.support.test.espresso.intent.Intents.intended
 import android.support.test.espresso.intent.Intents.intending
 import android.support.test.espresso.intent.matcher.IntentMatchers.anyIntent
-import android.support.test.espresso.intent.matcher.IntentMatchers.hasAction
-import android.support.test.espresso.intent.matcher.IntentMatchers.hasData
+import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra
+import android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed
+import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
+import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.rule.ActivityTestRule
+import android.support.v7.widget.Toolbar
+import android.view.View
+import app.common.PresentationPost
+import app.detail.PostDetailActivity
 import domain.entity.Post
 import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.equalTo
+import org.jorge.ms.app.R
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
@@ -25,6 +34,8 @@ import rx.Subscriber
 import rx.subjects.ReplaySubject
 import util.android.test.BinaryIdlingResource
 import util.android.test.matchers.withIndex
+import java.net.UnknownHostException
+import kotlin.test.assertEquals
 
 /**
  * The setup seems a bit strange, but there is a reason: we need to define SUBJECT before
@@ -52,73 +63,78 @@ internal class TopGamingActivityInstrumentation {
     @Rule
     val expectedException: ExpectedException = ExpectedException.none()
 
-//    @Test
-//    fun activityIsShown() {
-//        SUBJECT = ReplaySubject.create()
-//        SUBJECT.onCompleted()
-//        launchActivity()
-//        onView(withId(android.R.id.content)).check { view, _ ->
-//            assertEquals(View.VISIBLE, view.visibility, "Window visibility was not VISIBLE") }
-//    }
-//
-//    @Test
-//    fun toolbarIsCompletelyShownOnOpening() {
-//        SUBJECT = ReplaySubject.create()
-//        SUBJECT.onCompleted()
-//        launchActivity()
-//        val completelyDisplayedMatcher = matches(isCompletelyDisplayed())
-//        onView(isAssignableFrom(Toolbar::class.java)).check(completelyDisplayedMatcher)
-//        onView(withText(R.string.app_label)).check(completelyDisplayedMatcher)
-//    }
-//
-//    @Test
-//    fun goingBackPausesApp() {
-//        SUBJECT = ReplaySubject.create()
-//        SUBJECT.onCompleted()
-//        launchActivity()
-//        expectedException.expect(NoActivityResumedException::class.java)
-//        expectedException.expectMessage("Pressed back and killed the app")
-//        Espresso.pressBack()
-//    }
-//
-//    @Test
-//    fun onLoadItemsAreShown() {
-//        SUBJECT = ReplaySubject.create()
-//        SUBJECT.onNext(Post("0", "Bananas title", "r/bananas", 879, "bananaLink", "tb"))
-//        SUBJECT.onCompleted()
-//        launchActivity()
-//        onView(withId(R.id.progress)).check { view, _ ->
-//            assertEquals(View.GONE, view.visibility, "Progress visibility was not GONE") }
-//        onView(withId(R.id.error)).check { view, _ ->
-//            assertEquals(View.GONE, view.visibility, "Error visibility was not GONE") }
-//        onView(withId(R.id.content)).check { view, _ ->
-//            assertEquals(View.VISIBLE, view.visibility, "Content visibility was not VISIBLE") }
-//        onView(withIndex(withText("Bananas title"), 0)).check(matches(isDisplayed()))
-//    }
-//
-//    @Test
-//    fun onFailureErrorIsShown() {
-//        SUBJECT = ReplaySubject.create()
-//        SUBJECT.onError(UnknownHostException())
-//        launchActivity()
-//        onView(withId(R.id.progress)).check { view, _ ->
-//            assertEquals(View.GONE, view.visibility, "Progress visibility was not GONE") }
-//        onView(withId(R.id.error)).check { view, _ ->
-//            assertEquals(View.VISIBLE, view.visibility, "Error visibility was not VISIBLE") }
-//        onView(withId(R.id.content)).check { view, _ ->
-//            assertEquals(View.VISIBLE, view.visibility, "Content visibility was not VISIBLE") }
-//    }
+    @Test
+    fun activityIsShown() {
+        SUBJECT = ReplaySubject.create()
+        SUBJECT.onCompleted()
+        launchActivity()
+        onView(withId(android.R.id.content)).check { view, _ ->
+            assertEquals(View.VISIBLE, view.visibility, "Window visibility was not VISIBLE") }
+    }
 
     @Test
-    fun onItemClickIntentIsFired() {
+    fun toolbarIsCompletelyShownOnOpening() {
         SUBJECT = ReplaySubject.create()
-        SUBJECT.onNext(Post("0", "Bananas title", "r/bananas", 879, "http://www.banan.as", "tb"))
+        SUBJECT.onCompleted()
+        launchActivity()
+        val completelyDisplayedMatcher = matches(isCompletelyDisplayed())
+        onView(isAssignableFrom(Toolbar::class.java)).check(completelyDisplayedMatcher)
+        onView(withText(R.string.app_label)).check(completelyDisplayedMatcher)
+    }
+
+    @Test
+    fun goingBackPausesApp() {
+        SUBJECT = ReplaySubject.create()
+        SUBJECT.onCompleted()
+        launchActivity()
+        expectedException.expect(NoActivityResumedException::class.java)
+        expectedException.expectMessage("Pressed back and killed the app")
+        Espresso.pressBack()
+    }
+
+    @Test
+    fun onLoadItemsAreShown() {
+        SUBJECT = ReplaySubject.create()
+        SUBJECT.onNext(Post("0", "Bananas title", "r/bananas", 879, "tb", "link"))
+        SUBJECT.onCompleted()
+        launchActivity()
+        onView(withId(R.id.progress)).check { view, _ ->
+            assertEquals(View.GONE, view.visibility, "Progress visibility was not GONE") }
+        onView(withId(R.id.error)).check { view, _ ->
+            assertEquals(View.GONE, view.visibility, "Error visibility was not GONE") }
+        onView(withId(R.id.content)).check { view, _ ->
+            assertEquals(View.VISIBLE, view.visibility, "Content visibility was not VISIBLE") }
+        onView(withIndex(withText("Bananas title"), 0)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun onFailureErrorIsShown() {
+        SUBJECT = ReplaySubject.create()
+        SUBJECT.onError(UnknownHostException())
+        launchActivity()
+        onView(withId(R.id.progress)).check { view, _ ->
+            assertEquals(View.GONE, view.visibility, "Progress visibility was not GONE") }
+        onView(withId(R.id.error)).check { view, _ ->
+            assertEquals(View.VISIBLE, view.visibility, "Error visibility was not VISIBLE") }
+        onView(withId(R.id.content)).check { view, _ ->
+            assertEquals(View.VISIBLE, view.visibility, "Content visibility was not VISIBLE") }
+    }
+
+    @Test
+    fun onItemClickDetailIntentIsLaunched() {
+        val srcPost = Post("0", "Bananas title", "r/bananas", 879, "tb", "link")
+        SUBJECT = ReplaySubject.create()
+        SUBJECT.onNext(srcPost)
         SUBJECT.onCompleted()
         launchActivity()
         Intents.init()
         intending(anyIntent()).respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, null))
-        onView(withIndex(withText("Bananas title"), 0)).perform(click())
-        intended(allOf(hasAction(equalTo(Intent.ACTION_VIEW)), hasData("http://www.banan.as")))
+        onView(withIndex(withText(srcPost.title), 0)).perform(click())
+        intended(allOf(hasComponent(PostDetailActivity::class.java.name),
+                hasExtra(PostDetailActivity.KEY_MODEL, PresentationPost(
+                srcPost.id, srcPost.title, srcPost.subreddit, srcPost.score, srcPost.thumbnailLink,
+                        srcPost.url))
+        ))
         Intents.release()
     }
 

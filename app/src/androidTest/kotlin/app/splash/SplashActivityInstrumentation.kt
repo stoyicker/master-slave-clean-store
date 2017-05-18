@@ -8,6 +8,7 @@ import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.rule.ActivityTestRule
 import app.gaming.TopGamingAllTimePostsActivity
 import org.junit.Rule
+import org.junit.Test
 
 /**
  * Instrumentation for SplashActivity.
@@ -17,12 +18,12 @@ internal class SplashActivityInstrumentation {
     @Rule
     val activityTestRule = ActivityTestRule(SplashActivity::class.java)
 
-//    @Test
+    @Test
     fun activityIsShown() {
         onView(withId(android.R.id.content)).check(matches(isCompletelyDisplayed()))
     }
 
-//    @Test
+    @Test
     fun finishesIntoContent() {
         val activityMonitor = Instrumentation.ActivityMonitor(
                 TopGamingAllTimePostsActivity::class.java.name, null, true)

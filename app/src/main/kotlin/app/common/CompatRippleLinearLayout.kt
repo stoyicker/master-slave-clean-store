@@ -19,7 +19,7 @@ import util.android.ext.getInteger
  */
 internal class CompatRippleLinearLayout(context: Context, attrs: AttributeSet?)
     : LinearLayout(context, attrs) {
-    private val rippleColor = context.getColorCompat(R.color.default_ripple)
+    private val rippleColor = context.getColorCompat(R.color.defaultRipple)
     private val rippleDuration = context.getInteger(android.R.integer.config_shortAnimTime).toLong()
     private lateinit var sourceCoordinates: PointF
     private val ripplePaint = Paint()

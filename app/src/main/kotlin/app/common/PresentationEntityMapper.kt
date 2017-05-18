@@ -14,6 +14,6 @@ internal class PresentationEntityMapper {
             post.title,
             post.subreddit,
             post.score,
-            post.detailLink,
-            post.thumbnailLink)
+            post.thumbnailLink,
+            post.url)
 }

@@ -22,6 +22,7 @@
         <ignore regexp="search" />
         <ignore regexp="scroll_guide" />
         <ignore regexp="thumbnail" />
+        <ignore regexp="share" />
     </issue>
     <issue id="MergeRootFrame">
         <ignore regexp="include_top_posts_view" />

@@ -1,5 +1,7 @@
 package app.gaming
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
@@ -13,8 +15,8 @@ import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
 import app.common.PresentationPost
-import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
 import org.jorge.ms.app.R
 import util.android.HtmlCompat
 
@@ -87,7 +89,6 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.render(shownItems[position])
-        onViewHolderBound(holder, position)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: List<Any>) {
@@ -112,17 +113,6 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
         // Now combinedBundle contains the latest version of each of the fields that can be updated
         // individually
         holder.renderPartial(combinedBundle, shownItems[position])
-        onViewHolderBound(holder, position)
-    }
-
-    /**
-     * A method to wrap operations that need to happen regardless of how a holder is being bound
-     * (as in partial vs full update).
-     */
-    private fun onViewHolderBound(holder: ViewHolder, position: Int) {
-        if (position <= shownItems.size - 1) {
-            holder.addBottomMargin()
-        }
     }
 
     override fun getItemCount(): Int = shownItems.size
@@ -230,7 +220,8 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
      */
     internal class ViewHolder internal constructor(
             itemView: View,
-            private val onItemClicked: (PresentationPost) -> Unit): RecyclerView.ViewHolder(itemView) {
+            private val onItemClicked: (PresentationPost) -> Unit)
+        : RecyclerView.ViewHolder(itemView), Target {
         private val titleView: TextView = itemView.findViewById(R.id.text_title) as TextView
         private val scoreView: TextView = itemView.findViewById(R.id.text_score) as TextView
         private val subredditView: TextView = itemView.findViewById(R.id.text_subreddit) as TextView
@@ -262,12 +253,6 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
         }
 
         /**
-         * Adds a margin under the recycler view for the progress and error views to show.
-         */
-        internal fun addBottomMargin() {
-        }
-
-        /**
          * Updates the layout according to the changes required by a new title.
          * @param title The new title.
          */
@@ -293,24 +278,25 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
             scoreView.text = score.toString()
         }
 
+        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+            thumbnailView.visibility = View.GONE
+            thumbnailView.setImageDrawable(null)
+        }
+
+        override fun onBitmapFailed(errorDrawable: Drawable?) { }
+
+        override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
+            thumbnailView.setImageBitmap(bitmap)
+            thumbnailView.visibility = View.VISIBLE
+        }
+
         /**
          * Updates the layout according to the changes required by a new thumbnail link.
          * @param thumbnailLink The new thumbnail link, or <code>null</code> if none is applicable.
          */
         private fun setThumbnail(thumbnailLink: String?) {
             if (thumbnailLink != null) {
-                Picasso.with(thumbnailView.context)
-                        .load(thumbnailLink)
-                        .into(thumbnailView, object : Callback {
-                            override fun onError() {
-                                thumbnailView.visibility = View.GONE
-                                thumbnailView.setImageDrawable(null)
-                            }
-
-                            override fun onSuccess() {
-                                thumbnailView.visibility = View.VISIBLE
-                            }
-                        })
+                Picasso.with(thumbnailView.context).load(thumbnailLink).into(this)
             } else {
                 thumbnailView.visibility = View.GONE
                 thumbnailView.setImageDrawable(null)

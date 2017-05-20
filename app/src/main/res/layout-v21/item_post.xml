@@ -8,10 +8,10 @@
     android:padding="@dimen/appbar_horizontal_padding"
     android:theme="@style/AppTheme.Card">
     <TextView
-        android:id="@+id/text_title"
+        android:id="@+id/title_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/section_separator"
+        android:layout_marginBottom="@dimen/content_vertical_padding"
         android:textIsSelectable="false"
         android:clickable="false"
         style="@style/AppTheme.TextTitle" />
@@ -25,7 +25,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginBottom="@dimen/section_separator"
+        android:layout_marginBottom="@dimen/content_vertical_padding"
         android:clickable="false"
         android:background="@color/windowBackground" />
     <LinearLayout
@@ -35,14 +35,14 @@
         android:background="@null"
         android:foreground="@null">
         <TextView
-            android:id="@+id/text_score"
+            android:id="@+id/score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/text_separation"
             android:textIsSelectable="false"
             style="@style/AppTheme.TextSubhead" />
         <TextView
-            android:id="@+id/text_subreddit"
+            android:id="@+id/subreddit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textIsSelectable="false"

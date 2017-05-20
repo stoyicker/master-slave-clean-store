@@ -12,9 +12,9 @@
     <!-- This check is broken when using KotlinX -->
     <issue id="UnusedIds">
         <ignore regexp="toolbar" />
-        <ignore regexp="text_title" />
-        <ignore regexp="text_score" />
-        <ignore regexp="text_subreddit" />
+        <ignore regexp="title_view" />
+        <ignore regexp="score" />
+        <ignore regexp="subreddit" />
         <ignore regexp="content" />
         <ignore regexp="progress" />
         <ignore regexp="error" />

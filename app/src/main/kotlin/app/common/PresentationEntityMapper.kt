@@ -1,6 +1,7 @@
 package app.common
 
 import domain.entity.Post
+import util.android.HtmlCompat
 
 /**
  * Entity mapper between presentation and domain.
@@ -11,7 +12,7 @@ internal class PresentationEntityMapper {
      */
     fun transform(post: Post) = PresentationPost(
             post.id,
-            post.title,
+            HtmlCompat.fromHtml(post.title).toString(),
             post.subreddit,
             post.score,
             post.thumbnailLink,

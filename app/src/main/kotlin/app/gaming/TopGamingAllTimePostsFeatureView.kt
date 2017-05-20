@@ -18,7 +18,6 @@ import app.common.PresentationPost
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import org.jorge.ms.app.R
-import util.android.HtmlCompat
 
 /**
  * Configuration for the recycler view holding the post list.
@@ -222,9 +221,9 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
             itemView: View,
             private val onItemClicked: (PresentationPost) -> Unit)
         : RecyclerView.ViewHolder(itemView), Target {
-        private val titleView: TextView = itemView.findViewById(R.id.text_title) as TextView
-        private val scoreView: TextView = itemView.findViewById(R.id.text_score) as TextView
-        private val subredditView: TextView = itemView.findViewById(R.id.text_subreddit) as TextView
+        private val titleView: TextView = itemView.findViewById(R.id.title_view) as TextView
+        private val scoreView: TextView = itemView.findViewById(R.id.score) as TextView
+        private val subredditView: TextView = itemView.findViewById(R.id.subreddit) as TextView
         private val thumbnailView: ImageView = itemView.findViewById(R.id.thumbnail) as ImageView
 
         /**
@@ -257,9 +256,8 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
          * @param title The new title.
          */
         private fun setTitle(title: String) {
-            val formattedTitle = HtmlCompat.fromHtml(title)
-            titleView.text = formattedTitle
-            thumbnailView.contentDescription = formattedTitle.toString()
+            titleView.text = title
+            thumbnailView.contentDescription = title.toString()
         }
 
         /**

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        tools:ignore="ContentDescription" />
+    <TextView
+        android:id="@+id/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/content_horizontal_margin"
+        android:paddingEnd="@dimen/content_horizontal_margin"
+        android:paddingTop="@dimen/content_vertical_padding"
+        android:paddingBottom="@dimen/content_vertical_padding"
+        android:background="?colorPrimary"
+        android:textIsSelectable="true"
+        style="@style/AppTheme.TextTitle" />
+</merge>

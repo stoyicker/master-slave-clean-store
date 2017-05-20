@@ -1,7 +1,7 @@
 package app.gaming
 
 import android.annotation.SuppressLint
-import android.app.Activity
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import app.common.PresentationPost
@@ -21,18 +21,18 @@ import javax.inject.Singleton
  */
 @Module
 internal class TopGamingAllTimePostsFeatureInstrumentationModule(
+        private val context: Context,
         private val contentView: RecyclerView,
         private val errorView: View,
         private val progressView: View,
-        private val guideView: View,
-        private val activity: Activity) {
+        private val guideView: View) {
     @Provides
     @Singleton
     fun coordinatorBehaviorCallback(coordinator: TopGamingAllTimePostsCoordinator) =
             object : TopGamingAllTimePostsActivity.BehaviorCallback {
                 @SuppressLint("InlinedApi")
                 override fun onItemClicked(item: PresentationPost) {
-                    activity.startActivity(PostDetailActivity.getCallingIntent(activity, item))
+                    context.startActivity(PostDetailActivity.getCallingIntent(context, item))
                 }
 
                 override fun onPageLoadRequested() {

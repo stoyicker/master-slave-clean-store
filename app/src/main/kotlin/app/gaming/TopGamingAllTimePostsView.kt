@@ -3,7 +3,6 @@ package app.gaming
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.FrameLayout
-import app.common.LoadableContentView
 import app.common.PresentationPost
 import org.jorge.ms.app.R
 import util.android.ext.getDimension

@@ -27,6 +27,7 @@ internal class PostDetailActivity : AppCompatActivity() {
     lateinit var shareFeatureDelegate: ShareFeature
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        overridePendingTransition(0, 0)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_detail)
         configureToolbar()

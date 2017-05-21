@@ -66,15 +66,6 @@ internal class PostDetailActivityInstrumentation {
         Intents.release()
     }
 
-//    @Test TODO Enable this test when the thumbnail view gains content
-    fun viewIsVisible() {
-        arrayOf(R.id.title, R.id.thumbnail).forEach {
-            onView(withId(it)).check { view, _ ->
-                assertEquals(View.VISIBLE, view.visibility, "Visibility was not VISIBLE")
-            }
-        }
-    }
-
     @Test
     fun viewIsUpdated() {
         verify(activityTestRule.activity.view).updateContent(ITEM)

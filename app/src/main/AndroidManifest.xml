@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.jorge.ms.app">
     <application
         android:allowBackup="false"
@@ -24,6 +25,16 @@
             </intent-filter>
             <meta-data android:name="android.app.searchable"
                        android:resource="@xml/searchable"/>
+        </activity>
+        <activity
+            android:name="app.detail.PostDetailActivity"
+            android:theme="@style/AppTheme"
+            android:launchMode="singleTask"
+            android:parentActivityName="app.gaming.TopGamingAllTimePostsActivity"
+            tools:targetApi="jelly_bean">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="app.gaming.TopGamingAllTimePostsActivity" />
         </activity>
         <meta-data
             android:name="android.max_aspect"

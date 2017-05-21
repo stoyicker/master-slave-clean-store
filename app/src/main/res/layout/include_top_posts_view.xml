@@ -43,7 +43,7 @@
         android:layout_gravity="bottom|center_horizontal"
         android:gravity="center"
         android:textStyle="bold"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:text="@string/top_posts_scroll_guide"
         android:visibility="invisible" />
 </FrameLayout>

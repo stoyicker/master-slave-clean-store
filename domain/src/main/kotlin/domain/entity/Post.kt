@@ -9,9 +9,5 @@ data class Post(
         val title: String,
         val subreddit: String,
         val score: Int,
-        val detailLink: String,
-        val thumbnailLink: String) {
-    override fun hashCode() = id.hashCode()
-
-    override fun equals(other: Any?) = other is Post && id == other.id
-}
+        val thumbnailLink: String,
+        val url: String)

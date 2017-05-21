@@ -1,6 +1,7 @@
 package data.top
 
 import data.ComponentHolder
+import data.common.DomainEntityMapper
 import domain.entity.Post
 import domain.entity.TimeRange
 import domain.repository.DomainTopPostsFacade
@@ -18,7 +19,7 @@ import javax.inject.Inject
  */
 class TopPostsFacade : DomainTopPostsFacade {
     @Inject
-    internal lateinit var entityMapper: TopRequestEntityMapper
+    internal lateinit var entityMapper: DomainEntityMapper
     @Inject
     internal lateinit var source: TopRequestSource
 

@@ -11,6 +11,7 @@ import dagger.Module
 import dagger.Provides
 import data.ComponentHolder
 import data.common.DataPost
+import data.common.DomainEntityMapper
 import domain.entity.Post
 import domain.entity.TimeRange
 import org.jetbrains.spek.api.SubjectSpek
@@ -115,7 +116,7 @@ internal class TopPostsFacadeSpek : SubjectSpek<TopPostsFacade>({
     }
 }) {
     private companion object {
-        val MOCK_ENTITY_MAPPER = mock<TopRequestEntityMapper>()
+        val MOCK_ENTITY_MAPPER = mock<DomainEntityMapper>()
         val MOCK_SOURCE = mock<TopRequestSource>()
     }
 }
@@ -125,7 +126,7 @@ internal class TopPostsFacadeSpek : SubjectSpek<TopPostsFacade>({
  */
 @Module
 internal class TopPostsFacadeSpekModule(
-        private val entityMapper: TopRequestEntityMapper, private val source: TopRequestSource) {
+        private val entityMapper: DomainEntityMapper, private val source: TopRequestSource) {
     @Provides
     @Singleton
     fun entityMapper() = entityMapper

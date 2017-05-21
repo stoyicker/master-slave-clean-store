@@ -2,7 +2,6 @@ package app.gaming
 
 import android.app.Activity
 import android.app.Instrumentation
-import android.content.Intent
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso
 import android.support.test.espresso.Espresso.onView
@@ -13,8 +12,8 @@ import android.support.test.espresso.intent.Intents
 import android.support.test.espresso.intent.Intents.intended
 import android.support.test.espresso.intent.Intents.intending
 import android.support.test.espresso.intent.matcher.IntentMatchers.anyIntent
-import android.support.test.espresso.intent.matcher.IntentMatchers.hasAction
-import android.support.test.espresso.intent.matcher.IntentMatchers.hasData
+import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra
 import android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -23,9 +22,10 @@ import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.rule.ActivityTestRule
 import android.support.v7.widget.Toolbar
 import android.view.View
+import app.common.PresentationPost
+import app.detail.PostDetailActivity
 import domain.entity.Post
 import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.equalTo
 import org.jorge.ms.app.R
 import org.junit.Rule
 import org.junit.Test
@@ -95,7 +95,7 @@ internal class TopGamingActivityInstrumentation {
     @Test
     fun onLoadItemsAreShown() {
         SUBJECT = ReplaySubject.create()
-        SUBJECT.onNext(Post("0", "Bananas title", "r/bananas", 879, "bananaLink", "tb"))
+        SUBJECT.onNext(Post("0", "Bananas title", "r/bananas", 879, "tb", "link"))
         SUBJECT.onCompleted()
         launchActivity()
         onView(withId(R.id.progress)).check { view, _ ->
@@ -121,15 +121,20 @@ internal class TopGamingActivityInstrumentation {
     }
 
     @Test
-    fun onItemClickIntentIsFired() {
+    fun onItemClickDetailIntentIsLaunched() {
+        val srcPost = Post("0", "Bananas title", "r/bananas", 879, "tb", "link")
         SUBJECT = ReplaySubject.create()
-        SUBJECT.onNext(Post("0", "Bananas title", "r/bananas", 879, "http://www.banan.as", "tb"))
+        SUBJECT.onNext(srcPost)
         SUBJECT.onCompleted()
         launchActivity()
         Intents.init()
         intending(anyIntent()).respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, null))
-        onView(withIndex(withText("Bananas title"), 0)).perform(click())
-        intended(allOf(hasAction(equalTo(Intent.ACTION_VIEW)), hasData("http://www.banan.as")))
+        onView(withIndex(withText(srcPost.title), 0)).perform(click())
+        intended(allOf(hasComponent(PostDetailActivity::class.java.name),
+                hasExtra(PostDetailActivity.KEY_MODEL, PresentationPost(
+                srcPost.id, srcPost.title, srcPost.subreddit, srcPost.score, srcPost.thumbnailLink,
+                        srcPost.url))
+        ))
         Intents.release()
     }
 

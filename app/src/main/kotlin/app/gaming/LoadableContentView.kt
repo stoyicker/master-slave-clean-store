@@ -1,8 +1,5 @@
-package app
+package app.gaming
 
-/**
- * An interface describing the behavior required by views bound to coordinators.
- */
 internal interface LoadableContentView<in T : Any?> {
     /**
      * Called to notify the implementation that the loading layout should be shown.

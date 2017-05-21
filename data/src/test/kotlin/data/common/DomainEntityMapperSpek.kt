@@ -1,24 +1,24 @@
-package data.top
+package data.common
 
-import data.common.DataPost
 import domain.entity.Post
 import org.jetbrains.spek.api.SubjectSpek
 import org.jetbrains.spek.api.dsl.it
-import org.jorge.ms.data.BuildConfig
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
 import kotlin.test.assertEquals
 
 /**
  * Unit tests for the top request entity mapper.
- * @see TopRequestEntityMapper
+ * @see DomainEntityMapper
  */
 @RunWith(JUnitPlatform::class)
-internal class TopRequestEntityMapperSpek : SubjectSpek<TopRequestEntityMapper>({
-    subject { TopRequestEntityMapper() } // <- Specify the test subject (the singleton instance, in this case)
+internal class DomainEntityMapperSpek : SubjectSpek<DomainEntityMapper>({
+    subject { DomainEntityMapper() } // <- Specify the test subject
 
     it ("should transform a happy case") {
-        val source = DataPost("r54553", "random title", "random subreddit", 23, "some permalink", "https://media.giphy.com/media/3o6ZtdtckQKDQWAet2/giphy.gif")
+        val source = DataPost("r54553", "random title", "random subreddit", 23,
+                "https://media.giphy.com/media/3o6ZtdtckQKDQWAet2/giphy.gif",
+                "http://www.google.com/")
         assertEquivalent(source, subject.transform(source))
     }
 
@@ -28,12 +28,12 @@ internal class TopRequestEntityMapperSpek : SubjectSpek<TopRequestEntityMapper>(
     }
 
     it ("should transform a mixed case") {
-        val source = DataPost("aa", "", "another subreddit", 0, "another permalink", "self")
+        val source = DataPost("aa", "", "another subreddit", 0, "self", "Afeafe")
         assertEquivalent(source, subject.transform(source))
     }
 
     it ("should transform when score is negative") {
-        val source = DataPost("87", "a title", "yet another subreddit", -7, "one more permalink", "feafea")
+        val source = DataPost("87", "a title", "yet another subreddit", -7, "feafea", "")
         assertEquivalent(source, subject.transform(source))
     }
 }) {
@@ -43,7 +43,6 @@ internal class TopRequestEntityMapperSpek : SubjectSpek<TopRequestEntityMapper>(
             assertEquals(dataPost.title, post.title)
             assertEquals(dataPost.subreddit, post.subreddit)
             assertEquals(dataPost.score, post.score)
-            assertEquals("${BuildConfig.API_URL}${dataPost.permalink.drop(1)}", post.detailLink)
             assertEquals(dataPost.thumbnailLink, post.thumbnailLink)
         }
     }

@@ -11,8 +11,8 @@ internal data class DataPost(
         @Json(name = "title") val title: String,
         @Json(name = "subreddit_name_prefixed") val subreddit: String,
         @Json(name = "score") val score: Int,
-        @Json(name = "permalink") val permalink: String,
-        @Json(name= "thumbnail") val thumbnailLink: String) {
+        @Json(name = "thumbnail") val thumbnailLink: String,
+        @Json(name = "url") val url: String) {
     override fun hashCode() = id.hashCode()
 
     override fun equals(other: Any?) = other is DataPost && id == other.id

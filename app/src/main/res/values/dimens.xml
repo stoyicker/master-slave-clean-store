@@ -4,7 +4,7 @@
     <dimen name="content_horizontal_margin">16dp</dimen>
     <dimen name="footer_padding">32dp</dimen>
     <dimen name="item_separation">16dp</dimen>
-    <dimen name="section_separator">16dp</dimen>
+    <dimen name="content_vertical_padding">16dp</dimen>
     <dimen name="text_separation">12dp</dimen>
     <dimen name="default_column_width">150dp</dimen>
     <dimen name="top_posts_column_width">200dp</dimen>

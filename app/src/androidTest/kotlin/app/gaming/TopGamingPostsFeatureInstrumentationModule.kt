@@ -1,22 +1,19 @@
 package app.gaming
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import app.UIPostExecutionThread
+import app.common.PresentationPost
+import app.common.UIPostExecutionThread
+import app.detail.PostDetailActivity
 import app.gaming.TopGamingActivityInstrumentation.Companion.SUBJECT
 import app.gaming.TopGamingActivityInstrumentation.Companion.SUBSCRIBER_GENERATOR
 import dagger.Component
 import dagger.Module
 import dagger.Provides
-import domain.entity.Post
 import domain.exec.PostExecutionThread
 import domain.interactor.TopGamingAllTimePostsUseCase
-import org.jorge.ms.app.BuildConfig
 import javax.inject.Singleton
 
 /**
@@ -24,30 +21,18 @@ import javax.inject.Singleton
  */
 @Module
 internal class TopGamingAllTimePostsFeatureInstrumentationModule(
+        private val context: Context,
         private val contentView: RecyclerView,
         private val errorView: View,
         private val progressView: View,
-        private val guideView: View,
-        private val activity: Activity) {
+        private val guideView: View) {
     @Provides
     @Singleton
     fun coordinatorBehaviorCallback(coordinator: TopGamingAllTimePostsCoordinator) =
             object : TopGamingAllTimePostsActivity.BehaviorCallback {
                 @SuppressLint("InlinedApi")
-                override fun onItemClicked(item: Post) {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.detailLink))
-                    // https://developer.android.com/training/implementing-navigation/descendant.html#external-activities
-                    if (BuildConfig.VERSION_CODE > Build.VERSION_CODES.LOLLIPOP) {
-                        @Suppress("DEPRECATION")
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
-                    } else {
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
-                    }
-                    val candidates = activity.packageManager
-                            .queryIntentActivities(intent, 0)
-                    if (candidates.size > 0) {
-                        activity.startActivity(intent)
-                    }
+                override fun onItemClicked(item: PresentationPost) {
+                    context.startActivity(PostDetailActivity.getCallingIntent(context, item))
                 }
 
                 override fun onPageLoadRequested() {

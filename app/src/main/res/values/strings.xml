@@ -5,4 +5,6 @@
     <string name="top_posts_error_action">Retry</string>
     <string name="top_posts_scroll_guide">Scroll down to see more!</string>
     <string name="search_view_hint"><![CDATA[<font color=#FF9999>Search r/gaming</font>]]></string>
+    <string name="search_view_hint_clear">Search r/gaming</string>
+    <string name="share">Share…</string>
 </resources>

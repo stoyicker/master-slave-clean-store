@@ -7,6 +7,7 @@ final def jUnitVersion = "4.12"
 final def kotlinVersion = rootProject.ext.kotlinVersion
 final def mockitoKotlinVersion = "1.4.0"
 final def mockitoAndroidVersion = "2.7.22"
+final def paperparcelVersion = "2.0.1"
 final def picassoVersion = "2.5.2"
 final def retrofitVersion = "2.1.0"
 final def rxAndroidVersion = "1.2.1"
@@ -52,11 +53,11 @@ ext {
     ]
     androidTestCompileAppDependencies = [
             "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion",
-            "org.mockito:mockito-android:$mockitoAndroidVersion",
-            "com.android.support.test.espresso:espresso-intents:$espressoVersion"
+            "org.mockito:mockito-android:$mockitoAndroidVersion"
     ]
     annotationProcessorAppDependencies = [
-            "com.google.dagger:dagger-compiler:$daggerVersion"
+            "com.google.dagger:dagger-compiler:$daggerVersion",
+            "nz.bradcampbell:paperparcel-compiler:$paperparcelVersion"
     ]
     annotationProcessorAndroidTestAppDependencies = [
             "com.google.dagger:dagger-compiler:$daggerVersion"
@@ -67,13 +68,15 @@ ext {
             "com.android.support:design:$supportVersion",
             "com.google.firebase:firebase-crash:$firebaseVersion",
             "com.google.dagger:dagger-android:$daggerVersion",
-            "com.squareup.picasso:picasso:$picassoVersion"
+            "com.squareup.picasso:picasso:$picassoVersion",
+            "nz.bradcampbell:paperparcel:$paperparcelVersion"
     ]
     providedUtilAndroidDependencies = [
             "com.android.support:support-annotations:$supportVersion"
     ]
     compileUtilAndroidTestDependencies = [
             "com.android.support.test.espresso:espresso-core:$espressoVersion",
-            "com.android.support.test.espresso:espresso-idling-resource:$espressoVersion"
+            "com.android.support.test.espresso:espresso-idling-resource:$espressoVersion",
+            "com.android.support.test.espresso:espresso-intents:$espressoVersion"
     ]
 }

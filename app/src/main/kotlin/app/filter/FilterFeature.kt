@@ -10,7 +10,7 @@ import org.jorge.ms.app.R
 import util.android.HtmlCompat
 
 /**
- * Contains boilerplate for real-time search.
+ * Contains boilerplate for list filtering.
  */
 internal class FilterFeature(activity: Activity, private val searchView: SearchView,
                              private val target: TopGamingAllTimePostsFeatureView) {

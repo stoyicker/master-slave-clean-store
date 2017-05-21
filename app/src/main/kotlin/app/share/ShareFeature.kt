@@ -2,7 +2,6 @@ package app.share
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import org.jorge.ms.app.R
 
 /**
@@ -14,8 +13,9 @@ internal class ShareFeature(private val context: Context) {
      * @param item The time to share.
      */
     fun share(item: ShareFeature.Shareable) {
-        val intent = Intent(Intent.ACTION_SEND, item.getShareableLink())
-        intent.putExtra(Intent.EXTRA_TITLE, item.getShareableTitle())
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.putExtra(Intent.EXTRA_SUBJECT, item.getShareableTitle())
+        intent.putExtra(Intent.EXTRA_TEXT, item.getShareableLink())
         intent.type = "text/plain"
         context.startActivity(Intent.createChooser(intent, context.getString(R.string.share)))
     }
@@ -34,6 +34,6 @@ internal class ShareFeature(private val context: Context) {
          * Implementations should provide a uri representative of this item when shared.
          * @return A uri representative of this item when shared.
          */
-        fun getShareableLink(): Uri
+        fun getShareableLink(): String
     }
 }

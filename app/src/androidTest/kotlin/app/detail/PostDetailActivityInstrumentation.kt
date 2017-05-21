@@ -62,7 +62,9 @@ internal class PostDetailActivityInstrumentation {
         intending(anyIntent()).respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, null))
         onView(withId(R.id.share)).perform(click())
         intended(intentChooser(allOf(
-                hasExtra(Intent.EXTRA_TITLE, ITEM.title))))
+                hasExtra(Intent.EXTRA_SUBJECT, ITEM.title),
+                hasExtra(Intent.EXTRA_TEXT, ITEM.url)
+        )))
         Intents.release()
     }
 

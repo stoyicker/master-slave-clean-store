@@ -28,7 +28,7 @@ internal data class PresentationPost(
 
     override fun getShareableTitle() = title
 
-    override fun getShareableLink(): Uri = Uri.parse(url)
+    override fun getShareableLink() = url
 
     companion object {
         @Suppress("unused") // Parcelable

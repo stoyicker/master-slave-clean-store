@@ -25,7 +25,8 @@ I chose Kotlin over Java because:
 * It is more natural both to read and write, which makes
 writing code easier and faster while still allowing Java developers
 who have never seen it to understand it.
-* It compiles to Java bytecode.
+* It can be configured to generate Java 6/8 bytecode, which means its evolution is independent of that of the platform.
+* It is [officially supported by Google as a first-class language for Android](https://blog.jetbrains.com/kotlin/2017/05/kotlin-on-android-now-official/).
 
 # Documentation
 Documentation is generated using [Dokka](https://github.com/Kotlin/dokka), which is the

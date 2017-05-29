@@ -1,4 +1,3 @@
 #!/bin/sh -e
 cd .git/hooks/
-rm pre-push
 ln -s ../../hooks/pre-push .

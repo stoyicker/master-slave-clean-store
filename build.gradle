@@ -9,7 +9,7 @@ buildscript {
     }
     final def androidPluginVersion = "2.3.2"
     final def kotlinPluginVersion = rootProject.ext.kotlinVersion = "1.1.2"
-    final def dokkaPluginVersion = "0.9.13"
+    final def dokkaPluginVersion = "0.9.14"
     final def googleServicesPluginVersion = "3.0.0"
     final def firebasePluginsVersion = "1.0.5"
     final def ktLintGradlePluginVersion = "0.7.0"

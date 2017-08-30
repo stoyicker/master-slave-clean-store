@@ -1,9 +1,7 @@
 package app.gaming
 
 import app.common.UIPostExecutionThread
-import domain.entity.Post
 import domain.interactor.TopGamingAllTimePostsUseCase
-import domain.interactor.UseCase
 
 /**
  * Takes care of binding the logic of the top gaming posts request to the view that handles its
@@ -15,7 +13,7 @@ internal class TopGamingAllTimePostsCoordinator(
         private val useCaseFactory: TopGamingAllTimePostsUseCase.Factory,
         private val pageLoadSubscriberFactory: PageLoadSubscriber.Factory) {
     internal var page = 0
-    private lateinit var ongoingUseCase: UseCase<Post>
+    private var ongoingUseCase: TopGamingAllTimePostsUseCase? = null
 
     /**
      * Triggers the load of the next page.
@@ -24,7 +22,7 @@ internal class TopGamingAllTimePostsCoordinator(
      * resorts to memory and disk cache, checking for data availability in that order.
      */
     internal fun actionLoadNextPage(requestedManually: Boolean = true) {
-        ongoingUseCase = if (requestedManually) {
+        val ongoingUseCase = if (requestedManually) {
             useCaseFactory.newFetch(page, UIPostExecutionThread)
         } else {
             useCaseFactory.newGet(page, UIPostExecutionThread)
@@ -36,6 +34,6 @@ internal class TopGamingAllTimePostsCoordinator(
      * Aborts the on-going next page load, if any.
      */
     internal fun abortActionLoadNextPage() {
-        ongoingUseCase.terminate()
+        ongoingUseCase?.dispose()
     }
 }

@@ -5,7 +5,7 @@ import data.common.DomainEntityMapper
 import domain.entity.Post
 import domain.entity.TimeRange
 import domain.repository.DomainTopPostsFacade
-import rx.Observable
+import io.reactivex.Single
 import javax.inject.Inject
 
 /**
@@ -36,7 +36,7 @@ class TopPostsFacade : DomainTopPostsFacade {
      * @param page The page to request.
      */
     override fun fetchTop(subreddit: CharSequence, timeRange: TimeRange, page: Int)
-        : Observable<Post> = mapToDomain(
+        : Single<Iterable<Post>> = mapToDomain(
             source.fetch(TopRequestParameters(subreddit, timeRange, page)))
 
     /**
@@ -48,17 +48,17 @@ class TopPostsFacade : DomainTopPostsFacade {
      * @param page The page to request.
      */
     override fun getTop(subreddit: CharSequence, timeRange: TimeRange, page: Int)
-            : Observable<Post> = mapToDomain(
+            : Single<Iterable<Post>> = mapToDomain(
             source.get(TopRequestParameters(subreddit, timeRange, page)))
 
     /**
      * Prepares the data in a top response to be consumed by outer modules.
      * @param parsedDataResponse The response as it is made available to this module after parsing.
      */
-    private fun mapToDomain(parsedDataResponse: Observable<TopRequestDataContainer>)
-        = parsedDataResponse.flatMapIterable {
-            it.data.children.map {
-                entityMapper.transform(it.data)
-            }
+    private fun mapToDomain(parsedDataResponse: Single<TopRequestDataContainer>)
+            : Single<Iterable<Post>> = parsedDataResponse.map {
+        it.data.children.map {
+            entityMapper.transform(it.data)
         }
+    }
 }

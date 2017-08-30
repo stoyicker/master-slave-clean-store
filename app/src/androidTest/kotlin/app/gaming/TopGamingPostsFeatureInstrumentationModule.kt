@@ -12,8 +12,10 @@ import app.gaming.TopGamingActivityInstrumentation.Companion.SUBSCRIBER_GENERATO
 import dagger.Component
 import dagger.Module
 import dagger.Provides
+import domain.entity.Post
 import domain.exec.PostExecutionThread
 import domain.interactor.TopGamingAllTimePostsUseCase
+import io.reactivex.Single
 import javax.inject.Singleton
 
 /**
@@ -60,7 +62,7 @@ internal class TopGamingAllTimePostsFeatureInstrumentationModule(
         object : TopGamingAllTimePostsUseCase.Factory {
             override fun newFetch(page: Int, postExecutionThread: PostExecutionThread) =
                 object : TopGamingAllTimePostsUseCase(page, UIPostExecutionThread) {
-                    override fun buildUseCaseObservable() = SUBJECT
+                    override fun buildUseCase(): Single<Iterable<Post>> = SUBJECT.singleOrError()
                 }
 
             override fun newGet(page: Int, postExecutionThread: PostExecutionThread) =

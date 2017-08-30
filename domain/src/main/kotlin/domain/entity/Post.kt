@@ -9,5 +9,5 @@ data class Post(
         val title: String,
         val subreddit: String,
         val score: Int,
-        val thumbnailLink: String,
+        val thumbnailLink: String?,
         val url: String)

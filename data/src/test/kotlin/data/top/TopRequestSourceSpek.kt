@@ -6,19 +6,21 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import com.nytimes.android.external.store.base.impl.Store
+import com.nytimes.android.external.store3.base.impl.Store
 import dagger.Component
 import dagger.Module
 import dagger.Provides
 import data.ComponentHolder
+import domain.entity.Post
 import domain.entity.TimeRange
+import io.reactivex.Single
+import io.reactivex.observers.TestObserver
+import io.reactivex.subscribers.TestSubscriber
 import org.jetbrains.spek.api.SubjectSpek
 import org.jetbrains.spek.api.dsl.it
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
 import retrofit2.Retrofit
-import rx.Observable
-import rx.observers.TestSubscriber
 import util.android.IndexedPersistedByDiskStore
 import java.io.File
 import javax.inject.Singleton
@@ -42,20 +44,17 @@ internal class TopRequestSourceSpek : SubjectSpek<TopRequestSource>({
         reset(MOCK_STORE)
     }
 
-    it ("should fall back to the cache on failed fetch and propagate the error when the cache is empty") {
-        val fetchError = mock<Exception>()
-        whenever(MOCK_STORE.fetch(anyVararg())) doReturn
-                Observable.error<TopRequestDataContainer>(fetchError)
-        whenever(MOCK_STORE.get(anyVararg())) doReturn Observable.empty()
-        val testSubscriber = TestSubscriber<TopRequestDataContainer>()
+    it ("should fall back to the cache on failed fetch") {
+        val value = TopRequestDataContainer.EMPTY
+        whenever(MOCK_STORE.fetch(anyVararg())) doReturn Single.error(mock<Exception>())
+        whenever(MOCK_STORE.get(anyVararg())) doReturn Single.just(value)
+        val testSubscriber = TestObserver<TopRequestDataContainer>()
         // Parameters do not matter because of the mocked method on the provided store
-        subject.fetch(TopRequestParameters("", TimeRange.ALL_TIME, 0)).subscribe(testSubscriber)
+        subject.fetch(TopRequestParameters("", TimeRange.ALL_TIME, 0))
+                .subscribe(testSubscriber)
         verify(MOCK_STORE).fetch(anyVararg())
-        verify(MOCK_STORE).get(anyVararg())
-        testSubscriber.assertError(fetchError)
-        testSubscriber.assertNoValues()
-        testSubscriber.assertNotCompleted()
-        testSubscriber.assertTerminalEvent()
+        testSubscriber.assertValue(value)
+        testSubscriber.assertComplete()
     }
 
     it ("should fall back to the cache on failed fetch without propagating the error when the cache is not empty") {
@@ -66,17 +65,17 @@ internal class TopRequestSourceSpek : SubjectSpek<TopRequestSource>({
             on { data } doReturn requestData
         }
         val fetchError = mock<Exception>()
-        whenever(MOCK_STORE.fetch(anyVararg())) doReturn
-                Observable.error<TopRequestDataContainer>(fetchError)
-        whenever(MOCK_STORE.get(anyVararg())) doReturn Observable.just(cachedValue)
-        val testSubscriber = TestSubscriber<TopRequestDataContainer>()
+        whenever(MOCK_STORE.fetch(anyVararg())) doReturn Single.error(fetchError)
+        whenever(MOCK_STORE.get(anyVararg())) doReturn Single.just(cachedValue)
+        val testSubscriber = TestObserver<TopRequestDataContainer>()
         // Parameters do not matter because of the mocked method on the provided store
-        subject.fetch(TopRequestParameters("", TimeRange.ALL_TIME, 0)).subscribe(testSubscriber)
+        subject.fetch(TopRequestParameters("", TimeRange.ALL_TIME, 0))
+                .subscribe(testSubscriber)
         verify(MOCK_STORE).fetch(anyVararg())
         verify(MOCK_STORE).get(anyVararg())
         testSubscriber.assertNoErrors()
         testSubscriber.assertValue(cachedValue)
-        testSubscriber.assertCompleted()
+        testSubscriber.assertComplete()
     }
 }) {
     private companion object {

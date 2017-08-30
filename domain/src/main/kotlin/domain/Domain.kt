@@ -1,7 +1,7 @@
 package domain
 
 import domain.repository.DomainTopPostsFacade
-import rx.schedulers.Schedulers
+import io.reactivex.schedulers.Schedulers
 
 /**
  * Global configuration holder for the module.

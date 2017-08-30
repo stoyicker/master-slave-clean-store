@@ -1,18 +1,8 @@
-# Setup for contributions
-
-Once cloned, just setup the hooks:
-
-```shell
-$<project-dir>: ./hooks/setup
-```
-
 # Build instructions
 
-* Make sure you're passing a property to gradle (like through `gradle.properties`) keyed 
-`FirebaseServiceAccountFilePath`. Its value is irrelevant.
-* Place the Firebase service account file, named 
-`master-slave-clean-store-firebase-crashreporting-private-key.json`, under the project root.
-* Put your `google-services.json` files under the `debug` and `release` folders of the `app` module.
+`./gradlew assemble` (or something like `gradlew.bat assemble` on Windows I guess).
+You can also get an APK from the [Releases](https://github.com/stoyicker/master-slave-clean-store/releases) 
+tab, courtesy of Travis. 
 
 # Architecture
 This is a reactive app: it runs by reacting to user interactions. Here
@@ -38,3 +28,11 @@ code documentation generation tool for Kotlin, similar to what Javadoc is for Ja
  Unit and integration tests are written using [Spek](https://spekframework.org), the specification
  framework for Kotlin. Run them with the `test` Gradle task in each module.
  Instrumentation tests are only present in the `app` module and can be run using the `cAT` task.
+
+# Setup for contributions
+
+Once cloned, just setup the hooks:
+
+```shell
+$<project-dir>: ./hooks/setup (or whatever equivalent if on Windows).
+```

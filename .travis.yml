@@ -7,8 +7,8 @@ android:
   components:
   - tools
   - platform-tools
-  - android-25
-  - build-tools-25.0.3
+  - android-26
+  - build-tools-26.0.1
   - extra-android-m2repository
   - extra-google-m2repository
 branches:
@@ -19,15 +19,8 @@ env:
   - TASK="./gradlew :app:clean :app:build :app:check :app:dokka --stacktrace"
   - TASK="./gradlew :domain:clean :domain:build :domain:check :domain:dokka --stacktrace"
   - TASK="./gradlew :data:clean :data:build :data:check :data:dokka --stacktrace"
-  - TASK="./gradlew :util-android:build :util-android:check :util-android:dokka  :util-android-test:build :util-android-test:check :util-android-test:dokka --stacktrace"
-before_install:
-- openssl aes-256-cbc -K $encrypted_90d766e4084d_key -iv $encrypted_90d766e4084d_iv
-  -in secrets.tar.enc -out secrets.tar -d
-- tar xvf secrets.tar
-- mv google-services-debug.json app/src/debug/google-services.json
-- mv google-services-release.json app/src/release/google-services.json
+  - TASK="./gradlew :util-android:build :util-android:check :util-android:dokka :util-android-test:build :util-android-test:check :util-android-test:dokka --stacktrace"
 before_script:
-- printf "org.gradle.daemon=false\nFirebaseServiceAccountFilePath=" > gradle.properties
 - export ARTIFACT_VERSION=$(git rev-list --count HEAD)
 - |
   if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
@@ -41,8 +34,6 @@ after_success:
   if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ] && [[ "$TRAVIS_JOB_NUMBER" == *.1 ]]; then
     echo "CI on master succeded. Executing release tasks..."
     ./ci/release.sh
-    echo "Uploading mapping to Firebase..."
-    ./gradlew :app:firebaseUploadReleaseProguardMapping
   fi
 notifications:
   email:

@@ -1,6 +1,5 @@
 package app.common
 
-import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 import app.share.ShareFeature
@@ -14,7 +13,7 @@ internal data class PresentationPost(
         val title: String,
         val subreddit: String,
         val score: Int,
-        val thumbnailLink: String,
+        val thumbnailLink: String?,
         val url: String) : Parcelable, ShareFeature.Shareable {
     override fun hashCode() = id.hashCode()
 

@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import org.jorge.ms.data.BuildConfig
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import javax.inject.Singleton
 
 /**
@@ -17,7 +17,7 @@ internal class NetworkModule {
     fun networkInterface(): Retrofit =
             Retrofit.Builder()
                     .baseUrl(BuildConfig.API_URL)
-                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .validateEagerly(true)
                     .build()
 }

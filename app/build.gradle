@@ -4,22 +4,21 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'org.jmailen.kotlinter'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.jetbrains.dokka-android'
-apply plugin: 'com.google.firebase.firebase-crash'
 
 android {
     compileSdkVersion rootProject.ext.androidCompileSdkVersion
     buildToolsVersion rootProject.ext.androidBuildToolsVersion
     signingConfigs {
         release {
-            storeFile new File("alias.keystore")
-            storePassword("keystorePwd")
-            keyAlias("alias")
-            keyPassword("keyPwd")
+            storeFile new File("dummy12.keystore")
+            storePassword "dummy12"
+            keyAlias "dummy12"
+            keyPassword "dummy12"
         }
     }
     buildTypes {
         debug {
-            applicationIdSuffix ".debug" // Do not change as Firebase depends on this
+            applicationIdSuffix ".debug"
         }
         release {
             signingConfig signingConfigs.release
@@ -61,6 +60,7 @@ android {
 }
 repositories {
     jcenter()
+    maven { url "https://maven.google.com" }
 }
 dependencies {
     compile project(':data')
@@ -79,8 +79,3 @@ dependencies {
     compile rootProject.ext.compileAppDependencies
     testCompile rootProject.ext.testCompileDependencies
 }
-
-apply plugin: 'com.google.gms.google-services'
-
-setProperty("FirebaseServiceAccountFilePath", rootProject.rootDir.absolutePath + "/" +
-        rootProject.ext.firebaseServiceAccountFileName)

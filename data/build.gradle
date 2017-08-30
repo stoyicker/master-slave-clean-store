@@ -40,6 +40,7 @@ android {
 
 repositories {
     jcenter()
+    maven { url "https://maven.google.com" }
 }
 
 dependencies {
@@ -51,7 +52,6 @@ dependencies {
     compile rootProject.ext.compileDependencies
     rootProject.ext.compileDataDependencies.forEach {
         compile(it) {
-            // Correct RxJava is brought by the domain module
             exclude group: 'io.reactivex'
         }
     }

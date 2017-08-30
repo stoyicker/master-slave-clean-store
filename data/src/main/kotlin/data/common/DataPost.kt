@@ -11,7 +11,8 @@ internal data class DataPost(
         @Json(name = "title") val title: String,
         @Json(name = "subreddit_name_prefixed") val subreddit: String,
         @Json(name = "score") val score: Int,
-        @Json(name = "thumbnail") val thumbnailLink: String,
+        // Needed hack to allow nullability
+        @field:Json(name = "thumbnail") val thumbnailLink: String?,
         @Json(name = "url") val url: String) {
     override fun hashCode() = id.hashCode()
 

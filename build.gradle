@@ -8,18 +8,14 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" }
     }
     final def androidPluginVersion = "2.3.2"
-    final def kotlinPluginVersion = rootProject.ext.kotlinVersion = "1.1.2"
-    final def dokkaPluginVersion = "0.9.14"
-    final def googleServicesPluginVersion = "3.0.0"
-    final def firebasePluginsVersion = "1.0.5"
-    final def ktLintGradlePluginVersion = "0.7.0"
+    final def kotlinPluginVersion = rootProject.ext.kotlinVersion = "1.1.4"
+    final def dokkaPluginVersion = "0.9.15"
+    final def ktLintGradlePluginVersion = "1.3.0"
     final def classpathDependencies = [
         "com.android.tools.build:gradle:$androidPluginVersion",
         "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinPluginVersion",
         "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokkaPluginVersion",
         "org.jetbrains.dokka:dokka-gradle-plugin:$dokkaPluginVersion",
-        "com.google.gms:google-services:$googleServicesPluginVersion",
-        "com.google.firebase:firebase-plugins:$firebasePluginsVersion",
         "gradle.plugin.org.jmailen.gradle:kotlinter-gradle:$ktLintGradlePluginVersion"
     ]
     dependencies {
@@ -31,17 +27,16 @@ final def inducedVersion = System.getenv("ARTIFACT_VERSION")
 final def staticAnalysisReportFolderTarget = project.rootDir.absolutePath + "/staticAnalysisReport"
 
 rootProject.ext {
-    androidCompileSdkVersion = 25
+    androidCompileSdkVersion = 26
     androidMinSdkVersion = 14
-    androidTargetSdkVersion = 25
-    androidBuildToolsVersion = '25.0.3'
+    androidTargetSdkVersion = 26
+    androidBuildToolsVersion = '26.0.1'
 	androidVersionCode = inducedVersion != null ? Integer.parseInt(inducedVersion) : 1 // Depending on the git method locally causes IDE issues
 	androidVersionName = String.valueOf(androidVersionCode)
 	androidTestInstrumentationRunner = "app.AndroidTestApplicationAndroidJUnitRunner"
 	androidApplicationIdBase = "org.jorge.ms.%s"
 	staticAnalysisReportTarget = staticAnalysisReportFolderTarget
     javaVersion = JavaVersion.VERSION_1_7
-    firebaseServiceAccountFileName = "master-slave-clean-store-firebase-crashreporting-private-key.json"
 }
 
 task clean(type: Delete, overwrite: true) {

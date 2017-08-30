@@ -25,13 +25,13 @@ import android.view.View
 import app.common.PresentationPost
 import app.detail.PostDetailActivity
 import domain.entity.Post
+import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.subjects.ReplaySubject
 import org.hamcrest.Matchers.allOf
 import org.jorge.ms.app.R
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
-import rx.Subscriber
-import rx.subjects.ReplaySubject
 import util.android.test.BinaryIdlingResource
 import util.android.test.matchers.withIndex
 import java.net.UnknownHostException
@@ -66,7 +66,7 @@ internal class TopGamingActivityInstrumentation {
     @Test
     fun activityIsShown() {
         SUBJECT = ReplaySubject.create()
-        SUBJECT.onCompleted()
+        SUBJECT.onComplete()
         launchActivity()
         onView(withId(android.R.id.content)).check { view, _ ->
             assertEquals(View.VISIBLE, view.visibility, "Window visibility was not VISIBLE") }
@@ -75,7 +75,7 @@ internal class TopGamingActivityInstrumentation {
     @Test
     fun toolbarIsCompletelyShownOnOpening() {
         SUBJECT = ReplaySubject.create()
-        SUBJECT.onCompleted()
+        SUBJECT.onComplete()
         launchActivity()
         val completelyDisplayedMatcher = matches(isCompletelyDisplayed())
         onView(isAssignableFrom(Toolbar::class.java)).check(completelyDisplayedMatcher)
@@ -85,7 +85,7 @@ internal class TopGamingActivityInstrumentation {
     @Test
     fun goingBackPausesApp() {
         SUBJECT = ReplaySubject.create()
-        SUBJECT.onCompleted()
+        SUBJECT.onComplete()
         launchActivity()
         expectedException.expect(NoActivityResumedException::class.java)
         expectedException.expectMessage("Pressed back and killed the app")
@@ -95,8 +95,14 @@ internal class TopGamingActivityInstrumentation {
     @Test
     fun onLoadItemsAreShown() {
         SUBJECT = ReplaySubject.create()
-        SUBJECT.onNext(Post("0", "Bananas title", "r/bananas", 879, "tb", "link"))
-        SUBJECT.onCompleted()
+        SUBJECT.onNext(setOf(Post(
+                "0",
+                "Bananas title",
+                "r/bananas",
+                879,
+                "tb",
+                "link")))
+        SUBJECT.onComplete()
         launchActivity()
         onView(withId(R.id.progress)).check { view, _ ->
             assertEquals(View.GONE, view.visibility, "Progress visibility was not GONE") }
@@ -122,10 +128,16 @@ internal class TopGamingActivityInstrumentation {
 
     @Test
     fun onItemClickDetailIntentIsLaunched() {
-        val srcPost = Post("0", "Bananas title", "r/bananas", 879, "tb", "link")
+        val srcPost = Post(
+                "0",
+                "Bananas title",
+                "r/bananas",
+                879,
+                "tb",
+                "link")
         SUBJECT = ReplaySubject.create()
-        SUBJECT.onNext(srcPost)
-        SUBJECT.onCompleted()
+        SUBJECT.onNext(setOf(srcPost))
+        SUBJECT.onComplete()
         launchActivity()
         Intents.init()
         intending(anyIntent()).respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, null))
@@ -146,28 +158,23 @@ internal class TopGamingActivityInstrumentation {
 
     companion object {
         private lateinit var IDLING_RESOURCE: BinaryIdlingResource
-        internal lateinit var SUBJECT: ReplaySubject<Post>
-        internal val SUBSCRIBER_GENERATOR: (TopGamingAllTimePostsCoordinator) -> Subscriber<Post> =
+        internal lateinit var SUBJECT: ReplaySubject<Iterable<Post>>
+        internal val SUBSCRIBER_GENERATOR:
+                (TopGamingAllTimePostsCoordinator) -> DisposableSingleObserver<Iterable<Post>> =
                 {
-                    object : Subscriber<Post>() {
-                        private val realSubscriberDelegate = PageLoadSubscriber(it)
-
+                    object : PageLoadSubscriber(it) {
                         override fun onStart() {
-                            realSubscriberDelegate.onStart()
+                            super.onStart()
                             IDLING_RESOURCE.setIdleState(false)
                         }
 
-                        override fun onNext(post: Post) {
-                            realSubscriberDelegate.onNext(post)
-                        }
-
-                        override fun onError(throwable: Throwable) {
-                            realSubscriberDelegate.onError(throwable)
+                        override fun onSuccess(payload: Iterable<Post>) {
+                            super.onSuccess(payload)
                             IDLING_RESOURCE.setIdleState(true)
                         }
 
-                        override fun onCompleted() {
-                            realSubscriberDelegate.onCompleted()
+                        override fun onError(throwable: Throwable) {
+                            super.onError(throwable)
                             IDLING_RESOURCE.setIdleState(true)
                         }
                     }

@@ -1,6 +1,5 @@
-final def daggerVersion = "2.10"
+final def daggerVersion = "2.11"
 final def espressoVersion = "2.2.2"
-final def firebaseVersion = "10.2.4"
 final def jsr250Version = "1.0"
 final def junitPlatformRunnerVersion = "1.0.0-M3"
 final def jUnitVersion = "4.12"
@@ -9,12 +8,12 @@ final def mockitoKotlinVersion = "1.4.0"
 final def mockitoAndroidVersion = "2.7.22"
 final def paperparcelVersion = "2.0.1"
 final def picassoVersion = "2.5.2"
-final def retrofitVersion = "2.1.0"
-final def rxAndroidVersion = "1.2.1"
-final def rxJavaVersion = "1.2.6"
+final def retrofitVersion = "2.3.0"
+final def rxAndroidVersion = "2.0.1"
+final def rxJavaVersion = "2.1.3"
 final def spekVersion = "1.1.0-beta2"
-final def storeVersion = "2.0.4"
-final def supportVersion = "25.3.1"
+final def storeVersion = "3.0.0-beta"
+final def supportVersion = "26.0.1"
 
 ext {
     compileDependencies = [
@@ -32,7 +31,7 @@ ext {
             "javax.annotation:jsr250-api:$jsr250Version"
     ]
     compileDomainDependencies = [
-            "io.reactivex:rxjava:$rxJavaVersion"
+            "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
     ]
     annotationProcessorDataDependencies = [
             "com.google.dagger:dagger-compiler:$daggerVersion"
@@ -45,10 +44,10 @@ ext {
     ]
     compileDataDependencies = [
             "com.squareup.retrofit2:retrofit:$retrofitVersion",
-            "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion",
-            "com.nytimes.android:store:$storeVersion",
-            "com.nytimes.android:middleware-moshi:$storeVersion",
-            "com.nytimes.android:filesystem:$storeVersion",
+            "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion",
+            "com.nytimes.android:store-kotlin3:$storeVersion",
+            "com.nytimes.android:middleware-moshi3:$storeVersion",
+            "com.nytimes.android:filesystem3:$storeVersion",
             "com.google.dagger:dagger-android:$daggerVersion"
     ]
     androidTestCompileAppDependencies = [
@@ -63,10 +62,9 @@ ext {
             "com.google.dagger:dagger-compiler:$daggerVersion"
     ]
     compileAppDependencies = [
-            "io.reactivex:rxandroid:$rxAndroidVersion",
+            "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion",
             "com.android.support:appcompat-v7:$supportVersion",
             "com.android.support:design:$supportVersion",
-            "com.google.firebase:firebase-crash:$firebaseVersion",
             "com.google.dagger:dagger-android:$daggerVersion",
             "com.squareup.picasso:picasso:$picassoVersion",
             "nz.bradcampbell:paperparcel:$paperparcelVersion"

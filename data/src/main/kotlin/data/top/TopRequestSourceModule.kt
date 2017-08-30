@@ -1,10 +1,11 @@
 package data.top
 
-import com.nytimes.android.external.fs.FileSystemPersister
-import com.nytimes.android.external.fs.PathResolver
-import com.nytimes.android.external.fs.filesystem.FileSystemFactory
-import com.nytimes.android.external.store.base.impl.StoreBuilder
-import com.nytimes.android.external.store.middleware.moshi.MoshiParserFactory
+import com.nytimes.android.external.fs3.FileSystemPersister
+import com.nytimes.android.external.fs3.filesystem.FileSystemFactory
+import com.nytimes.android.external.store3.base.Fetcher
+import com.nytimes.android.external.store3.base.impl.FluentStoreBuilder
+import com.nytimes.android.external.store3.base.impl.StalePolicy
+import com.nytimes.android.external.store3.middleware.moshi.MoshiParserFactory
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -59,18 +60,19 @@ internal class TopRequestSourceModule(private val cacheDir: File) {
             // but we will default to checking the network because on app opening it is
             // reasonable to expected that, if network connectivity available, the data shown
             // should be the latest
-            StoreBuilder
-                    .parsedWithKey<TopRequestParameters, BufferedSource, TopRequestDataContainer>()
-                    .fetcher({ topFetcher(it, apiService, pageMap) })
-                    .parser(MoshiParserFactory.createSourceParser<TopRequestDataContainer>(
-                            TopRequestDataContainer::class.java))
-                    .persister(FileSystemPersister.create(
-                            FileSystemFactory.create(cacheDir),
-                            PathResolver<TopRequestParameters> { it.toString() }))
-                    // Never try to refresh from network on stale since it will very likely not
-                    // be worth and it is not required because we do it on app launch anyway
-                    .refreshOnStale()
-                    .open()
+            FluentStoreBuilder
+                    .parsedWithKey<TopRequestParameters, BufferedSource, TopRequestDataContainer>(
+                           Fetcher { topFetcher(it, apiService, pageMap) }) {
+                        parsers = listOf(MoshiParserFactory
+                                .createSourceParser<TopRequestDataContainer>(
+                                        TopRequestDataContainer::class.java))
+                        persister = FileSystemPersister.create(
+                                    FileSystemFactory.create(cacheDir),
+                                    { it.toString() })
+                        // Never try to refresh from network on stale since it will very likely not
+                        // be worth and it is not required because we do it on app launch anyway
+                         stalePolicy = StalePolicy.REFRESH_ON_STALE
+                    }
 
     /**
      * Provides a Fetcher for the store.

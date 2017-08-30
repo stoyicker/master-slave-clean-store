@@ -17,6 +17,7 @@ import android.widget.TextView
 import app.common.PresentationPost
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
+import kotlinx.android.synthetic.main.item_post.view.*
 import org.jorge.ms.app.R
 
 /**
@@ -221,10 +222,6 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
             itemView: View,
             private val onItemClicked: (PresentationPost) -> Unit)
         : RecyclerView.ViewHolder(itemView), Target {
-        private val titleView: TextView = itemView.findViewById(R.id.title_view) as TextView
-        private val scoreView: TextView = itemView.findViewById(R.id.score) as TextView
-        private val subredditView: TextView = itemView.findViewById(R.id.subreddit) as TextView
-        private val thumbnailView: ImageView = itemView.findViewById(R.id.thumbnail) as ImageView
 
         /**
          * Draw an item.
@@ -256,8 +253,8 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
          * @param title The new title.
          */
         private fun setTitle(title: String) {
-            titleView.text = title
-            thumbnailView.contentDescription = title.toString()
+            itemView.title_view.text = title
+            itemView.thumbnail.contentDescription = title.toString()
         }
 
         /**
@@ -265,7 +262,7 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
          * @param name The new subreddit name.
          */
         private fun setSubreddit(name: String) {
-            subredditView.text = name
+            itemView.subreddit.text = name
         }
 
         /**
@@ -273,19 +270,19 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
          * @param score The new score.
          */
         private fun setScore(score: Int) {
-            scoreView.text = score.toString()
+            itemView.score.text = score.toString()
         }
 
         override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-            thumbnailView.visibility = View.GONE
-            thumbnailView.setImageDrawable(null)
+            itemView.thumbnail.visibility = View.GONE
+            itemView.thumbnail.setImageDrawable(null)
         }
 
         override fun onBitmapFailed(errorDrawable: Drawable?) { }
 
         override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
-            thumbnailView.setImageBitmap(bitmap)
-            thumbnailView.visibility = View.VISIBLE
+            itemView.thumbnail.setImageBitmap(bitmap)
+            itemView.thumbnail.visibility = View.VISIBLE
         }
 
         /**
@@ -293,22 +290,22 @@ internal class Adapter(private val callback: TopGamingAllTimePostsActivity.Behav
          * @param thumbnailLink The new thumbnail link, or <code>null</code> if none is applicable.
          */
         private fun setThumbnail(thumbnailLink: String?) {
-            if (thumbnailLink != null) {
-                Picasso.with(thumbnailView.context).load(thumbnailLink).into(this)
-            } else {
-                thumbnailView.visibility = View.GONE
-                thumbnailView.setImageDrawable(null)
+            itemView.thumbnail.let {
+                if (thumbnailLink != null) {
+                    Picasso.with(it.context).load(thumbnailLink).into(this)
+                } else {
+                    it.visibility = View.GONE
+                    it.setImageDrawable(null)
+                }
             }
         }
     }
-
-    private companion object {
-        private val KEY_TITLE = "KEY_TITLE"
-        private val KEY_SUBREDDIT = "KEY_SUBREDDIT"
-        private val KEY_SCORE = "KEY_SCORE"
-        private val KEY_THUMBNAIL = "KEY_THUMBNAIL"
-    }
 }
+
+private val KEY_TITLE = "org.jorge.ms.app.KEY_TITLE"
+private val KEY_SUBREDDIT = "org.jorge.ms.app.KEY_SUBREDDIT"
+private val KEY_SCORE = "org.jorge.ms.app.KEY_SCORE"
+private val KEY_THUMBNAIL = "org.jorge.ms.app.KEY_THUMBNAIL"
 
 /**
  * @see <a href="https://gist.githubusercontent.com/nesquena/d09dc68ff07e845cc622/raw/e2429b173f75afb408b420ad4088fed68240334c/EndlessRecyclerViewScrollListener.java">Adapted from CodePath</a>

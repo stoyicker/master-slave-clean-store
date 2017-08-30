@@ -1,8 +1,8 @@
 package data.top
 
-import com.nytimes.android.external.store.base.impl.Store
+import com.nytimes.android.external.store3.base.impl.Store
 import data.ComponentHolder
-import rx.Observable
+import io.reactivex.Single
 import util.android.IndexedPersistedByDiskStore
 import javax.inject.Inject
 import dagger.Lazy as DaggerLazy
@@ -39,11 +39,9 @@ internal class TopRequestSource {
             if (pageMap[topRequestParameters.page] != NO_MORE_PAGES) {
                 updatePageMapAndContinue(topRequestParameters.page, store.fetch(
                         topRequestParameters)
-                        .onErrorResumeNext { error ->
-                            store.get(topRequestParameters).switchIfEmpty(Observable.error(error))
-                        })
+                        .onErrorResumeNext { store.get(topRequestParameters) })
             } else {
-                Observable.empty()
+                Single.just(TopRequestDataContainer.EMPTY)
             }
 
     /**
@@ -55,7 +53,7 @@ internal class TopRequestSource {
             if (pageMap[topRequestParameters.page] != NO_MORE_PAGES) {
                 updatePageMapAndContinue(topRequestParameters.page, store.get(topRequestParameters))
             } else {
-                Observable.empty()
+                Single.just(TopRequestDataContainer.EMPTY)
             }
 
     /**
@@ -66,8 +64,8 @@ internal class TopRequestSource {
      * @param from An observable of the desired data.
      */
     private fun updatePageMapAndContinue(requestPage: Int,
-                                         from: Observable<TopRequestDataContainer>) =
-            from.doOnNext { it.data.after.let {
+                                         from: Single<TopRequestDataContainer>) =
+            from.doOnSuccess { it.data.after.let {
                 pageMap.put(requestPage + 1, it ?: NO_MORE_PAGES)
             }
     }

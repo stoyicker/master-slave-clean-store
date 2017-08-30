@@ -1,10 +1,10 @@
 package data.common
 
+import io.reactivex.Single
 import okhttp3.ResponseBody
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import rx.Observable
 
 /**
  * Describes interactions with the API.
@@ -21,7 +21,7 @@ internal interface ApiService {
     fun top(@Path(PATH_PARAM_SUBREDDIT_NAME) subreddit: CharSequence,
             @Query(QUERY_PARAM_TIME) time: CharSequence,
             @Query(QUERY_PARAM_AFTER) after: CharSequence?,
-            @Query(QUERY_PARAM_LIMIT) limit: Int): Observable<ResponseBody>
+            @Query(QUERY_PARAM_LIMIT) limit: Int): Single<ResponseBody>
 
     private companion object {
         private const val ROUTE_SUBREDDIT = "r"

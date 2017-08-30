@@ -1,7 +1,9 @@
 package app.common
 
 import domain.exec.PostExecutionThread
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 object UIPostExecutionThread : PostExecutionThread {
-    override fun provideScheduler(): rx.Scheduler = rx.android.schedulers.AndroidSchedulers.mainThread()
+    override fun scheduler(): Scheduler = AndroidSchedulers.mainThread()
 }

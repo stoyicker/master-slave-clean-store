@@ -11,10 +11,10 @@ internal class PresentationEntityMapper {
      * Maps a domain post to a presentation post.
      */
     fun transform(post: Post) = PresentationPost(
-            post.id,
-            HtmlCompat.fromHtml(post.title).toString(),
-            post.subreddit,
-            post.score,
-            post.thumbnailLink,
-            post.url)
+            id = post.id,
+            title = HtmlCompat.fromHtml(post.title).toString(),
+            subreddit = post.subreddit,
+            score = post.score,
+            thumbnailLink = post.thumbnailLink,
+            url = post.url)
 }

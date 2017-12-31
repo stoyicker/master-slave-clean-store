@@ -27,10 +27,10 @@ final def inducedVersion = System.getenv("ARTIFACT_VERSION")
 final def staticAnalysisReportFolderTarget = project.rootDir.absolutePath + "/staticAnalysisReport"
 
 rootProject.ext {
-    androidCompileSdkVersion = 26
+    androidCompileSdkVersion = 27
     androidMinSdkVersion = 14
-    androidTargetSdkVersion = 26
-    androidBuildToolsVersion = '26.0.1'
+    androidTargetSdkVersion = 27
+    androidBuildToolsVersion = '27.0.3'
 	androidVersionCode = inducedVersion != null ? Integer.parseInt(inducedVersion) : 1 // Depending on the git method locally causes IDE issues
 	androidVersionName = String.valueOf(androidVersionCode)
 	androidTestInstrumentationRunner = "app.AndroidTestApplicationAndroidJUnitRunner"

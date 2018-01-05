@@ -8,7 +8,7 @@ repositories {
 
 dependencies {
     compileOnly rootProject.ext.compileOnlyDomainDependencies
-    compile rootProject.ext.compileDependencies
-    compile rootProject.ext.compileDomainDependencies
-    testCompile rootProject.ext.testCompileDependencies
+    implementation rootProject.ext.compileDependencies
+    implementation rootProject.ext.compileDomainDependencies
+    testImplementation rootProject.ext.testCompileDependencies
 }

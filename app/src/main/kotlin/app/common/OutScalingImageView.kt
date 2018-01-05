@@ -1,9 +1,9 @@
 package app.common
 
 import android.content.Context
+import android.support.v7.widget.AppCompatImageView
 import android.util.AttributeSet
 import android.view.View
-import android.widget.ImageView
 
 
 /**
@@ -12,7 +12,7 @@ import android.widget.ImageView
  *     ScalingImageView</>
  */
 internal class OutScalingImageView(context: Context, attrs: AttributeSet?)
-    : ImageView(context, attrs) {
+    : AppCompatImageView(context, attrs) {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var localHeightMeasureSpec = heightMeasureSpec
         val mDrawable = drawable

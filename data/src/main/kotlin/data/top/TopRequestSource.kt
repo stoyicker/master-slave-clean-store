@@ -41,6 +41,7 @@ internal class TopRequestSource {
                         topRequestParameters)
                         .onErrorResumeNext { store.get(topRequestParameters) })
             } else {
+                // noinspection CheckResult - False positive
                 Single.just(TopRequestDataContainer.EMPTY)
             }
 
@@ -53,6 +54,7 @@ internal class TopRequestSource {
             if (pageMap[topRequestParameters.page] != NO_MORE_PAGES) {
                 updatePageMapAndContinue(topRequestParameters.page, store.get(topRequestParameters))
             } else {
+                // noinspection CheckResult - False positive
                 Single.just(TopRequestDataContainer.EMPTY)
             }
 

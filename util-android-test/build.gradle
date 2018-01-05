@@ -42,13 +42,13 @@ repositories {
 }
 
 dependencies {
-    compile rootProject.ext.compileDependencies
-    compile rootProject.ext.providedUtilAndroidDependencies
+    implementation rootProject.ext.compileDependencies
+    compileOnly rootProject.ext.providedUtilAndroidDependencies
     rootProject.ext.compileUtilAndroidTestDependencies.forEach {
-        compile(it) {
+        api(it) {
             exclude group: 'com.google.code.findbugs'
             exclude module: 'support-annotations'
         }
     }
-    testCompile rootProject.ext.testCompileDependencies
+    testImplementation rootProject.ext.testCompileDependencies
 }

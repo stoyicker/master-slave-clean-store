@@ -42,7 +42,7 @@ repositories {
 }
 
 dependencies {
-    compile rootProject.ext.compileDependencies
-    compile rootProject.ext.providedUtilAndroidDependencies
-    testCompile rootProject.ext.testCompileDependencies
+    implementation rootProject.ext.compileDependencies
+    compileOnly rootProject.ext.providedUtilAndroidDependencies
+    testImplementation rootProject.ext.testCompileDependencies
 }

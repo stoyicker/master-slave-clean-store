@@ -1,5 +1,6 @@
 package app
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -17,6 +18,7 @@ import domain.Domain
 /**
  * Custom application.
  */
+@SuppressLint("Registered") // Registered via buildType-specific manifests
 internal open class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()

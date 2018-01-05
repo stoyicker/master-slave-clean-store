@@ -21,3 +21,6 @@
 -dontwarn com.google.errorprone.annotations.*
 -dontwarn com.squareup.okhttp.**
 -keep class android.support.v7.widget.SearchView { *; }
+-dontnote io.reactivex.**
+-dontnote org.reactivestreams.**
+-dontwarn io.reactivex.internal.**

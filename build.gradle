@@ -4,10 +4,11 @@ apply from: 'buildsystem/dependencies.gradle'
 
 buildscript {
 	repositories {
+        google()
         jcenter()
         maven { url "https://plugins.gradle.org/m2/" }
     }
-    final def androidPluginVersion = "2.3.2"
+    final def androidPluginVersion = "3.1.0-alpha06"
     final def kotlinPluginVersion = rootProject.ext.kotlinVersion = "1.1.4"
     final def dokkaPluginVersion = "0.9.15"
     final def ktLintGradlePluginVersion = "1.3.0"
@@ -27,10 +28,10 @@ final def inducedVersion = System.getenv("ARTIFACT_VERSION")
 final def staticAnalysisReportFolderTarget = project.rootDir.absolutePath + "/staticAnalysisReport"
 
 rootProject.ext {
-    androidCompileSdkVersion = 26
+    androidCompileSdkVersion = 27
     androidMinSdkVersion = 14
-    androidTargetSdkVersion = 26
-    androidBuildToolsVersion = '26.0.1'
+    androidTargetSdkVersion = 27
+    androidBuildToolsVersion = '27.0.3'
 	androidVersionCode = inducedVersion != null ? Integer.parseInt(inducedVersion) : 1 // Depending on the git method locally causes IDE issues
 	androidVersionName = String.valueOf(androidVersionCode)
 	androidTestInstrumentationRunner = "app.AndroidTestApplicationAndroidJUnitRunner"

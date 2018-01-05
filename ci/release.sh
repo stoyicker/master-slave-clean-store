@@ -39,7 +39,7 @@ uploadReleaseToGitHub() {
     # Build the apk
     ./gradlew assembleRelease
     # Copy it out of its cave
-    cp app/build/outputs/apk/app-release.apk .
+    cp app/build/outputs/apk/release/app-release.apk .
 
     # Attach the artifact
     curl -D - \

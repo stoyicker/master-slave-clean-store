@@ -10,7 +10,7 @@ android {
     buildToolsVersion rootProject.ext.androidBuildToolsVersion
     signingConfigs {
         release {
-            storeFile new File("dummy12.keystore")
+            storeFile new File(rootProject.projectDir.absolutePath + File.separator + "dummy12.keystore")
             storePassword "dummy12"
             keyAlias "dummy12"
             keyPassword "dummy12"

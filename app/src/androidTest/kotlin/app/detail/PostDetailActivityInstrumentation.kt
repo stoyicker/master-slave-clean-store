@@ -20,6 +20,7 @@ import android.support.test.rule.ActivityTestRule
 import android.support.v7.widget.Toolbar
 import android.view.View
 import app.common.PresentationPost
+import nocucumber.step.Step
 import org.hamcrest.Matchers.allOf
 import org.jorge.ms.app.R
 import org.junit.Rule
@@ -42,6 +43,7 @@ internal class PostDetailActivityInstrumentation {
         }
     }
 
+    @Step
     @Test
     fun activityIsShown() {
         onView(withId(android.R.id.content)).check { view, _ ->

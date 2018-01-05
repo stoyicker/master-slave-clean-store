@@ -59,6 +59,7 @@ android {
     }
 }
 repositories {
+    mavenLocal()
     jcenter()
     maven { url "https://maven.google.com" }
 }
@@ -67,6 +68,10 @@ dependencies {
     implementation project(':domain')
     implementation project(':util-android')
     androidTestImplementation project(':util-android-test')
+    //noinspection GradleDynamicVersion
+    androidTestImplementation "com.github.stoyicker:no-cucumber-annotations:+"
+    //noinspection GradleDynamicVersion
+    kaptAndroidTest "com.github.stoyicker:no-cucumber-processors:+"
     rootProject.ext.androidTestCompileAppDependencies.forEach {
         androidTestImplementation(it) {
             exclude group: 'com.google.code.findbugs'

@@ -44,16 +44,16 @@ repositories {
 }
 
 dependencies {
-    compile project(':domain')
-    compile project(':util-android')
+    implementation project(':domain')
+    implementation project(':util-android')
     kapt rootProject.ext.annotationProcessorDataDependencies
     kaptTest rootProject.ext.annotationProcessorTestDataDependencies
-    provided rootProject.ext.providedDataDependencies
-    compile rootProject.ext.compileDependencies
+    compileOnly rootProject.ext.providedDataDependencies
+    implementation rootProject.ext.compileDependencies
     rootProject.ext.compileDataDependencies.forEach {
-        compile(it) {
+        implementation(it) {
             exclude group: 'io.reactivex'
         }
     }
-    testCompile rootProject.ext.testCompileDependencies
+    testImplementation rootProject.ext.testCompileDependencies
 }

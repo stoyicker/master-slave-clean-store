@@ -63,19 +63,19 @@ repositories {
     maven { url "https://maven.google.com" }
 }
 dependencies {
-    compile project(':data')
-    compile project(':domain')
-    compile project(':util-android')
-    androidTestCompile project(':util-android-test')
+    implementation project(':data')
+    implementation project(':domain')
+    implementation project(':util-android')
+    androidTestImplementation project(':util-android-test')
     rootProject.ext.androidTestCompileAppDependencies.forEach {
-        androidTestCompile(it) {
+        androidTestImplementation(it) {
             exclude group: 'com.google.code.findbugs'
             exclude module: 'support-annotations'
         }
     }
     kapt rootProject.ext.annotationProcessorAppDependencies
     kaptAndroidTest rootProject.ext.annotationProcessorAndroidTestAppDependencies
-    compile rootProject.ext.compileDependencies
-    compile rootProject.ext.compileAppDependencies
-    testCompile rootProject.ext.testCompileDependencies
+    implementation rootProject.ext.compileDependencies
+    implementation rootProject.ext.compileAppDependencies
+    testImplementation rootProject.ext.testCompileDependencies
 }

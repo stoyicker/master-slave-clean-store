@@ -1,5 +1,5 @@
 final def daggerVersion = "2.11"
-final def espressoVersion = "2.2.2"
+final def espressoVersion = "3.0.1"
 final def jsr250Version = "1.0"
 final def junitPlatformRunnerVersion = "1.0.0-M3"
 final def jUnitVersion = "4.12"

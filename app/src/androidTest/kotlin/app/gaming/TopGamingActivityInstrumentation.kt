@@ -5,20 +5,15 @@ import android.app.Instrumentation
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso
 import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.IdlingRegistry
 import android.support.test.espresso.NoActivityResumedException
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.intent.Intents
 import android.support.test.espresso.intent.Intents.intended
 import android.support.test.espresso.intent.Intents.intending
-import android.support.test.espresso.intent.matcher.IntentMatchers.anyIntent
-import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
-import android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra
-import android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed
-import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
-import android.support.test.espresso.matcher.ViewMatchers.withId
-import android.support.test.espresso.matcher.ViewMatchers.withText
+import android.support.test.espresso.intent.matcher.IntentMatchers.*
+import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
 import android.support.v7.widget.Toolbar
 import android.view.View
@@ -51,12 +46,12 @@ internal class TopGamingActivityInstrumentation {
             TopGamingAllTimePostsActivity::class.java, false, false) {
         override fun beforeActivityLaunched() {
             IDLING_RESOURCE = BinaryIdlingResource("load")
-            Espresso.registerIdlingResources(IDLING_RESOURCE)
+            IdlingRegistry.getInstance().register(IDLING_RESOURCE)
         }
 
         override fun afterActivityFinished() {
             super.afterActivityFinished()
-            Espresso.unregisterIdlingResources(IDLING_RESOURCE)
+            IdlingRegistry.getInstance().unregister(IDLING_RESOURCE)
         }
     }
     @JvmField
@@ -153,8 +148,8 @@ internal class TopGamingActivityInstrumentation {
     /**
      * Launches the activity.
      */
-    private fun launchActivity() = activityTestRule.launchActivity(
-            TopGamingAllTimePostsActivity.getCallingIntent(InstrumentationRegistry.getContext()))
+    private fun launchActivity() = activityTestRule.launchActivity(TopGamingAllTimePostsActivity
+            .getCallingIntent(InstrumentationRegistry.getTargetContext()))
 
     companion object {
         private lateinit var IDLING_RESOURCE: BinaryIdlingResource

@@ -4,6 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'org.jmailen.kotlinter'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.jetbrains.dokka-android'
+apply plugin: 'no-cucumber-android'
 
 android {
     compileSdkVersion rootProject.ext.androidCompileSdkVersion

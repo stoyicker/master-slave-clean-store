@@ -4,6 +4,7 @@ apply from: 'buildsystem/dependencies.gradle'
 
 buildscript {
 	repositories {
+        mavenLocal()
         google()
         jcenter()
         maven { url "https://plugins.gradle.org/m2/" }
@@ -17,7 +18,8 @@ buildscript {
         "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinPluginVersion",
         "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokkaPluginVersion",
         "org.jetbrains.dokka:dokka-gradle-plugin:$dokkaPluginVersion",
-        "gradle.plugin.org.jmailen.gradle:kotlinter-gradle:$ktLintGradlePluginVersion"
+        "gradle.plugin.org.jmailen.gradle:kotlinter-gradle:$ktLintGradlePluginVersion",
+        "com.github.stoyicker:no-cucumber-plugin:+"
     ]
     dependencies {
         classpath classpathDependencies

@@ -4,10 +4,10 @@ apply from: 'buildsystem/dependencies.gradle'
 
 buildscript {
 	repositories {
-        mavenLocal()
+        maven { url "https://plugins.gradle.org/m2/" }
         google()
         jcenter()
-        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "https://jitpack.io" }
     }
     final def androidPluginVersion = "3.1.0-alpha06"
     final def kotlinPluginVersion = rootProject.ext.kotlinVersion = "1.1.4"

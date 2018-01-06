@@ -70,9 +70,9 @@ dependencies {
     implementation project(':util-android')
     androidTestImplementation project(':util-android-test')
     //noinspection GradleDynamicVersion
-    androidTestImplementation "com.github.stoyicker:no-cucumber-annotations:+"
+    androidTestImplementation "com.github.stoyicker.no-cucumber:no-cucumber-annotations:+"
     //noinspection GradleDynamicVersion
-    kaptAndroidTest "com.github.stoyicker:no-cucumber-processors:+"
+    kaptAndroidTest "com.github.stoyicker.no-cucumber:no-cucumber-processors:+"
     rootProject.ext.androidTestCompileAppDependencies.forEach {
         androidTestImplementation(it) {
             exclude group: 'com.google.code.findbugs'

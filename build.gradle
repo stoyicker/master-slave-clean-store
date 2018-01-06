@@ -19,7 +19,7 @@ buildscript {
         "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokkaPluginVersion",
         "org.jetbrains.dokka:dokka-gradle-plugin:$dokkaPluginVersion",
         "gradle.plugin.org.jmailen.gradle:kotlinter-gradle:$ktLintGradlePluginVersion",
-        "com.github.stoyicker:no-cucumber-plugin:+"
+        "com.github.stoyicker.no-cucumber:no-cucumber-plugin:+"
     ]
     dependencies {
         classpath classpathDependencies

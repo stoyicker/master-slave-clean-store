@@ -12,8 +12,14 @@ import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.intent.Intents
 import android.support.test.espresso.intent.Intents.intended
 import android.support.test.espresso.intent.Intents.intending
-import android.support.test.espresso.intent.matcher.IntentMatchers.*
-import android.support.test.espresso.matcher.ViewMatchers.*
+import android.support.test.espresso.intent.matcher.IntentMatchers.anyIntent
+import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra
+import android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed
+import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
+import android.support.test.espresso.matcher.ViewMatchers.withId
+import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.rule.ActivityTestRule
 import android.support.v7.widget.Toolbar
 import android.view.View
@@ -22,6 +28,7 @@ import app.detail.PostDetailActivity
 import domain.entity.Post
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.subjects.ReplaySubject
+import nocucumber.step.Step
 import org.hamcrest.Matchers.allOf
 import org.jorge.ms.app.R
 import org.junit.Rule
@@ -77,6 +84,7 @@ internal class TopGamingActivityInstrumentation {
         onView(withText(R.string.app_label)).check(completelyDisplayedMatcher)
     }
 
+    @Step(names = arrayOf("this is a step", "with two names"))
     @Test
     fun goingBackPausesApp() {
         SUBJECT = ReplaySubject.create()

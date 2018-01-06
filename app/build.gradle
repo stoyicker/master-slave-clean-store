@@ -54,8 +54,13 @@ android {
     packagingOptions {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
-    sourceSets.forEach {
-        it.java.srcDirs = ["src/$it.name/kotlin"]
+    sourceSets{
+        androidTest {
+            assets.srcDirs = ["src/androidTest/assets"]
+        }
+        forEach {
+            it.java.srcDirs = ["src/$it.name/kotlin"]
+        }
     }
 }
 repositories {
@@ -78,4 +83,6 @@ dependencies {
     implementation rootProject.ext.compileDependencies
     implementation rootProject.ext.compileAppDependencies
     testImplementation rootProject.ext.testCompileDependencies
+    androidTestImplementation 'info.cukes:cucumber-android:1.2.5@jar'
+    androidTestImplementation 'info.cukes:cucumber-picocontainer:1.2.4'
 }

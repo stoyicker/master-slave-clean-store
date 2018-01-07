@@ -84,7 +84,7 @@ internal class TopGamingActivityInstrumentation {
         onView(withText(R.string.app_label)).check(completelyDisplayedMatcher)
     }
 
-    @Step(names = arrayOf("this is a step", "with two names"))
+    @Step(ids = arrayOf("bananas", "a step"), names = arrayOf("this is a step", "with two names"))
     @Test
     fun goingBackPausesApp() {
         SUBJECT = ReplaySubject.create()

@@ -31,6 +31,7 @@ import io.reactivex.subjects.ReplaySubject
 import nocucumber.step.Step
 import org.hamcrest.Matchers.allOf
 import org.jorge.ms.app.R
+import org.junit.Assert.fail
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
@@ -87,6 +88,7 @@ internal class TopGamingActivityInstrumentation {
     @Step(ids = arrayOf("bananas", "a step"), names = arrayOf("this is a step", "with two names"))
     @Test
     fun goingBackPausesApp() {
+        fail("hola hola failure message")
         SUBJECT = ReplaySubject.create()
         SUBJECT.onComplete()
         launchActivity()
